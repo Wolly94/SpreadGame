@@ -8,5 +8,5 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var x = { id: 0 };
-var A = __importStar(require("./game/common"));
-exports.A = A;
+var Game = __importStar(require("./game/common"));
+exports.A = Game;
