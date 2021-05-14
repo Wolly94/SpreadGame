@@ -5,7 +5,6 @@ import Bubble from "./bubble";
 import Cell from "./cell";
 import { SpreadMap, getPlayerIds } from "./map";
 import basicMechanics from "./mechanics/basicMechanics";
-import asicMechanics from "./mechanics/basicMechanics";
 import bounceMechanics from "./mechanics/bounceMechanics";
 import { SpreadGameMechanics } from "./mechanics/commonMechanics";
 import scrapeOffMechanics from "./mechanics/scrapeOffMechanics";
