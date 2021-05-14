@@ -1,4 +1,4 @@
-import { SpreadMap } from "../../spreadGame/map";
+import { SpreadMap } from "../../spreadGame/map/map";
 import { SendReplayMessage } from "../replay/serverReplayMessages";
 import { ClientGameState } from "./clientGameState";
 
