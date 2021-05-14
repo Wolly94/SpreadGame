@@ -6,6 +6,6 @@ const x: ExampleType = { id: 0 };
 
 export default ExampleType;
 
-import * as Game from "./game/common";
+/* import * as Game from "./game/ratios";
 
-export { Game };
+export { Game }; */
