@@ -1,5 +1,5 @@
+import { SpreadMap } from "../../spreadGame/map";
 import Player from "../../spreadGame/player";
-import { SpreadMap } from "../../shared/game/map";
 import { SendUnitsMessage } from "../inGame/clientInGameMessage";
 import { GameSettings } from "../inGame/gameServerMessages";
 

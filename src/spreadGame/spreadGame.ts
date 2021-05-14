@@ -1,10 +1,11 @@
-import { getPlayerIds, SpreadMap } from "../shared/game/map";
 import { ClientGameState } from "../messages/inGame/clientGameState";
 import { GameSettings } from "../messages/inGame/gameServerMessages";
 import SpreadReplay, { HistoryEntry, Move } from "../messages/replay/replay";
 import Bubble from "./bubble";
 import Cell from "./cell";
+import { SpreadMap, getPlayerIds } from "./map";
 import basicMechanics from "./mechanics/basicMechanics";
+import asicMechanics from "./mechanics/basicMechanics";
 import bounceMechanics from "./mechanics/bounceMechanics";
 import { SpreadGameMechanics } from "./mechanics/commonMechanics";
 import scrapeOffMechanics from "./mechanics/scrapeOffMechanics";
