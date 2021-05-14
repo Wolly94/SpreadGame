@@ -7,10 +7,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var x = { id: 0 };
-var messages = __importStar(require("./messages/index"));
-exports.messages = messages;
-var spreadGame = __importStar(require("./spreadGame/index"));
-exports.spreadGame = spreadGame;
-var aiStuff = __importStar(require("./ai/index"));
-exports.aiStuff = aiStuff;
+var spreadGame_1 = require("./spreadGame");
+exports.SpreadGameImplementation = spreadGame_1.SpreadGameImplementation;
+var entities = __importStar(require("./entites"));
+exports.entities = entities;
+var mapStuff = __importStar(require("./map/index"));
+exports.mapStuff = mapStuff;

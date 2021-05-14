@@ -2,5 +2,7 @@ declare type ExampleType = {
     id: number;
 };
 export default ExampleType;
-import * as Game from "./game/common";
-export { Game as A };
+import * as messages from "./messages/index";
+import * as spreadGame from "./spreadGame/index";
+import * as aiStuff from "./ai/index";
+export { messages, spreadGame, aiStuff };

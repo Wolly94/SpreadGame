@@ -7,10 +7,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var x = { id: 0 };
-var messages = __importStar(require("./messages/index"));
-exports.messages = messages;
-var spreadGame = __importStar(require("./spreadGame/index"));
-exports.spreadGame = spreadGame;
-var aiStuff = __importStar(require("./ai/index"));
-exports.aiStuff = aiStuff;
+var map = __importStar(require("./map"));
+exports.map = map;
+var mapGenerator = __importStar(require("./mapGenerator"));
+exports.mapGenerator = mapGenerator;
