@@ -1,10 +1,8 @@
-import SpreadReplay from './replay'
+import SpreadReplay from "./replay";
 
 export interface SendReplayMessage {
-    type: 'sendreplay'
-    data: SpreadReplay
+  type: "sendreplay";
+  data: SpreadReplay;
 }
 
-type GameServerMessage = SendReplayMessage
-
-export default GameServerMessage
+export default SendReplayMessage;

@@ -1,5 +1,5 @@
 export interface GetReplayMessage {
-    type: 'getreplay';
+    type: "getreplay";
     data: {};
 }
 export declare type ClientReplayMessage = GetReplayMessage;
