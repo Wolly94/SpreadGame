@@ -46,6 +46,5 @@ export interface GameOverMessage {
 }
 export declare type ServerLobbyMessage = SetPlayerIdMessage | LobbyStateMessage;
 export declare type ServerInGameMessage = GameStateMessage | GameOverMessage;
-declare type GameServerMessage = ServerLobbyMessage | ServerInGameMessage | SendReplayMessage;
+export declare type GameServerMessage = ServerLobbyMessage | ServerInGameMessage | SendReplayMessage;
 export declare const isServerLobbyMessage: (msg: GameServerMessage) => msg is ServerLobbyMessage;
-export default GameServerMessage;

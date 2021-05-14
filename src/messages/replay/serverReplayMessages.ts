@@ -5,4 +5,4 @@ export interface SendReplayMessage {
   data: SpreadReplay;
 }
 
-export default SendReplayMessage;
+export type ServerReplayMessage = SendReplayMessage;
