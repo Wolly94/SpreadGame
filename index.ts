@@ -3,3 +3,5 @@ type ExampleType = {
 };
 
 const x: ExampleType = { id: 0 };
+
+export default ExampleType;
