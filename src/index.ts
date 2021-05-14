@@ -8,4 +8,4 @@ export default ExampleType;
 
 import * as Game from "./game/common";
 
-export { Game as A };
+export { Game };
