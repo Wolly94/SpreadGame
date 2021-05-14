@@ -1,4 +1,4 @@
-import { SpreadMap } from "../../spreadGame/map";
+import { SpreadMap } from "../../spreadGame/map/map";
 import { GameSettings } from "./gameServerMessages";
 
 export interface SetMapMessage {
