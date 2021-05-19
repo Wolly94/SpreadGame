@@ -13,3 +13,5 @@ var entities = __importStar(require("./entites"));
 exports.entities = entities;
 var mapStuff = __importStar(require("./map/index"));
 exports.mapStuff = mapStuff;
+var commonStuff = __importStar(require("./common"));
+exports.commonStuff = commonStuff;
