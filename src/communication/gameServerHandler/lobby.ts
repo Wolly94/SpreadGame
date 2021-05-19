@@ -1,18 +1,17 @@
-import { ClientLobbyMessage } from "../../../messages/inGame/clientLobbyMessage";
+import { ClientLobbyMessage } from "../../messages/inGame/clientLobbyMessage";
 import {
-  ClientAiPlayer,
-  ClientHumanPlayer,
-  ClientLobbyPlayer,
-  ClientLobbyState,
-  ClientObserver,
-  GameServerMessage,
   GameSettings,
+  GameServerMessage,
   LobbyStateMessage,
   ServerLobbyMessage,
+  ClientLobbyPlayer,
+  ClientAiPlayer,
+  ClientHumanPlayer,
+  ClientObserver,
+  ClientLobbyState,
   SetPlayerIdMessage,
-} from "../../../messages/inGame/gameServerMessages";
-import { getPlayerIds, SpreadMap } from "../../../spreadGame/map/map";
-import { ServerCommunication } from "../../ServerCommunication";
+} from "../../messages/inGame/gameServerMessages";
+import { SpreadMap, getPlayerIds } from "../../spreadGame/map/map";
 import {
   AiPlayer,
   HumanPlayer,

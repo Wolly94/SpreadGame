@@ -1,15 +1,14 @@
-import ClientMessage from "../../../messages/clientMessage";
 import {
   GameClientMessageData,
   isClientLobbyMessage,
-} from "../../../messages/inGame/gameClientMessages";
-import { GameServerMessage } from "../../../messages/inGame/gameServerMessages";
-import { ServerCommunication } from "../../ServerCommunication";
+} from "../../messages/inGame/gameClientMessages";
+import { GameServerMessage } from "../../messages/inGame/gameServerMessages";
+import { ServerCommunication } from "../ServerCommunication";
 import { idFromToken, PlayerData } from "./common";
 import { InGame } from "./inGame";
 import LobbyImplementation, { Lobby } from "./lobby";
 
-class GameServerHandler {
+export class GameServerHandler {
   state: Lobby | InGame;
   serverCommunication: ServerCommunication<
     GameServerMessage,

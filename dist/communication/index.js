@@ -7,11 +7,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var messages = __importStar(require("./messages/index"));
-exports.messages = messages;
-var spreadGame = __importStar(require("./spreadGame/index"));
-exports.spreadGame = spreadGame;
-var aiStuff = __importStar(require("./ai/index"));
-exports.aiStuff = aiStuff;
-var comm = __importStar(require("./communication/index"));
-exports.comm = comm;
+var clientComm = __importStar(require("./ClientCommunication"));
+exports.clientComm = clientComm;
+var serverComm = __importStar(require("./ServerCommunication"));
+exports.serverComm = serverComm;
+var gameServerHandler = __importStar(require("./gameServerHandler/index"));
+exports.gameServerHandler = gameServerHandler;

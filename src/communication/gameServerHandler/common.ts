@@ -1,4 +1,4 @@
-import { getPlayerIds, SpreadMap } from "../../../spreadGame/map/map";
+import { getPlayerIds, SpreadMap } from "../../spreadGame/map/map";
 
 export interface PlayerData {
   name: string;

@@ -1,13 +1,6 @@
-type ExampleType = {
-  id: number;
-};
-
-const x: ExampleType = { id: 0 };
-
-export default ExampleType;
-
 import * as messages from "./messages/index";
 import * as spreadGame from "./spreadGame/index";
 import * as aiStuff from "./ai/index";
+import * as comm from "./communication/index";
 
-export { messages, spreadGame, aiStuff };
+export { messages, spreadGame, aiStuff, comm };
