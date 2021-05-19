@@ -1,4 +1,4 @@
-export interface ServerSideClient<TSenderMessage> {
+interface ServerSideClient<TSenderMessage> {
     token: string;
     sendToClient: (message: TSenderMessage) => void;
 }
@@ -10,3 +10,4 @@ export declare class ServerCommunication<TSenderMessage, TReceiverMessage> {
     sendMessageToClients(message: TSenderMessage): void;
     sendMessageToClient(message: TSenderMessage, token: string): void;
 }
+export {};
