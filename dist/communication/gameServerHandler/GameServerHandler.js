@@ -11,14 +11,11 @@ var GameServerHandler = /** @class */ (function () {
         this.serverCommunication = new ServerCommunication_1.ServerCommunication(this.onMessageReceive);
         this.state = new lobby_1.default();
     }
-    GameServerHandler.prototype.connectClient = function (token, sendToClient) {
+    GameServerHandler.prototype.connectClient = function (token, playerData, sendToClient) {
         this.serverCommunication.connectClient({
             token: token,
             sendToClient: sendToClient,
         });
-        var playerData = {
-            name: "FakeServerPlayerName1000",
-        };
         if (this.state.type === "lobby") {
             var msgToSend = this.state.onConnect(token, playerData);
             if (msgToSend !== null) {

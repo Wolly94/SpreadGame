@@ -20,14 +20,16 @@ export class GameServerHandler {
     this.state = new LobbyImplementation();
   }
 
-  connectClient(token: string, sendToClient: (msg: GameServerMessage) => void) {
+  connectClient(
+    token: string,
+    playerData: PlayerData,
+    sendToClient: (msg: GameServerMessage) => void
+  ) {
     this.serverCommunication.connectClient({
       token: token,
       sendToClient: sendToClient,
     });
-    const playerData: PlayerData = {
-      name: "FakeServerPlayerName1000",
-    };
+
     if (this.state.type === "lobby") {
       const msgToSend = this.state.onConnect(token, playerData);
       if (msgToSend !== null) {
