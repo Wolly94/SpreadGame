@@ -2,8 +2,7 @@ import {
   ClientCell,
   ClientGameState,
 } from "../messages/inGame/clientGameState";
-import { SendUnitsMessage } from "../messages/inGame/clientInGameMessage";
-import { Move } from "../messages/replay/replay";
+import { Move, SendUnitsMove } from "../messages/replay/replay";
 
 export interface Ai {
   getMove: (state: ClientGameState, playerId: number) => Move | null;
@@ -42,9 +41,13 @@ export class GreedyAi implements Ai {
     }, 0);
     if (attackers < weakestUnownedCell.units) return null;
 
-    const result: SendUnitsMessage = {
-      type: "sendunits",
-      data: { receiverId: weakestUnownedCell.id, senderIds: senderIds },
+    const result: SendUnitsMove = {
+      type: "sendunitsmove",
+      data: {
+        receiverId: weakestUnownedCell.id,
+        senderIds: senderIds,
+        playerId: playerId,
+      },
     };
 
     return result;

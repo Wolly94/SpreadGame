@@ -95,7 +95,15 @@ var InGameImplementation = /** @class */ (function () {
             var playerId = common_1.idFromToken(token, this.seatedPlayers);
             if (playerId != null) {
                 var value = message.data;
-                this.gameState.sendUnits(playerId, value.senderIds, value.receiverId);
+                var move = {
+                    type: "sendunitsmove",
+                    data: {
+                        playerId: playerId,
+                        senderIds: value.senderIds,
+                        receiverId: value.receiverId,
+                    },
+                };
+                this.gameState.applyMove(move);
                 console.log("message received and attack sent: " + message);
             }
             return null;
@@ -128,7 +136,7 @@ var InGameImplementation = /** @class */ (function () {
         this.aiClients.forEach(function (aiCl) {
             var move = aiCl.getMove(data);
             if (move != null) {
-                _this.gameState.sendUnits(aiCl.playerId, move.data.senderIds, move.data.receiverId);
+                _this.gameState.applyMove(move);
             }
         });
     };

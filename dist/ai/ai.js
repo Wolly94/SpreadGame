@@ -35,8 +35,12 @@ var GreedyAi = /** @class */ (function () {
         if (attackers < weakestUnownedCell.units)
             return null;
         var result = {
-            type: "sendunits",
-            data: { receiverId: weakestUnownedCell.id, senderIds: senderIds },
+            type: "sendunitsmove",
+            data: {
+                receiverId: weakestUnownedCell.id,
+                senderIds: senderIds,
+                playerId: playerId,
+            },
         };
         return result;
     };

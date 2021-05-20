@@ -47,6 +47,11 @@ var SpreadGameImplementation = /** @class */ (function () {
         };
         return rep;
     };
+    SpreadGameImplementation.prototype.applyMove = function (move) {
+        if (move.type === "sendunitsmove") {
+            this.sendUnits(move.data.playerId, move.data.senderIds, move.data.receiverId);
+        }
+    };
     SpreadGameImplementation.prototype.step = function (ms) {
         var _this = this;
         this.bubbles.map(function (bubble) { return _this.mechanics.move(bubble, ms); });
@@ -122,10 +127,11 @@ var SpreadGameImplementation = /** @class */ (function () {
         this.pastMoves.push({
             timestamp: this.timePassed,
             data: {
-                type: "sendunits",
+                type: "sendunitsmove",
                 data: {
                     receiverId: targetCell.id,
                     senderIds: sentIds,
+                    playerId: playerId,
                 },
             },
         });

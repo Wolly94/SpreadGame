@@ -12,7 +12,7 @@ export interface SpreadGameState {
     players: Player[];
 }
 export interface SpreadGameInteraction {
-    sendUnits: (playerId: number, senderIds: number[], receiverId: number) => void;
+    applyMove: (move: Move) => void;
 }
 export interface SpreadGameFunctions {
     step: (ms: number) => void;
@@ -33,6 +33,7 @@ export declare class SpreadGameImplementation implements SpreadGame {
     timePassed: number;
     constructor(map: SpreadMap, gameSettings: GameSettings);
     getReplay(): SpreadReplay;
+    applyMove(move: Move): void;
     step(ms: number): void;
     collideBubblesWithBubbles(): void;
     collideBubblesWithCells(): void;

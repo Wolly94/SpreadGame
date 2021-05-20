@@ -3,7 +3,16 @@ import Player from "../../spreadGame/player";
 import { SendUnitsMessage } from "../inGame/clientInGameMessage";
 import { GameSettings } from "../inGame/gameServerMessages";
 
-export type Move = SendUnitsMessage;
+export interface SendUnitsMove {
+  type: "sendunitsmove";
+  data: {
+    playerId: number;
+    senderIds: number[];
+    receiverId: number;
+  };
+}
+
+export type Move = SendUnitsMove;
 
 export interface HistoryEntry<T> {
   timestamp: number;

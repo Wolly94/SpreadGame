@@ -27,11 +27,7 @@ export interface SpreadGameState {
 }
 
 export interface SpreadGameInteraction {
-  sendUnits: (
-    playerId: number,
-    senderIds: number[],
-    receiverId: number
-  ) => void;
+  applyMove: (move: Move) => void;
 }
 
 export interface SpreadGameFunctions {
@@ -87,6 +83,16 @@ export class SpreadGameImplementation implements SpreadGame {
       players: this.players,
     };
     return rep;
+  }
+
+  applyMove(move: Move) {
+    if (move.type === "sendunitsmove") {
+      this.sendUnits(
+        move.data.playerId,
+        move.data.senderIds,
+        move.data.receiverId
+      );
+    }
   }
 
   step(ms: number) {
@@ -161,10 +167,11 @@ export class SpreadGameImplementation implements SpreadGame {
     this.pastMoves.push({
       timestamp: this.timePassed,
       data: {
-        type: "sendunits",
+        type: "sendunitsmove",
         data: {
           receiverId: targetCell.id,
           senderIds: sentIds,
+          playerId: playerId,
         },
       },
     });

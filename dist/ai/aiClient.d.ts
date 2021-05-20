@@ -6,6 +6,6 @@ declare class AiClient {
     timeoutInterval: number;
     currentlyTimedOut: boolean;
     constructor(playerId: number, ai: Ai);
-    getMove(gameState: ClientGameState): import("../messages/inGame/clientInGameMessage").SendUnitsMessage | null;
+    getMove(gameState: ClientGameState): import("../messages/replay/replay").SendUnitsMove | null;
 }
 export default AiClient;

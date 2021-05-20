@@ -13,7 +13,11 @@ import {
   ClientObserver,
 } from "../../messages/inGame/gameServerMessages";
 import { GetReplayMessage } from "../../messages/replay/clientReplayMessages";
-import { HistoryEntry, Move } from "../../messages/replay/replay";
+import {
+  HistoryEntry,
+  Move,
+  SendUnitsMove,
+} from "../../messages/replay/replay";
 import { SendReplayMessage } from "../../messages/replay/serverReplayMessages";
 import { SpreadGameImplementation } from "../../spreadGame";
 import { SpreadMap } from "../../spreadGame/map/map";
@@ -152,7 +156,15 @@ class InGameImplementation implements InGame {
       const playerId = idFromToken(token, this.seatedPlayers);
       if (playerId != null) {
         const value = message.data;
-        this.gameState.sendUnits(playerId, value.senderIds, value.receiverId);
+        const move: SendUnitsMove = {
+          type: "sendunitsmove",
+          data: {
+            playerId: playerId,
+            senderIds: value.senderIds,
+            receiverId: value.receiverId,
+          },
+        };
+        this.gameState.applyMove(move);
         console.log("message received and attack sent: " + message);
       }
       return null;
@@ -182,11 +194,7 @@ class InGameImplementation implements InGame {
     this.aiClients.forEach((aiCl) => {
       const move = aiCl.getMove(data);
       if (move != null) {
-        this.gameState.sendUnits(
-          aiCl.playerId,
-          move.data.senderIds,
-          move.data.receiverId
-        );
+        this.gameState.applyMove(move);
       }
     });
   }
