@@ -68,7 +68,9 @@ var GameServerHandler = /** @class */ (function () {
             }
         }
         else if (!gameClientMessages_1.isClientLobbyMessage(message) && this.state.type === "ingame") {
-            var replayMessage = this.state.onReceiveMessage(token, message);
+            var toSender = this.state.onReceiveMessage(token, message);
+            if (toSender !== null)
+                this.serverCommunication.sendMessageToClient(toSender, token);
         }
     };
     return GameServerHandler;

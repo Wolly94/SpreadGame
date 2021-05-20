@@ -86,7 +86,9 @@ export class GameServerHandler {
         if (updateAll) this.updateClients();
       }
     } else if (!isClientLobbyMessage(message) && this.state.type === "ingame") {
-      const replayMessage = this.state.onReceiveMessage(token, message);
+      const toSender = this.state.onReceiveMessage(token, message);
+      if (toSender !== null)
+        this.serverCommunication.sendMessageToClient(toSender, token);
     }
   }
 }
