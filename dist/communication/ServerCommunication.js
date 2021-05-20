@@ -14,6 +14,11 @@ var ServerCommunication = /** @class */ (function () {
             this.clients.push(client);
         }
     };
+    ServerCommunication.prototype.disconnectClient = function (token) {
+        var index = this.clients.findIndex(function (cl) { return cl.token === token; });
+        if (index >= 0)
+            this.clients.splice(index, 1);
+    };
     ServerCommunication.prototype.sendMessageToClients = function (message) {
         this.clients.forEach(function (cl) { return cl.sendToClient(message); });
     };

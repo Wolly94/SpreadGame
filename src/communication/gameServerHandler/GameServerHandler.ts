@@ -49,6 +49,10 @@ export class GameServerHandler {
     }
   }
 
+  disconnectClient(token: string) {
+    this.serverCommunication.disconnectClient(token);
+  }
+
   updateClients() {
     if (this.state.type === "lobby") {
       const msgToAll = this.state.updateClientsMessage();

@@ -25,6 +25,11 @@ export class ServerCommunication<TSenderMessage, TReceiverMessage> {
     }
   }
 
+  disconnectClient(token: string) {
+    const index = this.clients.findIndex((cl) => cl.token === token);
+    if (index >= 0) this.clients.splice(index, 1);
+  }
+
   sendMessageToClients(message: TSenderMessage) {
     this.clients.forEach((cl) => cl.sendToClient(message));
   }

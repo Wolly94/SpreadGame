@@ -33,6 +33,9 @@ var GameServerHandler = /** @class */ (function () {
                 this.updateClients();
         }
     };
+    GameServerHandler.prototype.disconnectClient = function (token) {
+        this.serverCommunication.disconnectClient(token);
+    };
     GameServerHandler.prototype.updateClients = function () {
         if (this.state.type === "lobby") {
             var msgToAll = this.state.updateClientsMessage();

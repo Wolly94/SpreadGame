@@ -9,6 +9,7 @@ export declare class GameServerHandler {
     serverCommunication: ServerCommunication<GameServerMessage, GameClientMessageData>;
     constructor();
     connectClient(token: string, playerData: PlayerData, sendToClient: (msg: GameServerMessage) => void): void;
+    disconnectClient(token: string): void;
     updateClients(): void;
     onMessageReceive(message: GameClientMessageData, token: string): void;
 }
