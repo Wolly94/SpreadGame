@@ -35,8 +35,8 @@ var LobbyImplementation = /** @class */ (function () {
     LobbyImplementation.prototype.onReceiveMessage = function (token, message) {
         if (message.type === "setmap") {
             var value = message.data;
-            this.setMap(token, value);
-            return [true, null];
+            var toSender = this.setMap(token, value);
+            return [true, toSender];
         }
         else if (message.type === "takeseat") {
             var playerId = message.data.playerId;
@@ -223,11 +223,12 @@ var LobbyImplementation = /** @class */ (function () {
         });
         var playerIds = map_1.getPlayerIds(map);
         var openIds = Array.from(playerIds).filter(function (pid) { return !_this.seatedPlayers.some(function (sp) { return sp.playerId === pid; }); });
+        var toSenderMessage = null;
         if (openIds.length === playerIds.size) {
-            this.seatPlayer(token);
+            toSenderMessage = this.seatPlayer(token);
         }
         openIds.forEach(function (pid) { return _this.seatAi(token, pid); });
-        this.updateClientsMessage();
+        return toSenderMessage;
     };
     return LobbyImplementation;
 }());

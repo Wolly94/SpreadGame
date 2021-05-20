@@ -36,6 +36,6 @@ declare class LobbyImplementation implements Lobby {
     seatPlayer(token: string): SetPlayerIdMessage | null;
     unseatPlayer(token: string): void;
     onConnect(token: string, playerData: PlayerData): SetPlayerIdMessage | null;
-    setMap(token: string, map: SpreadMap): void;
+    setMap(token: string, map: SpreadMap): SetPlayerIdMessage | null;
 }
 export default LobbyImplementation;

@@ -81,8 +81,8 @@ class LobbyImplementation implements Lobby {
   ): [boolean, ServerLobbyMessage | null] {
     if (message.type === "setmap") {
       const value = message.data;
-      this.setMap(token, value);
-      return [true, null];
+      const toSender = this.setMap(token, value);
+      return [true, toSender];
     } else if (message.type === "takeseat") {
       const playerId = message.data.playerId;
       const newSeatMessage = this.takeSeat(token, playerId);
@@ -282,11 +282,12 @@ class LobbyImplementation implements Lobby {
     const openIds = Array.from(playerIds).filter(
       (pid) => !this.seatedPlayers.some((sp) => sp.playerId === pid)
     );
+    let toSenderMessage = null;
     if (openIds.length === playerIds.size) {
-      this.seatPlayer(token);
+      toSenderMessage = this.seatPlayer(token);
     }
     openIds.forEach((pid) => this.seatAi(token, pid));
-    this.updateClientsMessage();
+    return toSenderMessage;
   }
 }
 
