@@ -80,7 +80,7 @@ var bounceMechanics = {
             commonMechanics_1.reinforceCell(cell, fighters);
         }
         else {
-            var cellRem = commonMechanics_1.fight(fighters, cell.units, fightModifier);
+            var cellRem = commonMechanics_1.fight(fighters, cell.units, 1, 1);
             commonMechanics_1.takeOverCell(cell, cellRem, bubble.playerId);
         }
         var dirToCell = normalize(difference(cell.position, bubble.position));
