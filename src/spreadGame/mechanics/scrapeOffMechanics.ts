@@ -2,7 +2,7 @@ import Bubble from "../bubble";
 import Cell from "../cell";
 import { radiusToUnits, radiusToUnitsFixPoint } from "../common";
 import { distance } from "../entites";
-import { FightModifier } from "../spreadGame";
+import { FightProps } from "../spreadGame";
 import basicMechanics from "./basicMechanics";
 import {
   calculationAccuracy,
@@ -24,7 +24,8 @@ const scrapeOffMechanics: SpreadGameMechanics = {
   collideBubble: (
     bubble1: Bubble,
     bubble2: Bubble,
-    fightModifier: FightModifier
+    f1: FightProps,
+    f2: FightProps
   ) => {
     if (overlap(bubble1, bubble2) < minOverlap + calculationAccuracy)
       return [bubble1, bubble2];
@@ -33,8 +34,8 @@ const scrapeOffMechanics: SpreadGameMechanics = {
     const [u1, u2] = fightBubblePartial(
       bubble1.units,
       bubble2.units,
-      1.0,
-      1.0,
+      f1.attackModifier,
+      f2.attackModifier,
       dist
     );
     if (u1 !== null) {
@@ -47,19 +48,24 @@ const scrapeOffMechanics: SpreadGameMechanics = {
     }
     return [u1 !== null ? bubble1 : null, u2 !== null ? bubble2 : null];
   },
-  collideCell: (bubble: Bubble, cell: Cell, fightModifier: FightModifier) => {
+  collideCell: (bubble: Bubble, cell: Cell, f1: FightProps, f2: FightProps) => {
     if (overlap(bubble, cell) < minOverlap + calculationAccuracy) return bubble;
     // if collides returns true, then dist <= bubble.radius
     const bubbleSpace = distance(bubble.position, cell.position) - cell.radius;
     if (bubbleSpace <= calculationAccuracy) {
-      return basicMechanics.collideCell(bubble, cell, fightModifier);
+      return basicMechanics.collideCell(bubble, cell, f1, f2);
     } else {
       const fighters = cellFighters(bubble.units, bubbleSpace);
       // fighters >= here
       if (bubble.playerId === cell.playerId) {
         reinforceCell(cell, fighters);
       } else {
-        const result = fight(fighters, cell.units, 1.0, 1.0);
+        const result = fight(
+          fighters,
+          cell.units,
+          f1.attackModifier,
+          f2.attackModifier
+        );
         takeOverCell(cell, result, bubble.playerId);
       }
       bubble.units -= fighters;

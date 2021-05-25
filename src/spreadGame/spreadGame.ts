@@ -36,7 +36,9 @@ export interface SpreadGameFunctions {
   getReplay: () => SpreadReplay;
 }
 
-export interface FightModifier {}
+export interface FightProps {
+  attackModifier: number;
+}
 
 export type SpreadGame = SpreadGameState &
   SpreadGameFunctions &
@@ -114,7 +116,8 @@ export class SpreadGameImplementation implements SpreadGame {
           const [rem1, rem2] = this.mechanics.collideBubble(
             bubble2,
             currentBubble,
-            {}
+            { attackModifier: 1.0 },
+            { attackModifier: 1.0 }
           );
           currentBubble = rem2;
           return rem1 !== null;
@@ -136,7 +139,12 @@ export class SpreadGameImplementation implements SpreadGame {
           (currentBubble.motherId !== cell.id ||
             currentBubble.playerId !== cell.playerId)
         ) {
-          currentBubble = this.mechanics.collideCell(currentBubble, cell, {});
+          currentBubble = this.mechanics.collideCell(
+            currentBubble,
+            cell,
+            { attackModifier: 1.0 },
+            { attackModifier: 1.0 }
+          );
         }
       });
       if (currentBubble != null) {

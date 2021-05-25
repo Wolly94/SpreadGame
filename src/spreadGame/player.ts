@@ -1,5 +1,5 @@
 interface Player {
-    id: number
+  id: number;
 }
 
-export default Player
+export default Player;

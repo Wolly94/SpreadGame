@@ -1,6 +1,6 @@
 import Bubble from "../bubble";
 import Cell from "../cell";
-import { FightModifier } from "../spreadGame";
+import { FightProps } from "../spreadGame";
 import {
   calculationAccuracy,
   centerOverlap,
@@ -14,14 +14,20 @@ const basicMechanics: SpreadGameMechanics = {
   collideBubble: (
     bubble1: Bubble,
     bubble2: Bubble,
-    fightModifier: FightModifier
+    f1: FightProps,
+    f2: FightProps
   ) => {
     if (centerOverlap(bubble1, bubble2) < calculationAccuracy)
       return [bubble1, bubble2];
     // TODO modify 'this' accordingly
     // return
     if (bubble1.playerId === bubble2.playerId) return [bubble1, bubble2];
-    const result = fight(bubble1.units, bubble2.units, 1.0, 1.0);
+    const result = fight(
+      bubble1.units,
+      bubble2.units,
+      f1.attackModifier,
+      f2.attackModifier
+    );
     if (Math.abs(result) < calculationAccuracy) {
       return [null, null];
     } else if (result > 0) {
@@ -34,12 +40,17 @@ const basicMechanics: SpreadGameMechanics = {
       return [null, bubble2];
     }
   },
-  collideCell: (bubble: Bubble, cell: Cell, fightModifier: FightModifier) => {
+  collideCell: (bubble: Bubble, cell: Cell, f1: FightProps, f2: FightProps) => {
     if (centerOverlap(bubble, cell) < calculationAccuracy) return bubble;
     if (bubble.playerId === cell.playerId) {
       reinforceCell(cell, bubble.units);
     } else {
-      const result = fight(bubble.units, cell.units, 1.0, 1.0);
+      const result = fight(
+        bubble.units,
+        cell.units,
+        f1.attackModifier,
+        f2.attackModifier
+      );
       takeOverCell(cell, result, bubble.playerId);
     }
     return null;
