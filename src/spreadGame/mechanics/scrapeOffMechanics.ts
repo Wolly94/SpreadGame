@@ -17,26 +17,29 @@ import {
 export const fightBubblePartial = (
   att: number,
   def: number,
-  fightModifier: FightModifier,
+  am: number,
+  bm: number,
   dist: number
 ): [number | null, number | null] => {
-  const unitDiff = att - def;
   const maxUnits = radiusToUnits(dist);
-  if (unitDiff >= maxUnits) {
-    return [
-      ((unitDiff + maxUnits) / (2 * dist)) ** 2 * radiusToUnitsFixPoint,
-      null,
-    ];
-  } else if (unitDiff <= -maxUnits) {
-    return [
-      null,
-      ((-unitDiff + maxUnits) / (2 * dist)) ** 2 * radiusToUnitsFixPoint,
-    ];
-  } else {
-    return [
-      ((unitDiff + maxUnits) / (2 * dist)) ** 2 * radiusToUnitsFixPoint,
-      ((-unitDiff + maxUnits) / (2 * dist)) ** 2 * radiusToUnitsFixPoint,
-    ];
+  const upperBound = am * maxUnits;
+  const lowerBound = bm * maxUnits;
+  const unitDiff = att * am - def * bm;
+  if (unitDiff >= upperBound) return [unitDiff / am, null];
+  else if (unitDiff <= -lowerBound) return [null, -unitDiff / bm];
+  else {
+    const beta =
+      (unitDiff + bm * maxUnits) / ((2 * dist * bm) / radiusToUnitsFixPoint);
+    const deltaMod = am - bm;
+    if (deltaMod === 0) {
+      const ra = beta;
+      return [radiusToUnits(ra), radiusToUnits(dist - ra)];
+    } else {
+      const alpha = deltaMod / (2 * dist * bm);
+      const ra =
+        -1 / (2 * alpha) + Math.sqrt(beta / alpha + 1 / (4 * alpha ** 2));
+      return [radiusToUnits(ra), radiusToUnits(dist - ra)];
+    }
   }
 };
 
@@ -58,7 +61,8 @@ const scrapeOffMechanics: SpreadGameMechanics = {
     const [u1, u2] = fightBubblePartial(
       bubble1.units,
       bubble2.units,
-      fightModifier,
+      1.0,
+      1.0,
       dist
     );
     if (u1 !== null) {
