@@ -13,3 +13,21 @@ test("overlapCenter", function () {
     var overl = commonMechanics_1.centerOverlap(b1, b2);
     expect(overl).toBe(40);
 });
+test("fight with modifiers", function () {
+    var aUnits = [50, 50, 50];
+    var dUnits = [40, 50, 60];
+    var am = 11 / 10;
+    var dm = 12 / 10;
+    var rNeutral = [10, 0, -10];
+    var rPlusAttack = [15 / am, 5 / am, -5];
+    var rPlusDefense = [2, -10 / dm, -22 / dm];
+    aUnits.forEach(function (att, index) {
+        var def = dUnits[index];
+        var fneutral = commonMechanics_1.fight(att, def, 1, 1);
+        var fPlusAttack = commonMechanics_1.fight(att, def, am, 1);
+        var fPlusDefense = commonMechanics_1.fight(att, def, 1, dm);
+        expect(fneutral).toBeCloseTo(rNeutral[index]);
+        expect(fPlusAttack).toBeCloseTo(rPlusAttack[index]);
+        expect(fPlusDefense).toBeCloseTo(rPlusDefense[index]);
+    });
+});

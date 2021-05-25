@@ -1,19 +1,55 @@
 import Bubble from "../bubble";
 import Cell from "../cell";
+import { radiusToUnits, radiusToUnitsFixPoint } from "../common";
 import { distance } from "../entites";
 import { FightModifier } from "../spreadGame";
 
 export const calculationAccuracy = 0.01;
 export const minOverlap = 2;
 
+// > 0 means attacker won, <= 0 means defender won
 export const fight = (
   att: number,
   def: number,
-  fightModifier: FightModifier
+  am: number,
+  bm: number
 ): number => {
-  return att - def;
+  const unitDiff = att * am - def * bm;
+  if (unitDiff <= 0) return unitDiff / bm;
+  else return unitDiff / am;
 };
 
+// returns remaining fighters from both entities
+export const fightBubblePartial = (
+  att: number,
+  def: number,
+  am: number,
+  bm: number,
+  dist: number
+): [number | null, number | null] => {
+  const maxUnits = radiusToUnits(dist);
+  const upperBound = am * maxUnits;
+  const lowerBound = bm * maxUnits;
+  const unitDiff = att * am - def * bm;
+  if (unitDiff >= upperBound) return [unitDiff / am, null];
+  else if (unitDiff <= -lowerBound) return [null, -unitDiff / bm];
+  else {
+    const beta =
+      (unitDiff + bm * maxUnits) / ((2 * dist * bm) / radiusToUnitsFixPoint);
+    const deltaMod = am - bm;
+    if (deltaMod === 0) {
+      const ra = beta;
+      return [radiusToUnits(ra), radiusToUnits(dist - ra)];
+    } else {
+      const alpha = deltaMod / (2 * dist * bm);
+      const ra =
+        -1 / (2 * alpha) + Math.sqrt(beta / alpha + 1 / (4 * alpha ** 2));
+      return [radiusToUnits(ra), radiusToUnits(dist - ra)];
+    }
+  }
+};
+
+// newCellUnits is expected to be the result of 'fight' or 'fightCellPartial'
 export const takeOverCell = (
   cell: Cell,
   newCellUnits: number,

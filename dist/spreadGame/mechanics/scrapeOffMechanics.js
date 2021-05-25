@@ -7,28 +7,6 @@ var common_1 = require("../common");
 var entites_1 = require("../entites");
 var basicMechanics_1 = __importDefault(require("./basicMechanics"));
 var commonMechanics_1 = require("./commonMechanics");
-exports.fightBubblePartial = function (att, def, fightModifier, dist) {
-    var unitDiff = att - def;
-    var maxUnits = common_1.radiusToUnits(dist);
-    if (unitDiff >= maxUnits) {
-        return [
-            Math.pow(((unitDiff + maxUnits) / (2 * dist)), 2) * common_1.radiusToUnitsFixPoint,
-            null,
-        ];
-    }
-    else if (unitDiff <= -maxUnits) {
-        return [
-            null,
-            Math.pow(((-unitDiff + maxUnits) / (2 * dist)), 2) * common_1.radiusToUnitsFixPoint,
-        ];
-    }
-    else {
-        return [
-            Math.pow(((unitDiff + maxUnits) / (2 * dist)), 2) * common_1.radiusToUnitsFixPoint,
-            Math.pow(((-unitDiff + maxUnits) / (2 * dist)), 2) * common_1.radiusToUnitsFixPoint,
-        ];
-    }
-};
 exports.cellFighters = function (bubbleUnits, bubbleSpace) {
     var fighters = bubbleUnits - common_1.radiusToUnits(bubbleSpace);
     return fighters;
@@ -40,7 +18,7 @@ var scrapeOffMechanics = {
         if (bubble1.playerId === bubble2.playerId)
             return [bubble1, bubble2];
         var dist = entites_1.distance(bubble1.position, bubble2.position);
-        var _a = exports.fightBubblePartial(bubble1.units, bubble2.units, fightModifier, dist), u1 = _a[0], u2 = _a[1];
+        var _a = commonMechanics_1.fightBubblePartial(bubble1.units, bubble2.units, 1.0, 1.0, dist), u1 = _a[0], u2 = _a[1];
         if (u1 !== null) {
             bubble1.units = u1;
             bubble1.updateRadius();
@@ -66,7 +44,7 @@ var scrapeOffMechanics = {
                 commonMechanics_1.reinforceCell(cell, fighters);
             }
             else {
-                var result = commonMechanics_1.fight(fighters, cell.units, fightModifier);
+                var result = commonMechanics_1.fight(fighters, cell.units, 1.0, 1.0);
                 commonMechanics_1.takeOverCell(cell, result, bubble.playerId);
             }
             bubble.units -= fighters;

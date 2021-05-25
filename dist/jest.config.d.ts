@@ -1,8 +1,6 @@
 declare const _default: {
     roots: string[];
     testMatch: string[];
-    transform: {
-        '^.+\\.(ts|tsx)$': string;
-    };
+    transform: {};
 };
 export default _default;

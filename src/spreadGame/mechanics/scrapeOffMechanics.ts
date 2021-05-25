@@ -7,41 +7,13 @@ import basicMechanics from "./basicMechanics";
 import {
   calculationAccuracy,
   fight,
+  fightBubblePartial,
   minOverlap,
   overlap,
   reinforceCell,
   SpreadGameMechanics,
   takeOverCell,
 } from "./commonMechanics";
-
-export const fightBubblePartial = (
-  att: number,
-  def: number,
-  am: number,
-  bm: number,
-  dist: number
-): [number | null, number | null] => {
-  const maxUnits = radiusToUnits(dist);
-  const upperBound = am * maxUnits;
-  const lowerBound = bm * maxUnits;
-  const unitDiff = att * am - def * bm;
-  if (unitDiff >= upperBound) return [unitDiff / am, null];
-  else if (unitDiff <= -lowerBound) return [null, -unitDiff / bm];
-  else {
-    const beta =
-      (unitDiff + bm * maxUnits) / ((2 * dist * bm) / radiusToUnitsFixPoint);
-    const deltaMod = am - bm;
-    if (deltaMod === 0) {
-      const ra = beta;
-      return [radiusToUnits(ra), radiusToUnits(dist - ra)];
-    } else {
-      const alpha = deltaMod / (2 * dist * bm);
-      const ra =
-        -1 / (2 * alpha) + Math.sqrt(beta / alpha + 1 / (4 * alpha ** 2));
-      return [radiusToUnits(ra), radiusToUnits(dist - ra)];
-    }
-  }
-};
 
 export const cellFighters = (bubbleUnits: number, bubbleSpace: number) => {
   const fighters = bubbleUnits - radiusToUnits(bubbleSpace);
@@ -87,7 +59,7 @@ const scrapeOffMechanics: SpreadGameMechanics = {
       if (bubble.playerId === cell.playerId) {
         reinforceCell(cell, fighters);
       } else {
-        const result = fight(fighters, cell.units, fightModifier);
+        const result = fight(fighters, cell.units, 1.0, 1.0);
         takeOverCell(cell, result, bubble.playerId);
       }
       bubble.units -= fighters;

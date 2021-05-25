@@ -21,7 +21,7 @@ const basicMechanics: SpreadGameMechanics = {
     // TODO modify 'this' accordingly
     // return
     if (bubble1.playerId === bubble2.playerId) return [bubble1, bubble2];
-    const result = fight(bubble1.units, bubble2.units, fightModifier);
+    const result = fight(bubble1.units, bubble2.units, 1.0, 1.0);
     if (Math.abs(result) < calculationAccuracy) {
       return [null, null];
     } else if (result > 0) {
@@ -39,7 +39,7 @@ const basicMechanics: SpreadGameMechanics = {
     if (bubble.playerId === cell.playerId) {
       reinforceCell(cell, bubble.units);
     } else {
-      const result = fight(bubble.units, cell.units, fightModifier);
+      const result = fight(bubble.units, cell.units, 1.0, 1.0);
       takeOverCell(cell, result, bubble.playerId);
     }
     return null;
