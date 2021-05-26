@@ -9,19 +9,23 @@ var spreadGame_1 = require("../../spreadGame");
 var common_1 = require("./common");
 var updateFrequencyInMs = 20;
 var InGameImplementation = /** @class */ (function () {
-    function InGameImplementation(map, settings, seatedPlayers) {
+    function InGameImplementation(map, settings, seatedPlayers, skillTree) {
         this.type = "ingame";
+        this.skillTree = skillTree;
         this.intervalId = null;
         this.map = map;
         this.gameSettings = settings;
+        var players = seatedPlayers.map(function (sp) {
+            return { id: sp.playerId, skills: sp.skilledPerks };
+        });
         if (settings.mechanics === "basic") {
-            this.gameState = new spreadGame_1.SpreadGameImplementation(map, settings);
+            this.gameState = new spreadGame_1.SpreadGameImplementation(map, settings, players);
         }
         else if (settings.mechanics === "scrapeoff") {
-            this.gameState = new spreadGame_1.SpreadGameImplementation(map, settings);
+            this.gameState = new spreadGame_1.SpreadGameImplementation(map, settings, players);
         }
         else if (settings.mechanics === "bounce") {
-            this.gameState = new spreadGame_1.SpreadGameImplementation(map, settings);
+            this.gameState = new spreadGame_1.SpreadGameImplementation(map, settings, players);
         }
         else
             throw Error("unregistered mechanics");
@@ -61,11 +65,25 @@ var InGameImplementation = /** @class */ (function () {
             };
             toSender = playerIdMessage;
         }
+        var clientSkillTree = {
+            skills: this.skillTree.skills.map(function (sk) {
+                return {
+                    name: sk.name,
+                    perks: sk.perks.map(function (p) {
+                        return { name: p.name };
+                    }),
+                };
+            }),
+        };
         var players = this.seatedPlayers.map(function (sp) {
+            var skilledPerks = sp.skilledPerks.map(function (p) {
+                return { name: p.perk.name, level: p.level };
+            });
             if (sp.type === "ai") {
                 var aip = {
                     type: "ai",
                     playerId: sp.playerId,
+                    skilledPerks: skilledPerks,
                 };
                 return aip;
             }
@@ -74,6 +92,7 @@ var InGameImplementation = /** @class */ (function () {
                     type: "human",
                     name: sp.playerData.name,
                     playerId: sp.playerId,
+                    skilledPerks: skilledPerks,
                 };
                 return clp;
             }
@@ -82,6 +101,7 @@ var InGameImplementation = /** @class */ (function () {
         var lobbyStateMessage = {
             type: "lobbystate",
             data: {
+                skillTree: clientSkillTree,
                 map: this.map,
                 players: players,
                 observers: observers,

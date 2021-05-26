@@ -63,13 +63,13 @@ var adjustedDirection = function (bubblePos, bubbleDir, targetPos) {
     }
 };
 var bounceMechanics = {
-    collideBubble: function (bubble1, bubble2, fightModifier) {
-        return scrapeOffMechanics_1.default.collideBubble(bubble1, bubble2, fightModifier);
+    collideBubble: function (bubble1, bubble2, f1, f2) {
+        return scrapeOffMechanics_1.default.collideBubble(bubble1, bubble2, f1, f2);
     },
-    collideCell: function (bubble, cell, fightModifier) {
+    collideCell: function (bubble, cell, f1, f2) {
         // bubble reached its destiny?
         if (bubble.targetId === cell.id) {
-            return basicMechanics_1.default.collideCell(bubble, cell, fightModifier);
+            return basicMechanics_1.default.collideCell(bubble, cell, f1, f2);
         }
         if (commonMechanics_1.overlap(bubble, cell) < commonMechanics_1.calculationAccuracy)
             return bubble;
@@ -85,7 +85,7 @@ var bounceMechanics = {
         }
         var dirToCell = normalize(difference(cell.position, bubble.position));
         if (dirToCell === null)
-            return basicMechanics_1.default.collideCell(bubble, cell, fightModifier);
+            return basicMechanics_1.default.collideCell(bubble, cell, f1, f2);
         var newDirection = difference(bubble.direction, scalarMul(2 * mul(dirToCell, bubble.direction), dirToCell));
         bubble.direction = newDirection;
         return bubble;

@@ -1,3 +1,4 @@
+import { SkilledPerk } from "../../skilltree/skilltree";
 import { SpreadMap } from "../../spreadGame/map/map";
 export interface PlayerData {
     name: string;
@@ -9,12 +10,14 @@ export interface RegisteredToken {
 export interface AiPlayer {
     type: "ai";
     playerId: number;
+    skilledPerks: SkilledPerk[];
 }
 export interface HumanPlayer {
     type: "human";
     token: string;
     playerId: number;
     playerData: PlayerData;
+    skilledPerks: SkilledPerk[];
 }
 export declare type SeatedPlayer = AiPlayer | HumanPlayer;
 export declare const occupiedSeats: (seatedPlayers: SeatedPlayer[]) => number[];

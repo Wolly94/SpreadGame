@@ -5,6 +5,7 @@ import { GameSettings, GameStateMessage, GameServerMessage, LobbyStateMessage } 
 import { GetReplayMessage } from "../../messages/replay/clientReplayMessages";
 import { HistoryEntry, Move } from "../../messages/replay/replay";
 import { SendReplayMessage } from "../../messages/replay/serverReplayMessages";
+import { SkillTree } from "../../skilltree/skilltree";
 import { SpreadMap } from "../../spreadGame/map/map";
 import { SpreadGame } from "../../spreadGame/spreadGame";
 import { SeatedPlayer, PlayerData } from "./common";
@@ -33,7 +34,8 @@ declare class InGameImplementation implements InGame {
     gameState: SpreadGame;
     intervalId: NodeJS.Timeout | null;
     moveHistory: HistoryEntry<Move>[];
-    constructor(map: SpreadMap, settings: GameSettings, seatedPlayers: SeatedPlayer[]);
+    skillTree: SkillTree;
+    constructor(map: SpreadMap, settings: GameSettings, seatedPlayers: SeatedPlayer[], skillTree: SkillTree);
     isRunning(): boolean;
     stop(): void;
     onConnect(token: string, playerData: PlayerData): [boolean, GameServerMessage | null, LobbyStateMessage | null];

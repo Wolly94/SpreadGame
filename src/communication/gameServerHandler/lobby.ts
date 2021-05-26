@@ -1,4 +1,7 @@
-import { ClientLobbyMessage } from "../../messages/inGame/clientLobbyMessage";
+import {
+  ClientLobbyMessage,
+  SkilledPerkData,
+} from "../../messages/inGame/clientLobbyMessage";
 import {
   GameSettings,
   GameServerMessage,
@@ -10,8 +13,15 @@ import {
   ClientObserver,
   ClientLobbyState,
   SetPlayerIdMessage,
+  SkillTreeData,
+  SkillData,
 } from "../../messages/inGame/gameServerMessages";
-import { defaultSkillTree, SkillTree } from "../../skilltree/skilltree";
+import {
+  defaultSkillTree,
+  getPerkByName,
+  SkilledPerk,
+  SkillTree,
+} from "../../skilltree/skilltree";
 import { SpreadMap, getPlayerIds } from "../../spreadGame/map/map";
 import {
   AiPlayer,
@@ -70,7 +80,8 @@ class LobbyImplementation implements Lobby {
       const inGame = new InGameImplementation(
         this.map,
         this.gameSettings,
-        this.seatedPlayers
+        this.seatedPlayers,
+        this.skillTree
       );
       return inGame;
     } else return null;
@@ -101,18 +112,59 @@ class LobbyImplementation implements Lobby {
     } else if (message.type === "gamesettings") {
       this.gameSettings = message.data;
       return [true, null];
+    } else if (message.type === "setskilledperks") {
+      this.setSkillTree(token, message.data);
+      return [false, null];
     } else {
       return [false, null];
     }
   }
 
+  setSkillTree(token: string, data: SkilledPerkData[]) {
+    const pIndex = this.seatedPlayers.findIndex(
+      (sp) => sp.type === "human" && sp.token === token
+    );
+    if (pIndex < 0) return;
+
+    const skilledPerks: SkilledPerk[] = data.flatMap((sp) => {
+      const perk = getPerkByName(sp.name);
+      if (perk === null) return [];
+      else
+        return [
+          {
+            level: sp.level,
+            perk: perk,
+          },
+        ];
+    });
+    this.seatedPlayers[pIndex].skilledPerks = skilledPerks;
+  }
+
   updateClientsMessage() {
+    const clientSkillTree: SkillTreeData = {
+      skills: this.skillTree.skills.map(
+        (sk): SkillData => {
+          return {
+            name: sk.name,
+            perks: sk.perks.map((p) => {
+              return { name: p.name };
+            }),
+          };
+        }
+      ),
+    };
     // later add list of unseatedPlayers to lobby and inGame to let them also be displayed on website
     const players: ClientLobbyPlayer[] = this.seatedPlayers.map((sp) => {
+      const skilledPerks = sp.skilledPerks.map(
+        (p): SkilledPerkData => {
+          return { name: p.perk.name, level: p.level };
+        }
+      );
       if (sp.type === "ai") {
         const aip: ClientAiPlayer = {
           type: "ai",
           playerId: sp.playerId,
+          skilledPerks: skilledPerks,
         };
         return aip;
       } else {
@@ -120,6 +172,7 @@ class LobbyImplementation implements Lobby {
           type: "human",
           name: sp.playerData.name,
           playerId: sp.playerId,
+          skilledPerks: skilledPerks,
         };
         return clp;
       }
@@ -132,6 +185,7 @@ class LobbyImplementation implements Lobby {
       players,
       observers: observers,
       gameSettings: this.gameSettings,
+      skillTree: clientSkillTree,
     };
     const msg: LobbyStateMessage = {
       type: "lobbystate",

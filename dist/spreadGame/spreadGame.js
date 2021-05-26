@@ -3,8 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var skilltree_1 = require("../skilltree/skilltree");
 var cell_1 = __importDefault(require("./cell"));
-var map_1 = require("./map/map");
 var basicMechanics_1 = __importDefault(require("./mechanics/basicMechanics"));
 var bounceMechanics_1 = __importDefault(require("./mechanics/bounceMechanics"));
 var scrapeOffMechanics_1 = __importDefault(require("./mechanics/scrapeOffMechanics"));
@@ -22,8 +22,8 @@ var getMechanics = function (settings) {
         throw Error("unregistered mechanics");
 };
 var SpreadGameImplementation = /** @class */ (function () {
-    function SpreadGameImplementation(map, gameSettings) {
-        var players = map_1.getPlayerIds(map);
+    function SpreadGameImplementation(map, gameSettings, players) {
+        //const players = getPlayerIds(map);
         this.gameSettings = gameSettings;
         this.mechanics = getMechanics(gameSettings);
         this.map = map;
@@ -32,9 +32,7 @@ var SpreadGameImplementation = /** @class */ (function () {
             return cell;
         });
         this.bubbles = [];
-        this.players = Array.from(players).map(function (id) {
-            return { id: id };
-        });
+        this.players = players;
         this.timePassed = 0;
         this.pastMoves = [];
     }
@@ -67,10 +65,18 @@ var SpreadGameImplementation = /** @class */ (function () {
         var _this = this;
         var remainingBubbles = [];
         this.bubbles.forEach(function (bubble) {
+            var st1 = _this.players.find(function (pl) { return pl.id === bubble.playerId; });
+            var f1 = st1 === undefined
+                ? { attackModifier: 1.0 }
+                : skilltree_1.skillTreeMethods.getAttackerModifier(st1.skills);
             var currentBubble = bubble;
             remainingBubbles = remainingBubbles.filter(function (bubble2) {
                 if (currentBubble != null) {
-                    var _a = _this.mechanics.collideBubble(bubble2, currentBubble, {}), rem1 = _a[0], rem2 = _a[1];
+                    var st2 = _this.players.find(function (pl) { return pl.id === bubble2.playerId; });
+                    var f2 = st2 === undefined
+                        ? { attackModifier: 1.0 }
+                        : skilltree_1.skillTreeMethods.getAttackerModifier(st2.skills);
+                    var _a = _this.mechanics.collideBubble(bubble2, currentBubble, f2, f1), rem1 = _a[0], rem2 = _a[1];
                     currentBubble = rem2;
                     return rem1 !== null;
                 }
@@ -87,12 +93,18 @@ var SpreadGameImplementation = /** @class */ (function () {
         var _this = this;
         var remainingBubbles = [];
         this.bubbles.forEach(function (bubble) {
+            var st1 = _this.players.find(function (pl) { return pl.id === bubble.playerId; });
+            var f1 = st1 === undefined
+                ? { attackModifier: 1.0 }
+                : skilltree_1.skillTreeMethods.getAttackerModifier(st1.skills);
             var currentBubble = bubble;
             _this.cells.forEach(function (cell) {
                 if (currentBubble != null &&
                     (currentBubble.motherId !== cell.id ||
                         currentBubble.playerId !== cell.playerId)) {
-                    currentBubble = _this.mechanics.collideCell(currentBubble, cell, {});
+                    currentBubble = _this.mechanics.collideCell(currentBubble, cell, f1, {
+                        attackModifier: 1.0,
+                    });
                 }
             });
             if (currentBubble != null) {

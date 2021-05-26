@@ -31,10 +31,21 @@ export interface SetGameSettingsMessage {
   data: GameSettings;
 }
 
+export interface SkilledPerkData {
+  name: string;
+  level: number;
+}
+
+export interface SetSkilledPerksMessage {
+  type: "setskilledperks";
+  data: SkilledPerkData[];
+}
+
 export type ClientLobbyMessage =
   | SetMapMessage
   | StartGameMessage
   | TakeSeatMessage
   | SeatAiMessage
   | ClearSeatMessage
-  | SetGameSettingsMessage;
+  | SetGameSettingsMessage
+  | SetSkilledPerksMessage;

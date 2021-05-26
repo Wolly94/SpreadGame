@@ -12,13 +12,13 @@ exports.cellFighters = function (bubbleUnits, bubbleSpace) {
     return fighters;
 };
 var scrapeOffMechanics = {
-    collideBubble: function (bubble1, bubble2, fightModifier) {
+    collideBubble: function (bubble1, bubble2, f1, f2) {
         if (commonMechanics_1.overlap(bubble1, bubble2) < commonMechanics_1.minOverlap + commonMechanics_1.calculationAccuracy)
             return [bubble1, bubble2];
         if (bubble1.playerId === bubble2.playerId)
             return [bubble1, bubble2];
         var dist = entites_1.distance(bubble1.position, bubble2.position);
-        var _a = commonMechanics_1.fightBubblePartial(bubble1.units, bubble2.units, 1.0, 1.0, dist), u1 = _a[0], u2 = _a[1];
+        var _a = commonMechanics_1.fightBubblePartial(bubble1.units, bubble2.units, f1.attackModifier, f2.attackModifier, dist), u1 = _a[0], u2 = _a[1];
         if (u1 !== null) {
             bubble1.units = u1;
             bubble1.updateRadius();
@@ -29,13 +29,13 @@ var scrapeOffMechanics = {
         }
         return [u1 !== null ? bubble1 : null, u2 !== null ? bubble2 : null];
     },
-    collideCell: function (bubble, cell, fightModifier) {
+    collideCell: function (bubble, cell, f1, f2) {
         if (commonMechanics_1.overlap(bubble, cell) < commonMechanics_1.minOverlap + commonMechanics_1.calculationAccuracy)
             return bubble;
         // if collides returns true, then dist <= bubble.radius
         var bubbleSpace = entites_1.distance(bubble.position, cell.position) - cell.radius;
         if (bubbleSpace <= commonMechanics_1.calculationAccuracy) {
-            return basicMechanics_1.default.collideCell(bubble, cell, fightModifier);
+            return basicMechanics_1.default.collideCell(bubble, cell, f1, f2);
         }
         else {
             var fighters = exports.cellFighters(bubble.units, bubbleSpace);
@@ -44,7 +44,7 @@ var scrapeOffMechanics = {
                 commonMechanics_1.reinforceCell(cell, fighters);
             }
             else {
-                var result = commonMechanics_1.fight(fighters, cell.units, 1.0, 1.0);
+                var result = commonMechanics_1.fight(fighters, cell.units, f1.attackModifier, f2.attackModifier);
                 commonMechanics_1.takeOverCell(cell, result, bubble.playerId);
             }
             bubble.units -= fighters;

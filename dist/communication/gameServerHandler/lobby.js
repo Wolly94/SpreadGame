@@ -10,6 +10,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var skilltree_1 = require("../../skilltree/skilltree");
 var map_1 = require("../../spreadGame/map/map");
 var common_1 = require("./common");
 var inGame_1 = __importDefault(require("./inGame"));
@@ -20,11 +21,12 @@ var LobbyImplementation = /** @class */ (function () {
         this.gameSettings = { mechanics: "basic" };
         this.seatedPlayers = [];
         this.unseatedPlayers = [];
+        this.skillTree = skilltree_1.defaultSkillTree;
     }
     LobbyImplementation.prototype.startGame = function () {
         if (this.map !== null) {
             // maybe clients were created faster than they could be added to the game
-            var inGame = new inGame_1.default(this.map, this.gameSettings, this.seatedPlayers);
+            var inGame = new inGame_1.default(this.map, this.gameSettings, this.seatedPlayers, this.skillTree);
             return inGame;
         }
         else
@@ -57,17 +59,53 @@ var LobbyImplementation = /** @class */ (function () {
             this.gameSettings = message.data;
             return [true, null];
         }
+        else if (message.type === "setskilledperks") {
+            this.setSkillTree(token, message.data);
+            return [false, null];
+        }
         else {
             return [false, null];
         }
     };
+    LobbyImplementation.prototype.setSkillTree = function (token, data) {
+        var pIndex = this.seatedPlayers.findIndex(function (sp) { return sp.type === "human" && sp.token === token; });
+        if (pIndex < 0)
+            return;
+        var skilledPerks = data.flatMap(function (sp) {
+            var perk = skilltree_1.getPerkByName(sp.name);
+            if (perk === null)
+                return [];
+            else
+                return [
+                    {
+                        level: sp.level,
+                        perk: perk,
+                    },
+                ];
+        });
+        this.seatedPlayers[pIndex].skilledPerks = skilledPerks;
+    };
     LobbyImplementation.prototype.updateClientsMessage = function () {
+        var clientSkillTree = {
+            skills: this.skillTree.skills.map(function (sk) {
+                return {
+                    name: sk.name,
+                    perks: sk.perks.map(function (p) {
+                        return { name: p.name };
+                    }),
+                };
+            }),
+        };
         // later add list of unseatedPlayers to lobby and inGame to let them also be displayed on website
         var players = this.seatedPlayers.map(function (sp) {
+            var skilledPerks = sp.skilledPerks.map(function (p) {
+                return { name: p.perk.name, level: p.level };
+            });
             if (sp.type === "ai") {
                 var aip = {
                     type: "ai",
                     playerId: sp.playerId,
+                    skilledPerks: skilledPerks,
                 };
                 return aip;
             }
@@ -76,6 +114,7 @@ var LobbyImplementation = /** @class */ (function () {
                     type: "human",
                     name: sp.playerData.name,
                     playerId: sp.playerId,
+                    skilledPerks: skilledPerks,
                 };
                 return clp;
             }
@@ -88,6 +127,7 @@ var LobbyImplementation = /** @class */ (function () {
             players: players,
             observers: observers,
             gameSettings: this.gameSettings,
+            skillTree: clientSkillTree,
         };
         var msg = {
             type: "lobbystate",
@@ -132,6 +172,7 @@ var LobbyImplementation = /** @class */ (function () {
                 token: token,
                 playerId: playerId,
                 playerData: this.unseatedPlayers[unseatedIndex].playerData,
+                skilledPerks: [],
             });
         }
         var setPlayerIdMessage = {
@@ -151,6 +192,7 @@ var LobbyImplementation = /** @class */ (function () {
             var ai = {
                 playerId: playerId,
                 type: "ai",
+                skilledPerks: [],
             };
             this.seatedPlayers.push(ai);
         }
@@ -177,6 +219,7 @@ var LobbyImplementation = /** @class */ (function () {
             playerId: playerId,
             token: token,
             playerData: this.unseatedPlayers[unseatedIndex].playerData,
+            skilledPerks: [],
         };
         this.seatedPlayers.push(newSeated);
         this.unseatedPlayers.splice(unseatedIndex, 1);

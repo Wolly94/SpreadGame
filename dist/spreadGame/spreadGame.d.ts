@@ -19,7 +19,8 @@ export interface SpreadGameFunctions {
     toClientGameState: () => ClientGameState;
     getReplay: () => SpreadReplay;
 }
-export interface FightModifier {
+export interface FightProps {
+    attackModifier: number;
 }
 export declare type SpreadGame = SpreadGameState & SpreadGameFunctions & SpreadGameInteraction;
 export declare class SpreadGameImplementation implements SpreadGame {
@@ -31,7 +32,7 @@ export declare class SpreadGameImplementation implements SpreadGame {
     pastMoves: HistoryEntry<Move>[];
     mechanics: SpreadGameMechanics;
     timePassed: number;
-    constructor(map: SpreadMap, gameSettings: GameSettings);
+    constructor(map: SpreadMap, gameSettings: GameSettings, players: Player[]);
     getReplay(): SpreadReplay;
     applyMove(move: Move): void;
     step(ms: number): void;

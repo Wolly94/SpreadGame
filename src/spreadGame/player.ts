@@ -1,8 +1,8 @@
-import { GeneralPerk, SkilledPerks } from "../skilltree/skilltree";
+import { GeneralPerk, SkilledPerk } from "../skilltree/skilltree";
 
 interface Player {
   id: number;
-  skills: SkilledPerks[];
+  skills: SkilledPerk[];
 }
 
 export default Player;

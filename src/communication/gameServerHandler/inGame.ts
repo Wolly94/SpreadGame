@@ -1,6 +1,7 @@
 import { GreedyAi } from "../../ai/ai";
 import AiClient from "../../ai/aiClient";
 import { ClientInGameMessage } from "../../messages/inGame/clientInGameMessage";
+import { SkilledPerkData } from "../../messages/inGame/clientLobbyMessage";
 import {
   GameSettings,
   GameStateMessage,
@@ -11,6 +12,8 @@ import {
   ClientAiPlayer,
   ClientHumanPlayer,
   ClientObserver,
+  SkillData,
+  SkillTreeData,
 } from "../../messages/inGame/gameServerMessages";
 import { GetReplayMessage } from "../../messages/replay/clientReplayMessages";
 import {
@@ -19,6 +22,7 @@ import {
   SendUnitsMove,
 } from "../../messages/replay/replay";
 import { SendReplayMessage } from "../../messages/replay/serverReplayMessages";
+import { SkillTree, skillTreeMethods } from "../../skilltree/skilltree";
 import { Player, SpreadGameImplementation } from "../../spreadGame";
 import { SpreadMap } from "../../spreadGame/map/map";
 import { SpreadGame } from "../../spreadGame/spreadGame";
@@ -60,12 +64,15 @@ class InGameImplementation implements InGame {
   gameState: SpreadGame;
   intervalId: NodeJS.Timeout | null;
   moveHistory: HistoryEntry<Move>[];
+  skillTree: SkillTree;
 
   constructor(
     map: SpreadMap,
     settings: GameSettings,
-    seatedPlayers: SeatedPlayer[]
+    seatedPlayers: SeatedPlayer[],
+    skillTree: SkillTree
   ) {
+    this.skillTree = skillTree;
     this.intervalId = null;
     this.map = map;
     this.gameSettings = settings;
@@ -122,11 +129,30 @@ class InGameImplementation implements InGame {
       };
       toSender = playerIdMessage;
     }
+
+    const clientSkillTree: SkillTreeData = {
+      skills: this.skillTree.skills.map(
+        (sk): SkillData => {
+          return {
+            name: sk.name,
+            perks: sk.perks.map((p) => {
+              return { name: p.name };
+            }),
+          };
+        }
+      ),
+    };
     const players: ClientLobbyPlayer[] = this.seatedPlayers.map((sp) => {
+      const skilledPerks = sp.skilledPerks.map(
+        (p): SkilledPerkData => {
+          return { name: p.perk.name, level: p.level };
+        }
+      );
       if (sp.type === "ai") {
         const aip: ClientAiPlayer = {
           type: "ai",
           playerId: sp.playerId,
+          skilledPerks: skilledPerks,
         };
         return aip;
       } else {
@@ -134,6 +160,7 @@ class InGameImplementation implements InGame {
           type: "human",
           name: sp.playerData.name,
           playerId: sp.playerId,
+          skilledPerks: skilledPerks,
         };
         return clp;
       }
@@ -142,6 +169,7 @@ class InGameImplementation implements InGame {
     const lobbyStateMessage: LobbyStateMessage = {
       type: "lobbystate",
       data: {
+        skillTree: clientSkillTree,
         map: this.map,
         players: players,
         observers: observers,

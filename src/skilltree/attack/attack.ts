@@ -24,5 +24,6 @@ export const BaseAttack: Perk<number> = {
 };
 
 export const Attack: Skill = {
+  name: "Attack",
   perks: [BaseAttack],
 };

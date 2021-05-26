@@ -1,6 +1,7 @@
 import { SpreadMap } from "../../spreadGame/map/map";
 import { SendReplayMessage } from "../replay/serverReplayMessages";
 import { ClientGameState } from "./clientGameState";
+import { SkilledPerkData } from "./clientLobbyMessage";
 
 export type GameMechanics = "basic" | "scrapeoff" | "bounce";
 export const gameMechs: GameMechanics[] = ["basic", "scrapeoff", "bounce"];
@@ -26,12 +27,14 @@ export interface SetPlayerIdMessage {
 export interface ClientAiPlayer {
   type: "ai";
   playerId: number;
+  skilledPerks: SkilledPerkData[];
 }
 
 export interface ClientHumanPlayer {
   type: "human";
   name: string;
   playerId: number;
+  skilledPerks: SkilledPerkData[];
 }
 
 export interface ClientObserver {
@@ -40,10 +43,24 @@ export interface ClientObserver {
 
 export type ClientLobbyPlayer = ClientAiPlayer | ClientHumanPlayer;
 
+export interface PerkData {
+  name: string;
+}
+
+export interface SkillData {
+  name: string;
+  perks: PerkData[];
+}
+
+export interface SkillTreeData {
+  skills: SkillData[];
+}
+
 export interface ClientLobbyState {
   players: ClientLobbyPlayer[];
   observers: ClientObserver[];
   map: SpreadMap | null;
+  skillTree: SkillTreeData;
   gameSettings: GameSettings;
 }
 

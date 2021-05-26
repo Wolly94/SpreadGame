@@ -1,5 +1,6 @@
-import { ClientLobbyMessage } from "../../messages/inGame/clientLobbyMessage";
+import { ClientLobbyMessage, SkilledPerkData } from "../../messages/inGame/clientLobbyMessage";
 import { GameSettings, GameServerMessage, LobbyStateMessage, ServerLobbyMessage, SetPlayerIdMessage } from "../../messages/inGame/gameServerMessages";
+import { SkillTree } from "../../skilltree/skilltree";
 import { SpreadMap } from "../../spreadGame/map/map";
 import { AiPlayer, PlayerData, RegisteredToken, SeatedPlayer } from "./common";
 import InGameImplementation, { InGame } from "./inGame";
@@ -24,9 +25,11 @@ declare class LobbyImplementation implements Lobby {
     gameSettings: GameSettings;
     seatedPlayers: SeatedPlayer[];
     unseatedPlayers: RegisteredToken[];
+    skillTree: SkillTree;
     constructor();
     startGame(): InGameImplementation | null;
     onReceiveMessage(token: string, message: ClientLobbyMessage): [boolean, ServerLobbyMessage | null];
+    setSkillTree(token: string, data: SkilledPerkData[]): void;
     updateClientsMessage(): LobbyStateMessage;
     clearAiSeat(playerId: number): AiPlayer | null;
     takeSeat(token: string, playerId: number): SetPlayerIdMessage | null;

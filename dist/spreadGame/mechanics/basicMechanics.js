@@ -2,14 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var commonMechanics_1 = require("./commonMechanics");
 var basicMechanics = {
-    collideBubble: function (bubble1, bubble2, fightModifier) {
+    collideBubble: function (bubble1, bubble2, f1, f2) {
         if (commonMechanics_1.centerOverlap(bubble1, bubble2) < commonMechanics_1.calculationAccuracy)
             return [bubble1, bubble2];
         // TODO modify 'this' accordingly
         // return
         if (bubble1.playerId === bubble2.playerId)
             return [bubble1, bubble2];
-        var result = commonMechanics_1.fight(bubble1.units, bubble2.units, 1.0, 1.0);
+        var result = commonMechanics_1.fight(bubble1.units, bubble2.units, f1.attackModifier, f2.attackModifier);
         if (Math.abs(result) < commonMechanics_1.calculationAccuracy) {
             return [null, null];
         }
@@ -24,14 +24,14 @@ var basicMechanics = {
             return [null, bubble2];
         }
     },
-    collideCell: function (bubble, cell, fightModifier) {
+    collideCell: function (bubble, cell, f1, f2) {
         if (commonMechanics_1.centerOverlap(bubble, cell) < commonMechanics_1.calculationAccuracy)
             return bubble;
         if (bubble.playerId === cell.playerId) {
             commonMechanics_1.reinforceCell(cell, bubble.units);
         }
         else {
-            var result = commonMechanics_1.fight(bubble.units, cell.units, 1.0, 1.0);
+            var result = commonMechanics_1.fight(bubble.units, cell.units, f1.attackModifier, f2.attackModifier);
             commonMechanics_1.takeOverCell(cell, result, bubble.playerId);
         }
         return null;

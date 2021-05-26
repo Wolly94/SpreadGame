@@ -28,12 +28,13 @@ export type PerkEffect = GetFightProps;
 
 export type GeneralPerk = Perk<number | string>;
 
-export interface SkilledPerks {
+export interface SkilledPerk {
   perk: GeneralPerk;
   level: number;
 }
 
 export interface Skill {
+  name: string;
   perks: GeneralPerk[];
 }
 
@@ -43,7 +44,7 @@ export interface SkillTree {
 
 export const validSkillTree = (
   skillTree: SkillTree,
-  skilledPerks: SkilledPerks[]
+  skilledPerks: SkilledPerk[]
 ) => {
   return true;
 };
@@ -54,11 +55,11 @@ export interface Perk<TValue> {
   effect: PerkEffect[];
   values: TValue[];
   description: string;
-  skillable: (skillTree: SkillTree, skilledPerks: SkilledPerks[]) => boolean;
+  skillable: (skillTree: SkillTree, skilledPerks: SkilledPerk[]) => boolean;
 }
 
 export const skillTreeMethods = {
-  getAttackerModifier: (skilledPerks: SkilledPerks[]) => {
+  getAttackerModifier: (skilledPerks: SkilledPerk[]) => {
     var attackModifier = 0;
     skilledPerks.forEach((skilledPerk) => {
       skilledPerk.perk.effect
