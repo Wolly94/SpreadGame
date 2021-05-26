@@ -1,3 +1,4 @@
+import { SkilledPerks, SkillTree } from "../../skilltree/skilltree";
 import { getPlayerIds, SpreadMap } from "../../spreadGame/map/map";
 
 export interface PlayerData {
@@ -12,6 +13,7 @@ export interface RegisteredToken {
 export interface AiPlayer {
   type: "ai";
   playerId: number;
+  skilledPerks: SkilledPerks[];
 }
 
 export interface HumanPlayer {
@@ -19,6 +21,7 @@ export interface HumanPlayer {
   token: string;
   playerId: number;
   playerData: PlayerData;
+  skilledPerks: SkilledPerks[];
 }
 
 export type SeatedPlayer = AiPlayer | HumanPlayer;

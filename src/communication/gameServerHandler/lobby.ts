@@ -11,6 +11,7 @@ import {
   ClientLobbyState,
   SetPlayerIdMessage,
 } from "../../messages/inGame/gameServerMessages";
+import { defaultSkillTree, SkillTree } from "../../skilltree/skilltree";
 import { SpreadMap, getPlayerIds } from "../../spreadGame/map/map";
 import {
   AiPlayer,
@@ -53,12 +54,14 @@ class LobbyImplementation implements Lobby {
   gameSettings: GameSettings;
   seatedPlayers: SeatedPlayer[];
   unseatedPlayers: RegisteredToken[];
+  skillTree: SkillTree;
 
   constructor() {
     this.map = null;
     this.gameSettings = { mechanics: "basic" };
     this.seatedPlayers = [];
     this.unseatedPlayers = [];
+    this.skillTree = defaultSkillTree;
   }
 
   startGame() {
@@ -177,6 +180,7 @@ class LobbyImplementation implements Lobby {
         token: token,
         playerId: playerId,
         playerData: this.unseatedPlayers[unseatedIndex].playerData,
+        skilledPerks: [],
       });
     }
     const setPlayerIdMessage: SetPlayerIdMessage = {
@@ -200,6 +204,7 @@ class LobbyImplementation implements Lobby {
       const ai: AiPlayer = {
         playerId: playerId,
         type: "ai",
+        skilledPerks: [],
       };
       this.seatedPlayers.push(ai);
     }
@@ -230,6 +235,7 @@ class LobbyImplementation implements Lobby {
       playerId: playerId,
       token: token,
       playerData: this.unseatedPlayers[unseatedIndex].playerData,
+      skilledPerks: [],
     };
     this.seatedPlayers.push(newSeated);
     this.unseatedPlayers.splice(unseatedIndex, 1);

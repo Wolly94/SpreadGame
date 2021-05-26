@@ -3,24 +3,26 @@ import { formatDescription } from "../utils";
 
 const values = [10, 20, 30];
 
-const Base: Perk<number> = {
+export const BaseAttack: Perk<number> = {
   name: "Base",
   values: values,
   description:
-    "Raises damage of your cells by " +
+    "Raises damage of your bubbles by " +
     formatDescription(values, (val) => val.toString() + "%", "/") +
     ".",
   effect: [
     {
       type: "FightEffect",
-      getValue: (ev, lvl) => {
-        return values[lvl];
+      getValue: (lvl) => {
+        if (lvl <= 0) return { attackModifier: 0 };
+        else
+          return { attackModifier: values[Math.min(lvl, values.length) - 1] };
       },
     },
   ],
-  skillable: () => true,
+  skillable: (skilltree, skilledPerks) => true,
 };
 
-const Attack: Skill = {
-  perks: [Base],
+export const Attack: Skill = {
+  perks: [BaseAttack],
 };

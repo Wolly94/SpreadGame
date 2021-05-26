@@ -4,7 +4,7 @@ import {
 } from "../../messages/inGame/gameClientMessages";
 import { GameServerMessage } from "../../messages/inGame/gameServerMessages";
 import { ServerCommunication } from "../ServerCommunication";
-import { idFromToken, PlayerData } from "./common";
+import { PlayerData } from "./common";
 import { InGame } from "./inGame";
 import LobbyImplementation, { Lobby } from "./lobby";
 

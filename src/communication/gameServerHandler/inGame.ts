@@ -19,7 +19,7 @@ import {
   SendUnitsMove,
 } from "../../messages/replay/replay";
 import { SendReplayMessage } from "../../messages/replay/serverReplayMessages";
-import { SpreadGameImplementation } from "../../spreadGame";
+import { Player, SpreadGameImplementation } from "../../spreadGame";
 import { SpreadMap } from "../../spreadGame/map/map";
 import { SpreadGame } from "../../spreadGame/spreadGame";
 import { SeatedPlayer, AiPlayer, idFromToken, PlayerData } from "./common";
@@ -69,12 +69,15 @@ class InGameImplementation implements InGame {
     this.intervalId = null;
     this.map = map;
     this.gameSettings = settings;
+    const players: Player[] = seatedPlayers.map((sp) => {
+      return { id: sp.playerId, skills: sp.skilledPerks };
+    });
     if (settings.mechanics === "basic") {
-      this.gameState = new SpreadGameImplementation(map, settings);
+      this.gameState = new SpreadGameImplementation(map, settings, players);
     } else if (settings.mechanics === "scrapeoff") {
-      this.gameState = new SpreadGameImplementation(map, settings);
+      this.gameState = new SpreadGameImplementation(map, settings, players);
     } else if (settings.mechanics === "bounce") {
-      this.gameState = new SpreadGameImplementation(map, settings);
+      this.gameState = new SpreadGameImplementation(map, settings, players);
     } else throw Error("unregistered mechanics");
     this.moveHistory = [];
     this.seatedPlayers = seatedPlayers;

@@ -1,6 +1,7 @@
 import { ClientGameState } from "../messages/inGame/clientGameState";
 import { GameSettings } from "../messages/inGame/gameServerMessages";
 import SpreadReplay, { HistoryEntry, Move } from "../messages/replay/replay";
+import { skillTreeMethods } from "../skilltree/skilltree";
 import Bubble from "./bubble";
 import Cell from "./cell";
 import { SpreadMap, getPlayerIds } from "./map/map";
@@ -54,8 +55,8 @@ export class SpreadGameImplementation implements SpreadGame {
   mechanics: SpreadGameMechanics;
   timePassed: number;
 
-  constructor(map: SpreadMap, gameSettings: GameSettings) {
-    const players = getPlayerIds(map);
+  constructor(map: SpreadMap, gameSettings: GameSettings, players: Player[]) {
+    //const players = getPlayerIds(map);
     this.gameSettings = gameSettings;
     this.mechanics = getMechanics(gameSettings);
     this.map = map;
@@ -70,9 +71,7 @@ export class SpreadGameImplementation implements SpreadGame {
       return cell;
     });
     this.bubbles = [];
-    this.players = Array.from(players).map((id) => {
-      return { id: id };
-    });
+    this.players = players;
     this.timePassed = 0;
     this.pastMoves = [];
   }
@@ -110,14 +109,26 @@ export class SpreadGameImplementation implements SpreadGame {
   collideBubblesWithBubbles() {
     var remainingBubbles: Bubble[] = [];
     this.bubbles.forEach((bubble) => {
+      const st1 = this.players.find((pl) => pl.id === bubble.playerId);
+      const f1 =
+        st1 === undefined
+          ? { attackModifier: 1.0 }
+          : skillTreeMethods.getAttackerModifier(st1.skills);
+
       var currentBubble: Bubble | null = bubble;
       remainingBubbles = remainingBubbles.filter((bubble2) => {
         if (currentBubble != null) {
+          const st2 = this.players.find((pl) => pl.id === bubble2.playerId);
+          const f2 =
+            st2 === undefined
+              ? { attackModifier: 1.0 }
+              : skillTreeMethods.getAttackerModifier(st2.skills);
+
           const [rem1, rem2] = this.mechanics.collideBubble(
             bubble2,
             currentBubble,
-            { attackModifier: 1.0 },
-            { attackModifier: 1.0 }
+            f2,
+            f1
           );
           currentBubble = rem2;
           return rem1 !== null;
@@ -132,6 +143,12 @@ export class SpreadGameImplementation implements SpreadGame {
   collideBubblesWithCells() {
     var remainingBubbles: Bubble[] = [];
     this.bubbles.forEach((bubble) => {
+      const st1 = this.players.find((pl) => pl.id === bubble.playerId);
+      const f1 =
+        st1 === undefined
+          ? { attackModifier: 1.0 }
+          : skillTreeMethods.getAttackerModifier(st1.skills);
+
       var currentBubble: Bubble | null = bubble;
       this.cells.forEach((cell) => {
         if (
@@ -139,12 +156,9 @@ export class SpreadGameImplementation implements SpreadGame {
           (currentBubble.motherId !== cell.id ||
             currentBubble.playerId !== cell.playerId)
         ) {
-          currentBubble = this.mechanics.collideCell(
-            currentBubble,
-            cell,
-            { attackModifier: 1.0 },
-            { attackModifier: 1.0 }
-          );
+          currentBubble = this.mechanics.collideCell(currentBubble, cell, f1, {
+            attackModifier: 1.0,
+          });
         }
       });
       if (currentBubble != null) {

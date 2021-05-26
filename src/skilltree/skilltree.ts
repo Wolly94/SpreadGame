@@ -1,35 +1,52 @@
-import { HistoryEntry } from "../messages/replay/replay";
 import Bubble from "../spreadGame/bubble";
 import Cell from "../spreadGame/cell";
-import { FightProps, SpreadGame } from "../spreadGame/spreadGame";
+import { FightProps } from "../spreadGame/spreadGame";
+import { Attack } from "./attack/attack";
 
 export interface FightEvent {
   type: "FightEvent";
-  attackerId: number;
-  defender: {
-    type: "Bubble" | "Cell";
-    id: number;
-  };
+  attacker: Bubble;
+  opponent:
+    | {
+        type: "Bubble";
+        val: Bubble;
+      }
+    | {
+        type: "Cell";
+        val: Cell;
+      };
 }
 
 export type SpreadGameEvent = FightEvent;
 
 export interface GetFightProps {
   type: "FightEffect";
-  getValue: (event: FightEvent, level: number) => number; //eventHistory: HistoryEntry<SpreadGameEvent>[]) => number;
+  getValue: (level: number) => FightProps; //eventHistory: HistoryEntry<SpreadGameEvent>[]) => number;
 }
 
 export type PerkEffect = GetFightProps;
 
-type GeneralPerk = Perk<number | string>;
+export type GeneralPerk = Perk<number | string>;
 
-export interface SkillTree {
-  skilledPerks: [number, GeneralPerk][];
+export interface SkilledPerks {
+  perk: GeneralPerk;
+  level: number;
 }
 
 export interface Skill {
-  perks: Perk<number | string>[];
+  perks: GeneralPerk[];
 }
+
+export interface SkillTree {
+  skills: Skill[];
+}
+
+export const validSkillTree = (
+  skillTree: SkillTree,
+  skilledPerks: SkilledPerks[]
+) => {
+  return true;
+};
 
 export interface Perk<TValue> {
   name: string;
@@ -37,12 +54,37 @@ export interface Perk<TValue> {
   effect: PerkEffect[];
   values: TValue[];
   description: string;
-  skillable: (currentSkillTree: SkillTree) => boolean;
+  skillable: (skillTree: SkillTree, skilledPerks: SkilledPerks[]) => boolean;
 }
 
-export interface SkillTreeFunctions {
-  calculateAttackModifiers: (
-    spreadGame: SpreadGame,
-    entity: Bubble | Cell
-  ) => FightProps;
-}
+export const skillTreeMethods = {
+  getAttackerModifier: (skilledPerks: SkilledPerks[]) => {
+    var attackModifier = 0;
+    skilledPerks.forEach((skilledPerk) => {
+      skilledPerk.perk.effect
+        .filter((p): p is GetFightProps => p.type === "FightEffect")
+        .forEach((eff) => {
+          attackModifier += eff.getValue(skilledPerk.level).attackModifier;
+        });
+    });
+    return { attackModifier: 1 + attackModifier / 100 };
+  },
+};
+
+export const defaultSkillTree: SkillTree = {
+  skills: [Attack],
+};
+
+export const fullSkillTree: SkillTree = {
+  skills: [Attack],
+};
+
+export const allPerks: GeneralPerk[] = fullSkillTree.skills.flatMap(
+  (sk) => sk.perks
+);
+
+export const getPerkByName = (name: string) => {
+  const perk = allPerks.find((p) => p.name === name);
+  if (perk === undefined) return null;
+  else return perk;
+};
