@@ -144,7 +144,8 @@ var InGameImplementation = /** @class */ (function () {
         this.intervalId = setInterval(function () {
             if (_this.gameState !== null) {
                 _this.gameState.step(ms);
-                updateCallback(_this.getGameStateMessage());
+                var message = _this.getGameStateMessage();
+                updateCallback(message);
                 _this.applyAiMoves();
             }
         }, ms);

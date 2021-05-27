@@ -210,7 +210,8 @@ class InGameImplementation implements InGame {
     this.intervalId = setInterval(() => {
       if (this.gameState !== null) {
         this.gameState.step(ms);
-        updateCallback(this.getGameStateMessage());
+        const message = this.getGameStateMessage();
+        updateCallback(message);
         this.applyAiMoves();
       }
     }, ms);
