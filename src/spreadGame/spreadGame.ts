@@ -202,6 +202,7 @@ export class SpreadGameImplementation implements SpreadGame {
 
   toClientGameState() {
     const gs: ClientGameState = {
+      timePassedInMs: this.timePassed,
       cells: this.cells.map((cell) => {
         return {
           id: cell.id,
