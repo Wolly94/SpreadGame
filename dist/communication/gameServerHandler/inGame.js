@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var ai_1 = require("../../ai/ai");
 var aiClient_1 = __importDefault(require("../../ai/aiClient"));
+var skilltree_1 = require("../../skilltree/skilltree");
 var spreadGame_1 = require("../../spreadGame");
 var common_1 = require("./common");
 var updateFrequencyInMs = 20;
@@ -76,9 +77,7 @@ var InGameImplementation = /** @class */ (function () {
             }),
         };
         var players = this.seatedPlayers.map(function (sp) {
-            var skilledPerks = sp.skilledPerks.map(function (p) {
-                return { name: p.perk.name, level: p.level };
-            });
+            var skilledPerks = skilltree_1.skillTreeMethods.toSkilledPerkData(sp.skilledPerks);
             if (sp.type === "ai") {
                 var aip = {
                     type: "ai",

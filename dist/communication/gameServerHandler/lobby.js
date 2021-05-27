@@ -71,18 +71,7 @@ var LobbyImplementation = /** @class */ (function () {
         var pIndex = this.seatedPlayers.findIndex(function (sp) { return sp.type === "human" && sp.token === token; });
         if (pIndex < 0)
             return;
-        var skilledPerks = data.flatMap(function (sp) {
-            var perk = skilltree_1.getPerkByName(sp.name);
-            if (perk === null)
-                return [];
-            else
-                return [
-                    {
-                        level: sp.level,
-                        perk: perk,
-                    },
-                ];
-        });
+        var skilledPerks = skilltree_1.skillTreeMethods.toSkilledPerks(data);
         this.seatedPlayers[pIndex].skilledPerks = skilledPerks;
     };
     LobbyImplementation.prototype.updateClientsMessage = function () {
@@ -98,9 +87,7 @@ var LobbyImplementation = /** @class */ (function () {
         };
         // later add list of unseatedPlayers to lobby and inGame to let them also be displayed on website
         var players = this.seatedPlayers.map(function (sp) {
-            var skilledPerks = sp.skilledPerks.map(function (p) {
-                return { name: p.perk.name, level: p.level };
-            });
+            var skilledPerks = skilltree_1.skillTreeMethods.toSkilledPerkData(sp.skilledPerks);
             if (sp.type === "ai") {
                 var aip = {
                     type: "ai",

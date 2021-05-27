@@ -1,3 +1,5 @@
+import { SkilledPerkData } from "../messages/inGame/clientLobbyMessage";
+import { SkillTreeData } from "../messages/inGame/gameServerMessages";
 import Bubble from "../spreadGame/bubble";
 import Cell from "../spreadGame/cell";
 import { FightProps } from "../spreadGame/spreadGame";
@@ -39,6 +41,10 @@ export interface Perk<TValue> {
     skillable: (skillTree: SkillTree, skilledPerks: SkilledPerk[]) => boolean;
 }
 export declare const skillTreeMethods: {
+    toData: (skillTree: SkillTree) => SkillTreeData;
+    fromData: (skillTreeData: SkillTreeData) => SkillTree;
+    toSkilledPerks: (skilledPerkData: SkilledPerkData[]) => SkilledPerk[];
+    toSkilledPerkData: (skilledPerks: SkilledPerk[]) => SkilledPerkData[];
     getAttackerModifier: (skilledPerks: SkilledPerk[]) => {
         attackModifier: number;
     };
@@ -46,4 +52,5 @@ export declare const skillTreeMethods: {
 export declare const defaultSkillTree: SkillTree;
 export declare const fullSkillTree: SkillTree;
 export declare const allPerks: GeneralPerk[];
+export declare const getSkillByName: (name: string) => Skill | null;
 export declare const getPerkByName: (name: string) => GeneralPerk | null;

@@ -21,6 +21,7 @@ import {
   getPerkByName,
   SkilledPerk,
   SkillTree,
+  skillTreeMethods,
 } from "../../skilltree/skilltree";
 import { SpreadMap, getPlayerIds } from "../../spreadGame/map/map";
 import {
@@ -126,17 +127,7 @@ class LobbyImplementation implements Lobby {
     );
     if (pIndex < 0) return;
 
-    const skilledPerks: SkilledPerk[] = data.flatMap((sp) => {
-      const perk = getPerkByName(sp.name);
-      if (perk === null) return [];
-      else
-        return [
-          {
-            level: sp.level,
-            perk: perk,
-          },
-        ];
-    });
+    const skilledPerks = skillTreeMethods.toSkilledPerks(data);
     this.seatedPlayers[pIndex].skilledPerks = skilledPerks;
   }
 
@@ -155,11 +146,7 @@ class LobbyImplementation implements Lobby {
     };
     // later add list of unseatedPlayers to lobby and inGame to let them also be displayed on website
     const players: ClientLobbyPlayer[] = this.seatedPlayers.map((sp) => {
-      const skilledPerks = sp.skilledPerks.map(
-        (p): SkilledPerkData => {
-          return { name: p.perk.name, level: p.level };
-        }
-      );
+      const skilledPerks = skillTreeMethods.toSkilledPerkData(sp.skilledPerks);
       if (sp.type === "ai") {
         const aip: ClientAiPlayer = {
           type: "ai",

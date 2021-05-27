@@ -143,11 +143,7 @@ class InGameImplementation implements InGame {
       ),
     };
     const players: ClientLobbyPlayer[] = this.seatedPlayers.map((sp) => {
-      const skilledPerks = sp.skilledPerks.map(
-        (p): SkilledPerkData => {
-          return { name: p.perk.name, level: p.level };
-        }
-      );
+      const skilledPerks = skillTreeMethods.toSkilledPerkData(sp.skilledPerks);
       if (sp.type === "ai") {
         const aip: ClientAiPlayer = {
           type: "ai",
