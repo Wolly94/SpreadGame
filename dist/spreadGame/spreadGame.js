@@ -151,6 +151,7 @@ var SpreadGameImplementation = /** @class */ (function () {
     };
     SpreadGameImplementation.prototype.toClientGameState = function () {
         var gs = {
+            timePassedInMs: this.timePassed,
             cells: this.cells.map(function (cell) {
                 return {
                     id: cell.id,

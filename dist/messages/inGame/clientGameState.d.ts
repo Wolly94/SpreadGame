@@ -13,6 +13,7 @@ export interface ClientCell {
     radius: number;
 }
 export interface ClientGameState {
+    timePassedInMs: number;
     cells: ClientCell[];
     bubbles: ClientBubble[];
 }
