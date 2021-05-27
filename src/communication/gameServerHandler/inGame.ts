@@ -28,8 +28,6 @@ import { SpreadMap } from "../../spreadGame/map/map";
 import { SpreadGame } from "../../spreadGame/spreadGame";
 import { SeatedPlayer, AiPlayer, idFromToken, PlayerData } from "./common";
 
-const updateFrequencyInMs = 50;
-
 interface InGameState {
   type: "ingame";
   map: SpreadMap;
@@ -206,7 +204,7 @@ class InGameImplementation implements InGame {
   }
 
   startGame(updateCallback: (msg: GameStateMessage) => void) {
-    const ms = updateFrequencyInMs;
+    const ms = this.gameSettings.updateFrequencyInMs;
     this.intervalId = setInterval(() => {
       if (this.gameState !== null) {
         this.gameState.step(ms);
