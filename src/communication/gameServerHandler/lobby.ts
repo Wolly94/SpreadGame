@@ -115,19 +115,40 @@ class LobbyImplementation implements Lobby {
       return [true, null];
     } else if (message.type === "setskilledperks") {
       this.setSkillTree(token, message.data);
-      return [false, null];
+      return [true, null];
+    } else if (message.type === "setaiskilledperks") {
+      this.setAiSkillTree(
+        token,
+        message.data.skilledPerkData,
+        message.data.playerId
+      );
+      return [true, null];
     } else {
       return [false, null];
     }
   }
 
-  setSkillTree(token: string, data: SkilledPerkData[]) {
+  setAiSkillTree(
+    token: string,
+    skilledPerkData: SkilledPerkData[],
+    playerId: number
+  ) {
+    const pIndex = this.seatedPlayers.findIndex(
+      (sp) => sp.type === "ai" && sp.playerId === playerId
+    );
+    if (pIndex < 0) return;
+
+    const skilledPerks = skillTreeMethods.toSkilledPerks(skilledPerkData);
+    this.seatedPlayers[pIndex].skilledPerks = skilledPerks;
+  }
+
+  setSkillTree(token: string, skilledPerkData: SkilledPerkData[]) {
     const pIndex = this.seatedPlayers.findIndex(
       (sp) => sp.type === "human" && sp.token === token
     );
     if (pIndex < 0) return;
 
-    const skilledPerks = skillTreeMethods.toSkilledPerks(data);
+    const skilledPerks = skillTreeMethods.toSkilledPerks(skilledPerkData);
     this.seatedPlayers[pIndex].skilledPerks = skilledPerks;
   }
 

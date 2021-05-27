@@ -38,4 +38,11 @@ export interface SetSkilledPerksMessage {
     type: "setskilledperks";
     data: SkilledPerkData[];
 }
-export declare type ClientLobbyMessage = SetMapMessage | StartGameMessage | TakeSeatMessage | SeatAiMessage | ClearSeatMessage | SetGameSettingsMessage | SetSkilledPerksMessage;
+export interface SetAiSkilledPerksMessage {
+    type: "setaiskilledperks";
+    data: {
+        skilledPerkData: SkilledPerkData[];
+        playerId: number;
+    };
+}
+export declare type ClientLobbyMessage = SetMapMessage | StartGameMessage | TakeSeatMessage | SeatAiMessage | ClearSeatMessage | SetGameSettingsMessage | SetSkilledPerksMessage | SetAiSkilledPerksMessage;

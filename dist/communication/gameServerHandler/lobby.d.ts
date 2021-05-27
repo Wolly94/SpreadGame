@@ -29,7 +29,8 @@ declare class LobbyImplementation implements Lobby {
     constructor();
     startGame(): InGameImplementation | null;
     onReceiveMessage(token: string, message: ClientLobbyMessage): [boolean, ServerLobbyMessage | null];
-    setSkillTree(token: string, data: SkilledPerkData[]): void;
+    setAiSkillTree(token: string, skilledPerkData: SkilledPerkData[], playerId: number): void;
+    setSkillTree(token: string, skilledPerkData: SkilledPerkData[]): void;
     updateClientsMessage(): LobbyStateMessage;
     clearAiSeat(playerId: number): AiPlayer | null;
     takeSeat(token: string, playerId: number): SetPlayerIdMessage | null;

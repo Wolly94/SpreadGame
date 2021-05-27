@@ -61,17 +61,28 @@ var LobbyImplementation = /** @class */ (function () {
         }
         else if (message.type === "setskilledperks") {
             this.setSkillTree(token, message.data);
-            return [false, null];
+            return [true, null];
+        }
+        else if (message.type === "setaiskilledperks") {
+            this.setAiSkillTree(token, message.data.skilledPerkData, message.data.playerId);
+            return [true, null];
         }
         else {
             return [false, null];
         }
     };
-    LobbyImplementation.prototype.setSkillTree = function (token, data) {
+    LobbyImplementation.prototype.setAiSkillTree = function (token, skilledPerkData, playerId) {
+        var pIndex = this.seatedPlayers.findIndex(function (sp) { return sp.type === "ai" && sp.playerId === playerId; });
+        if (pIndex < 0)
+            return;
+        var skilledPerks = skilltree_1.skillTreeMethods.toSkilledPerks(skilledPerkData);
+        this.seatedPlayers[pIndex].skilledPerks = skilledPerks;
+    };
+    LobbyImplementation.prototype.setSkillTree = function (token, skilledPerkData) {
         var pIndex = this.seatedPlayers.findIndex(function (sp) { return sp.type === "human" && sp.token === token; });
         if (pIndex < 0)
             return;
-        var skilledPerks = skilltree_1.skillTreeMethods.toSkilledPerks(data);
+        var skilledPerks = skilltree_1.skillTreeMethods.toSkilledPerks(skilledPerkData);
         this.seatedPlayers[pIndex].skilledPerks = skilledPerks;
     };
     LobbyImplementation.prototype.updateClientsMessage = function () {
