@@ -82,6 +82,7 @@ export class SpreadGameImplementation implements SpreadGame {
       gameSettings: this.gameSettings,
       moveHistory: this.pastMoves,
       players: this.players,
+      lengthInMs: this.timePassed,
     };
     return rep;
   }

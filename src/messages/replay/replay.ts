@@ -24,6 +24,7 @@ interface SpreadReplay {
   gameSettings: GameSettings;
   moveHistory: HistoryEntry<Move>[];
   players: Player[];
+  lengthInMs: number;
 }
 
 export default SpreadReplay;

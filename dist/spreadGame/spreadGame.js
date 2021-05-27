@@ -42,6 +42,7 @@ var SpreadGameImplementation = /** @class */ (function () {
             gameSettings: this.gameSettings,
             moveHistory: this.pastMoves,
             players: this.players,
+            lengthInMs: this.timePassed,
         };
         return rep;
     };
