@@ -8,7 +8,7 @@ var aiClient_1 = __importDefault(require("../../ai/aiClient"));
 var skilltree_1 = require("../../skilltree/skilltree");
 var spreadGame_1 = require("../../spreadGame");
 var common_1 = require("./common");
-var updateFrequencyInMs = 20;
+var updateFrequencyInMs = 50;
 var InGameImplementation = /** @class */ (function () {
     function InGameImplementation(map, settings, seatedPlayers, skillTree) {
         this.type = "ingame";

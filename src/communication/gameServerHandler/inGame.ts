@@ -28,7 +28,7 @@ import { SpreadMap } from "../../spreadGame/map/map";
 import { SpreadGame } from "../../spreadGame/spreadGame";
 import { SeatedPlayer, AiPlayer, idFromToken, PlayerData } from "./common";
 
-const updateFrequencyInMs = 20;
+const updateFrequencyInMs = 50;
 
 interface InGameState {
   type: "ingame";
