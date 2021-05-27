@@ -26,6 +26,7 @@ test("bubble collision", function () {
     ];
     var gameState = new spreadGame_1.SpreadGameImplementation(createMapHelper(cells), {
         mechanics: "basic",
+        updateFrequencyInMs: 50,
     }, [
         { id: 0, skills: [] },
         { id: 1, skills: [] },
@@ -46,6 +47,7 @@ test("bubble collision with attack modifier", function () {
         new cell_1.default(1, 1, [400, 500], 50, 50),
     ];
     var gameState = new spreadGame_1.SpreadGameImplementation(createMapHelper(cells), {
+        updateFrequencyInMs: 50,
         mechanics: "basic",
     }, [
         {

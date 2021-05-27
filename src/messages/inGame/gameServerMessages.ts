@@ -15,6 +15,7 @@ export const toGameMechanics = (s: string): GameMechanics | null => {
 
 export interface GameSettings {
   mechanics: GameMechanics;
+  updateFrequencyInMs: number;
 }
 
 export interface SetPlayerIdMessage {

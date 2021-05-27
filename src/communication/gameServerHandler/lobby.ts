@@ -69,7 +69,7 @@ class LobbyImplementation implements Lobby {
 
   constructor() {
     this.map = null;
-    this.gameSettings = { mechanics: "basic" };
+    this.gameSettings = { mechanics: "basic", updateFrequencyInMs: 25 };
     this.seatedPlayers = [];
     this.unseatedPlayers = [];
     this.skillTree = defaultSkillTree;

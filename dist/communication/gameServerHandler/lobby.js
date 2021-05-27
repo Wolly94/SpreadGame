@@ -18,7 +18,7 @@ var LobbyImplementation = /** @class */ (function () {
     function LobbyImplementation() {
         this.type = "lobby";
         this.map = null;
-        this.gameSettings = { mechanics: "basic" };
+        this.gameSettings = { mechanics: "basic", updateFrequencyInMs: 25 };
         this.seatedPlayers = [];
         this.unseatedPlayers = [];
         this.skillTree = skilltree_1.defaultSkillTree;

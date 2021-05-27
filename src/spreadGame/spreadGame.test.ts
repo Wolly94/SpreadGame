@@ -30,6 +30,7 @@ test("bubble collision", () => {
     createMapHelper(cells),
     {
       mechanics: "basic",
+      updateFrequencyInMs: 50,
     },
     [
       { id: 0, skills: [] },
@@ -55,6 +56,7 @@ test("bubble collision with attack modifier", () => {
   const gameState = new SpreadGameImplementation(
     createMapHelper(cells),
     {
+      updateFrequencyInMs: 50,
       mechanics: "basic",
     },
     [

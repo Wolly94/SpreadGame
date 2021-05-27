@@ -7,6 +7,7 @@ export declare const gameMechs: GameMechanics[];
 export declare const toGameMechanics: (s: string) => "bounce" | "basic" | "scrapeoff" | null;
 export interface GameSettings {
     mechanics: GameMechanics;
+    updateFrequencyInMs: number;
 }
 export interface SetPlayerIdMessage {
     type: "playerid";
