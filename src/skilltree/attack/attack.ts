@@ -21,7 +21,10 @@ const replay: SpreadReplay = {
   gameSettings: { mechanics: "basic", updateFrequencyInMs: 25 },
   lengthInMs: 5000,
   map: simpleMap,
-  players: [{ id: 0, skills: [{ name: name, level: 3 }] }],
+  players: [
+    { id: 0, skills: [{ name: name, level: 3 }] },
+    { id: 1, skills: [] },
+  ],
   moveHistory: [
     {
       timestamp: 0,
