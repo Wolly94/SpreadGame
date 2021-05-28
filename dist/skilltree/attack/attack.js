@@ -9,7 +9,7 @@ var simpleMap = {
     cells: [
         { id: 0, playerId: 0, position: [100, 100], radius: 50, units: 100 },
         { id: 1, playerId: 1, position: [400, 100], radius: 50, units: 50 },
-        { id: 2, playerId: 1, position: [250, 400], radius: 50, units: 100 },
+        { id: 2, playerId: 1, position: [250, 400], radius: 50, units: 50 },
     ],
     players: 2,
 };
