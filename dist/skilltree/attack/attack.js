@@ -8,7 +8,8 @@ var simpleMap = {
     height: 500,
     cells: [
         { id: 0, playerId: 0, position: [100, 100], radius: 50, units: 100 },
-        { id: 1, playerId: 1, position: [400, 400], radius: 50, units: 60 },
+        { id: 1, playerId: 1, position: [400, 100], radius: 50, units: 50 },
+        { id: 2, playerId: 1, position: [250, 400], radius: 50, units: 100 },
     ],
     players: 2,
 };
@@ -30,6 +31,13 @@ var replay = {
             data: {
                 type: "sendunitsmove",
                 data: { playerId: 1, senderIds: [1], receiverId: 0 },
+            },
+        },
+        {
+            timestamp: 1000,
+            data: {
+                type: "sendunitsmove",
+                data: { playerId: 0, senderIds: [0], receiverId: 2 },
             },
         },
     ],
