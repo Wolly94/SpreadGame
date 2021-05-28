@@ -1,5 +1,5 @@
 import { SpreadMap } from "../../spreadGame/map/map";
-import Player from "../../spreadGame/player";
+import { PlayerData } from "../../spreadGame/player";
 import { GameSettings } from "../inGame/gameServerMessages";
 export interface SendUnitsMove {
     type: "sendunitsmove";
@@ -18,7 +18,7 @@ interface SpreadReplay {
     map: SpreadMap;
     gameSettings: GameSettings;
     moveHistory: HistoryEntry<Move>[];
-    players: Player[];
+    players: PlayerData[];
     lengthInMs: number;
 }
 export default SpreadReplay;

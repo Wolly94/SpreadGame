@@ -9,7 +9,7 @@ import basicMechanics from "./mechanics/basicMechanics";
 import bounceMechanics from "./mechanics/bounceMechanics";
 import { SpreadGameMechanics } from "./mechanics/commonMechanics";
 import scrapeOffMechanics from "./mechanics/scrapeOffMechanics";
-import Player from "./player";
+import Player, { dataFromPlayer } from "./player";
 
 const getMechanics = (settings: GameSettings): SpreadGameMechanics => {
   if (settings.mechanics === "basic") {
@@ -81,7 +81,7 @@ export class SpreadGameImplementation implements SpreadGame {
       map: this.map,
       gameSettings: this.gameSettings,
       moveHistory: this.pastMoves,
-      players: this.players,
+      players: this.players.map((pl) => dataFromPlayer(pl)),
       lengthInMs: this.timePassed,
     };
     return rep;

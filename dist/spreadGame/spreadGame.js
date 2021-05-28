@@ -8,6 +8,7 @@ var cell_1 = __importDefault(require("./cell"));
 var basicMechanics_1 = __importDefault(require("./mechanics/basicMechanics"));
 var bounceMechanics_1 = __importDefault(require("./mechanics/bounceMechanics"));
 var scrapeOffMechanics_1 = __importDefault(require("./mechanics/scrapeOffMechanics"));
+var player_1 = require("./player");
 var getMechanics = function (settings) {
     if (settings.mechanics === "basic") {
         return basicMechanics_1.default;
@@ -41,7 +42,7 @@ var SpreadGameImplementation = /** @class */ (function () {
             map: this.map,
             gameSettings: this.gameSettings,
             moveHistory: this.pastMoves,
-            players: this.players,
+            players: this.players.map(function (pl) { return player_1.dataFromPlayer(pl); }),
             lengthInMs: this.timePassed,
         };
         return rep;

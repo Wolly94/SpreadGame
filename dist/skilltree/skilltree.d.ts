@@ -1,5 +1,6 @@
 import { SkilledPerkData } from "../messages/inGame/clientLobbyMessage";
 import { SkillTreeData } from "../messages/inGame/gameServerMessages";
+import SpreadReplay from "../messages/replay/replay";
 import Bubble from "../spreadGame/bubble";
 import Cell from "../spreadGame/cell";
 import { FightProps } from "../spreadGame/spreadGame";
@@ -38,7 +39,7 @@ export interface Perk<TValue> {
     effect: PerkEffect[];
     values: TValue[];
     description: string;
-    skillable: (skillTree: SkillTree, skilledPerks: SkilledPerk[]) => boolean;
+    replay: SpreadReplay;
 }
 export declare const skillTreeMethods: {
     toData: (skillTree: SkillTree) => SkillTreeData;
