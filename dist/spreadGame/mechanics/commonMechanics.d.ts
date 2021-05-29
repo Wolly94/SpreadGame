@@ -13,8 +13,8 @@ export declare const entityDistance: (b: Bubble, e: Bubble | Cell) => number;
 export declare const centerOverlapDistance: (b: Bubble, e: Bubble | Cell) => number;
 export interface SpreadGameMechanics {
     collideBubble: (bubble1: Bubble, bubble2: Bubble, f1: FightProps, f2: FightProps) => [Bubble | null, Bubble | null];
-    collideCell: (bubble: Bubble, cell: Cell, f1: FightProps, f2: FightProps) => Bubble | null;
+    collideCell: (bubble: Bubble, cell: Cell, f1: FightProps, f2: FightProps) => [Bubble | null, Cell];
     move: (bubble: Bubble, ms: number) => Bubble;
     grow: (cell: Cell, ms: number) => Cell;
-    sendBubble: (sender: Cell, target: Cell) => Bubble | null;
+    sendBubble: (sender: Cell, target: Cell) => [Cell, Bubble | null];
 }

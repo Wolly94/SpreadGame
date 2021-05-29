@@ -84,22 +84,23 @@ var bounceMechanics = {
             return basicMechanics_1.default.collideCell(bubble, cell, f1, f2);
         }
         if (commonMechanics_1.overlap(bubble, cell) < commonMechanics_1.calculationAccuracy)
-            return __assign({}, bubble);
+            return [__assign({}, bubble), __assign({}, cell)];
         var fighters = Math.min(minUnitsOnBounce, bubble.units, cell.units);
         var resBubble = bubble_1.setUnits(bubble, bubble.units - fighters);
-        if (cell.playerId === resBubble.playerId) {
-            commonMechanics_1.reinforceCell(cell, fighters);
+        var resCell = __assign({}, cell);
+        if (resCell.playerId === resBubble.playerId) {
+            commonMechanics_1.reinforceCell(resCell, fighters);
         }
         else {
-            var cellRem = commonMechanics_1.fight(fighters, cell.units, 1, 1);
-            commonMechanics_1.takeOverCell(cell, cellRem, resBubble.playerId);
+            var cellRem = commonMechanics_1.fight(fighters, cell.units, f1.attackModifier, f2.attackModifier);
+            commonMechanics_1.takeOverCell(resCell, cellRem, resBubble.playerId);
         }
-        var dirToCell = normalize(difference(cell.position, resBubble.position));
+        var dirToCell = normalize(difference(resCell.position, resBubble.position));
         if (dirToCell === null)
-            return basicMechanics_1.default.collideCell(resBubble, cell, f1, f2);
+            return basicMechanics_1.default.collideCell(resBubble, resCell, f1, f2);
         var newDirection = difference(resBubble.direction, scalarMul(2 * mul(dirToCell, resBubble.direction), dirToCell));
         resBubble.direction = newDirection;
-        return resBubble;
+        return [resBubble, resCell];
     },
     move: function (bubble, ms) {
         bubble = basicMechanics_1.default.move(bubble, ms);

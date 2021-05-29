@@ -135,7 +135,20 @@ export class SpreadGameImplementation implements SpreadGame {
             f2,
             f1
           );
-          //if (event !== null) eventsToAdd = eventsToAdd.concat(event);
+          if (rem1 === null) {
+            eventsToAdd.push({
+              type: "LostBubble",
+              playerId: bubble2.playerId,
+              opponentEntity: { type: "Bubble", bubble: currentBubble },
+            });
+          }
+          if (rem2 === null) {
+            eventsToAdd.push({
+              type: "LostBubble",
+              playerId: currentBubble.playerId,
+              opponentEntity: { type: "Bubble", bubble: bubble2 },
+            });
+          }
           currentBubble = rem2;
           return rem1;
         } else {
@@ -170,7 +183,6 @@ export class SpreadGameImplementation implements SpreadGame {
           (currentBubble.motherId !== cell.id ||
             currentBubble.playerId !== cell.playerId)
         ) {
-          const oldCellData = {};
           const [newCurrentBubble, newCell] = this.mechanics.collideCell(
             currentBubble,
             cell,
@@ -179,6 +191,22 @@ export class SpreadGameImplementation implements SpreadGame {
               attackModifier: 1.0,
             }
           );
+          if (newCell.playerId !== cell.playerId) {
+            eventsToAdd.push({
+              type: "LostCell",
+              opponentPlayerId: newCell.id,
+              opponentBubbleId: currentBubble.id,
+              cellId: newCell.id,
+              playerId: cell.playerId,
+            });
+          }
+          if (newCurrentBubble === null) {
+            eventsToAdd.push({
+              type: "LostBubble",
+              playerId: currentBubble.playerId,
+              opponentEntity: { type: "Cell", cell: cell },
+            });
+          }
           currentBubble = newCurrentBubble;
           //if (event !== null) eventsToAdd.push(event);
           return newCell;

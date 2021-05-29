@@ -60,8 +60,10 @@ var SpreadGameImplementation = /** @class */ (function () {
     };
     SpreadGameImplementation.prototype.step = function (ms) {
         var _this = this;
-        this.bubbles.map(function (bubble) { return _this.mechanics.move(bubble, ms); });
-        this.cells.map(function (cell) { return _this.mechanics.grow(cell, ms); });
+        this.bubbles = this.bubbles.map(function (bubble) {
+            return _this.mechanics.move(bubble, ms);
+        });
+        this.cells = this.cells.map(function (cell) { return _this.mechanics.grow(cell, ms); });
         this.collideBubblesWithCells();
         this.collideBubblesWithBubbles();
         this.timePassed += ms;
@@ -76,25 +78,39 @@ var SpreadGameImplementation = /** @class */ (function () {
                 ? { attackModifier: 1.0 }
                 : skilltree_1.skillTreeMethods.getAttackerModifier(st1.skills);
             var currentBubble = bubble;
-            remainingBubbles = remainingBubbles.filter(function (bubble2) {
-                if (currentBubble != null) {
+            remainingBubbles = remainingBubbles.map(function (bubble2) {
+                if (currentBubble !== null && bubble2 !== null) {
                     var st2 = _this.players.find(function (pl) { return pl.id === bubble2.playerId; });
                     var f2 = st2 === undefined
                         ? { attackModifier: 1.0 }
                         : skilltree_1.skillTreeMethods.getAttackerModifier(st2.skills);
                     var _a = _this.mechanics.collideBubble(bubble2, currentBubble, f2, f1), rem1 = _a[0], rem2 = _a[1];
-                    //if (event !== null) eventsToAdd = eventsToAdd.concat(event);
+                    if (rem1 === null) {
+                        eventsToAdd.push({
+                            type: "LostBubble",
+                            playerId: bubble2.playerId,
+                            opponentEntity: { type: "Bubble", bubble: currentBubble },
+                        });
+                    }
+                    if (rem2 === null) {
+                        eventsToAdd.push({
+                            type: "LostBubble",
+                            playerId: currentBubble.playerId,
+                            opponentEntity: { type: "Bubble", bubble: bubble2 },
+                        });
+                    }
                     currentBubble = rem2;
-                    return rem1 !== null;
+                    return rem1;
                 }
-                else
-                    return true;
+                else {
+                    return bubble2;
+                }
             });
             if (currentBubble != null) {
                 remainingBubbles.push(currentBubble);
             }
         });
-        this.bubbles = remainingBubbles;
+        this.bubbles = remainingBubbles.filter(function (b) { return b !== null; });
         this.eventHistory = this.eventHistory.concat(eventsToAdd.map(function (ev) {
             return { timestamp: _this.timePassed, data: ev };
         }));
@@ -109,16 +125,35 @@ var SpreadGameImplementation = /** @class */ (function () {
                 ? { attackModifier: 1.0 }
                 : skilltree_1.skillTreeMethods.getAttackerModifier(st1.skills);
             var currentBubble = bubble;
-            _this.cells.forEach(function (cell) {
+            _this.cells = _this.cells.map(function (cell) {
                 if (currentBubble != null &&
                     (currentBubble.motherId !== cell.id ||
                         currentBubble.playerId !== cell.playerId)) {
-                    var oldCellData = {};
-                    var newCurrentBubble = _this.mechanics.collideCell(currentBubble, cell, f1, {
+                    var _a = _this.mechanics.collideCell(currentBubble, cell, f1, {
                         attackModifier: 1.0,
-                    });
+                    }), newCurrentBubble = _a[0], newCell = _a[1];
+                    if (newCell.playerId !== cell.playerId) {
+                        eventsToAdd.push({
+                            type: "LostCell",
+                            opponentPlayerId: newCell.id,
+                            opponentBubbleId: currentBubble.id,
+                            cellId: newCell.id,
+                            playerId: cell.playerId,
+                        });
+                    }
+                    if (newCurrentBubble === null) {
+                        eventsToAdd.push({
+                            type: "LostBubble",
+                            playerId: currentBubble.playerId,
+                            opponentEntity: { type: "Cell", cell: cell },
+                        });
+                    }
                     currentBubble = newCurrentBubble;
                     //if (event !== null) eventsToAdd.push(event);
+                    return newCell;
+                }
+                else {
+                    return cell;
                 }
             });
             if (currentBubble != null) {
@@ -138,19 +173,20 @@ var SpreadGameImplementation = /** @class */ (function () {
         var targetCell = this.cells.find(function (c) { return c.id == receiverId; });
         if (targetCell == undefined)
             return false;
-        var sentIds = senderIds.filter(function (senderId) {
-            var sender = _this.cells.find(function (c) {
-                return c.id == senderId && c.playerId == playerId && senderId != receiverId;
-            });
-            if (sender == undefined)
-                return false;
-            var bubble = _this.mechanics.sendBubble(sender, targetCell);
-            if (bubble != null) {
-                _this.bubbles.push(bubble);
-                return true;
+        var sentIds = [];
+        this.cells = this.cells.map(function (sender) {
+            if (senderIds.some(function (id) { return id === sender.id; }) &&
+                sender.playerId === playerId &&
+                sender.id !== receiverId) {
+                var _a = _this.mechanics.sendBubble(sender, targetCell), remCell = _a[0], bubble = _a[1];
+                if (bubble !== null) {
+                    _this.bubbles.push(bubble);
+                    sentIds.push(sender.id);
+                }
+                return remCell;
             }
             else {
-                return false;
+                return sender;
             }
         });
         this.pastMoves.push({

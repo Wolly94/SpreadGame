@@ -42,25 +42,26 @@ var scrapeOffMechanics = {
         return [res1, res2];
     },
     collideCell: function (bubble, cell, f1, f2) {
-        if (commonMechanics_1.overlap(bubble, cell) < commonMechanics_1.minOverlap + commonMechanics_1.calculationAccuracy)
-            return __assign({}, bubble);
+        var resCell = __assign({}, cell);
+        if (commonMechanics_1.overlap(bubble, resCell) < commonMechanics_1.minOverlap + commonMechanics_1.calculationAccuracy)
+            return [__assign({}, bubble), resCell];
         // if collides returns true, then dist <= bubble.radius
-        var bubbleSpace = entites_1.distance(bubble.position, cell.position) - cell.radius;
+        var bubbleSpace = entites_1.distance(bubble.position, resCell.position) - resCell.radius;
         if (bubbleSpace <= commonMechanics_1.calculationAccuracy) {
-            return basicMechanics_1.default.collideCell(bubble, cell, f1, f2);
+            return basicMechanics_1.default.collideCell(bubble, resCell, f1, f2);
         }
         else {
             var fighters = exports.cellFighters(bubble.units, bubbleSpace);
             // fighters >= here
-            if (bubble.playerId === cell.playerId) {
-                commonMechanics_1.reinforceCell(cell, fighters);
+            if (bubble.playerId === resCell.playerId) {
+                commonMechanics_1.reinforceCell(resCell, fighters);
             }
             else {
-                var result = commonMechanics_1.fight(fighters, cell.units, f1.attackModifier, f2.attackModifier);
-                commonMechanics_1.takeOverCell(cell, result, bubble.playerId);
+                var result = commonMechanics_1.fight(fighters, resCell.units, f1.attackModifier, f2.attackModifier);
+                commonMechanics_1.takeOverCell(resCell, result, bubble.playerId);
             }
-            var res = bubble_1.setUnits(bubble, bubble.units - fighters);
-            return res;
+            var resBubble = bubble_1.createBubble(__assign(__assign({}, bubble), { units: bubble.units - fighters }));
+            return [resBubble, resCell];
         }
     },
     move: basicMechanics_1.default.move,
