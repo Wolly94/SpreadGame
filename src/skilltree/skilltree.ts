@@ -1,35 +1,9 @@
 import { SkilledPerkData } from "../messages/inGame/clientLobbyMessage";
 import { SkillTreeData } from "../messages/inGame/gameServerMessages";
 import SpreadReplay from "../messages/replay/replay";
-import Bubble from "../spreadGame/bubble";
-import Cell from "../spreadGame/cell";
-import { FightProps } from "../spreadGame/spreadGame";
-import { Attack } from "./attack/attack";
-
-export interface FightEvent {
-  type: "FightEvent";
-  attacker: Bubble;
-  opponent:
-    | {
-        type: "Bubble";
-        val: Bubble;
-      }
-    | {
-        type: "Cell";
-        val: Cell;
-      };
-}
-
-export type SpreadGameEvent = FightEvent;
-
-export interface GetFightProps {
-  type: "FightEffect";
-  getValue: (level: number) => FightProps; //eventHistory: HistoryEntry<SpreadGameEvent>[]) => number;
-}
-
-export type PerkEffect = GetFightProps;
-
-export type GeneralPerk = Perk<number | string>;
+import { GetFightProps } from "./effects";
+import { GeneralPerk } from "./perks/perk";
+import { Attack } from "./skills/attack";
 
 export interface SkilledPerk {
   perk: GeneralPerk;
@@ -51,15 +25,6 @@ export const validSkillTree = (
 ) => {
   return true;
 };
-
-export interface Perk<TValue> {
-  name: string;
-  //trigger: SpreadGameEvent[]; // determines when sth in the game should be updated (e.g. for the rage skill)
-  effect: PerkEffect[];
-  values: TValue[];
-  description: string;
-  replay: SpreadReplay;
-}
 
 export const skillTreeMethods = {
   toData: (skillTree: SkillTree): SkillTreeData => {

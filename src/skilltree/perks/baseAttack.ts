@@ -1,7 +1,7 @@
 import SpreadReplay from "../../messages/replay/replay";
 import { SpreadMap } from "../../spreadGame/map/map";
-import { Perk, Skill } from "../skilltree";
 import { formatDescription } from "../utils";
+import { Perk } from "./perk";
 
 const name = "BaseAttack";
 const values = [10, 20, 30];
@@ -54,7 +54,7 @@ export const BaseAttack: Perk<number> = {
   name: name,
   values: values,
   description:
-    "Raises damage of your bubbles by " +
+    "Raises combat abilities of your bubbles by " +
     formatDescription(values, (val) => val.toString() + "%", "/") +
     ".",
   effect: [
@@ -68,9 +68,4 @@ export const BaseAttack: Perk<number> = {
     },
   ],
   replay: replay,
-};
-
-export const Attack: Skill = {
-  name: "Attack",
-  perks: [BaseAttack],
 };

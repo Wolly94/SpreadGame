@@ -1,4 +1,4 @@
-import { BaseAttack } from "../skilltree/attack/attack";
+import { BaseAttack } from "../skilltree/perks/baseAttack";
 import Bubble from "./bubble";
 import Cell from "./cell";
 import { SpreadMap } from "./map/map";

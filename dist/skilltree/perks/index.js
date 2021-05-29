@@ -7,9 +7,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var skilltree = __importStar(require("./skilltree"));
-exports.skilltree = skilltree;
-var skills = __importStar(require("./skills/index"));
-exports.skills = skills;
-var perks = __importStar(require("./perks/index"));
-exports.perks = perks;
+var perk = __importStar(require("./perk"));
+exports.perk = perk;
+var baseAttack = __importStar(require("./baseAttack"));
+exports.baseAttack = baseAttack;

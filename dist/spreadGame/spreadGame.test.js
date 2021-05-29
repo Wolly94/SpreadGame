@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var attack_1 = require("../skilltree/attack/attack");
+var baseAttack_1 = require("../skilltree/perks/baseAttack");
 var cell_1 = __importDefault(require("./cell"));
 var spreadGame_1 = require("./spreadGame");
 var createMapHelper = function (cells) {
@@ -52,7 +52,7 @@ test("bubble collision with attack modifier", function () {
     }, [
         {
             id: 0,
-            skills: [{ level: 1, perk: attack_1.BaseAttack }],
+            skills: [{ level: 1, perk: baseAttack_1.BaseAttack }],
         },
         { id: 1, skills: [] },
     ]);

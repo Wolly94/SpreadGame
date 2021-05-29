@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var attack_1 = require("./attack/attack");
+var attack_1 = require("./skills/attack");
 exports.validSkillTree = function (skillTree, skilledPerks) {
     return true;
 };
