@@ -44,6 +44,25 @@ var SpreadGameImplementation = /** @class */ (function () {
         this.pastMoves = [];
         this.eventHistory = [];
     }
+    SpreadGameImplementation.fromReplay = function (replay) {
+        var spreadGame = new SpreadGameImplementation(replay.map, replay.gameSettings, replay.players.map(player_1.playerFromData));
+        return spreadGame;
+    };
+    SpreadGameImplementation.prototype.runReplay = function (replay, ms) {
+        var _this = this;
+        var movesToDo = replay.moveHistory.filter(function (mv) {
+            return mv.timestamp >= _this.timePassed && mv.timestamp < _this.timePassed + ms;
+        });
+        var finalTime = Math.min(this.timePassed + ms, replay.lengthInMs);
+        while (this.timePassed < finalTime) {
+            movesToDo.forEach(function (mv) {
+                if (mv.timestamp === _this.timePassed) {
+                    _this.applyMove(mv.data);
+                }
+            });
+            this.step(replay.gameSettings.updateFrequencyInMs);
+        }
+    };
     SpreadGameImplementation.prototype.getReplay = function () {
         var rep = {
             map: this.map,

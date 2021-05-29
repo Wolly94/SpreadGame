@@ -11,7 +11,7 @@ import basicMechanics from "./mechanics/basicMechanics";
 import bounceMechanics from "./mechanics/bounceMechanics";
 import { SpreadGameMechanics } from "./mechanics/commonMechanics";
 import scrapeOffMechanics from "./mechanics/scrapeOffMechanics";
-import Player, { dataFromPlayer } from "./player";
+import Player, { dataFromPlayer, playerFromData } from "./player";
 
 const getMechanics = (settings: GameSettings): SpreadGameMechanics => {
   if (settings.mechanics === "basic") {
@@ -79,6 +79,31 @@ export class SpreadGameImplementation implements SpreadGame {
     this.timePassed = 0;
     this.pastMoves = [];
     this.eventHistory = [];
+  }
+
+  static fromReplay(replay: SpreadReplay) {
+    const spreadGame = new SpreadGameImplementation(
+      replay.map,
+      replay.gameSettings,
+      replay.players.map(playerFromData)
+    );
+    return spreadGame;
+  }
+
+  runReplay(replay: SpreadReplay, ms: number) {
+    const movesToDo = replay.moveHistory.filter(
+      (mv) =>
+        mv.timestamp >= this.timePassed && mv.timestamp < this.timePassed + ms
+    );
+    const finalTime = Math.min(this.timePassed + ms, replay.lengthInMs);
+    while (this.timePassed < finalTime) {
+      movesToDo.forEach((mv) => {
+        if (mv.timestamp === this.timePassed) {
+          this.applyMove(mv.data);
+        }
+      });
+      this.step(replay.gameSettings.updateFrequencyInMs);
+    }
   }
 
   getReplay() {
