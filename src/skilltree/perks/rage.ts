@@ -1,5 +1,8 @@
-import SpreadReplay from "../../messages/replay/replay";
+import SpreadReplay, { HistoryEntry } from "../../messages/replay/replay";
+import { SpreadGameImplementation } from "../../spreadGame";
+import Bubble from "../../spreadGame/bubble";
 import { SpreadMap } from "../../spreadGame/map/map";
+import { SpreadGameEvent } from "../events";
 import { formatDescription } from "../utils";
 import { Perk } from "./perk";
 
@@ -53,6 +56,24 @@ const replay: SpreadReplay = {
   ],
 };
 
+export const rageCondition = (
+  lvl: number,
+  eventHistory: HistoryEntry<SpreadGameEvent>[],
+  timePassed: number,
+  playerId: number
+) => {
+  if (lvl <= 0) return false;
+  const val = values[Math.min(lvl, values.length) - 1];
+  const toleratedTimeSpan = val[0];
+  const lostCellEvents = eventHistory.filter(
+    (ev) =>
+      ev.timestamp >= timePassed - toleratedTimeSpan &&
+      ev.data.type === "LostCell" &&
+      ev.data.playerId === playerId
+  );
+  return lostCellEvents.length > 0;
+};
+
 export const Rage: Perk<[number, number]> = {
   name: name,
   values: values,
@@ -65,12 +86,22 @@ export const Rage: Perk<[number, number]> = {
   effect: [
     {
       type: "FightEffect",
-      getValue: (lvl) => {
-        if (lvl <= 0) return { attackModifier: 0 };
-        else
+      getValue: (lvl, attacker, spreadGame) => {
+        if (
+          rageCondition(
+            lvl,
+            spreadGame.eventHistory,
+            spreadGame.timePassed,
+            attacker.playerId
+          )
+        ) {
+          const val = values[Math.min(lvl, values.length) - 1];
           return {
-            attackModifier: values[Math.min(lvl, values.length) - 1][1],
+            attackModifier: val[1],
           };
+        } else {
+          return { attackModifier: 0 };
+        }
       },
     },
   ],

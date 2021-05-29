@@ -41,13 +41,13 @@ exports.skillTreeMethods = {
             return { level: sp.level, name: sp.perk.name };
         });
     },
-    getAttackerModifier: function (skilledPerks) {
+    getAttackerModifier: function (skilledPerks, attacker, spreadGame) {
         var attackModifier = 0;
         skilledPerks.forEach(function (skilledPerk) {
             skilledPerk.perk.effect
                 .filter(function (p) { return p.type === "FightEffect"; })
                 .forEach(function (eff) {
-                attackModifier += eff.getValue(skilledPerk.level).attackModifier;
+                attackModifier += eff.getValue(skilledPerk.level, attacker, spreadGame).attackModifier;
             });
         });
         return { attackModifier: 1 + attackModifier / 100 };

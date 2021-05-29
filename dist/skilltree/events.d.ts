@@ -19,4 +19,15 @@ export interface LostBubbleEvent {
     };
 }
 export declare type FightResultEvent = LostCellEvent | LostBubbleEvent;
-export declare type SpreadGameEvent = FightResultEvent;
+export interface FightEvent {
+    type: "FightEvent";
+    attacker: Bubble;
+    defender: {
+        type: "Bubble";
+        bubble: Bubble;
+    } | {
+        type: "cell";
+        cell: Cell;
+    };
+}
+export declare type SpreadGameEvent = FightEvent | FightResultEvent;

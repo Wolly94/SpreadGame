@@ -2,6 +2,7 @@ import { ClientGameState } from "../messages/inGame/clientGameState";
 import { GameSettings } from "../messages/inGame/gameServerMessages";
 import SpreadReplay, { HistoryEntry, Move } from "../messages/replay/replay";
 import { SpreadGameEvent } from "../skilltree/events";
+import { Rage, rageCondition } from "../skilltree/perks/rage";
 import { skillTreeMethods } from "../skilltree/skilltree";
 import Bubble from "./bubble";
 import Cell from "./cell";
@@ -26,6 +27,7 @@ export interface SpreadGameState {
   cells: Cell[];
   bubbles: Bubble[];
   players: Player[];
+  timePassed: number;
 }
 
 export interface SpreadGameInteraction {
@@ -118,7 +120,7 @@ export class SpreadGameImplementation implements SpreadGame {
       const f1 =
         st1 === undefined
           ? { attackModifier: 1.0 }
-          : skillTreeMethods.getAttackerModifier(st1.skills);
+          : skillTreeMethods.getAttackerModifier(st1.skills, bubble, this);
 
       var currentBubble: Bubble | null = bubble;
       remainingBubbles = remainingBubbles.map((bubble2) => {
@@ -127,7 +129,7 @@ export class SpreadGameImplementation implements SpreadGame {
           const f2 =
             st2 === undefined
               ? { attackModifier: 1.0 }
-              : skillTreeMethods.getAttackerModifier(st2.skills);
+              : skillTreeMethods.getAttackerModifier(st2.skills, bubble2, this);
 
           const [rem1, rem2] = this.mechanics.collideBubble(
             bubble2,
@@ -174,7 +176,7 @@ export class SpreadGameImplementation implements SpreadGame {
       const f1 =
         st1 === undefined
           ? { attackModifier: 1.0 }
-          : skillTreeMethods.getAttackerModifier(st1.skills);
+          : skillTreeMethods.getAttackerModifier(st1.skills, bubble, this);
 
       var currentBubble: Bubble | null = bubble;
       this.cells = this.cells.map((cell) => {
@@ -273,12 +275,26 @@ export class SpreadGameImplementation implements SpreadGame {
         };
       }),
       bubbles: this.bubbles.map((bubble) => {
+        const pl = this.players.find((pl) => pl.id === bubble.playerId);
+        const ragePerkLevel = pl?.skills.find(
+          (sk) => sk.perk.name === Rage.name
+        )?.level;
+
         return {
           id: bubble.id,
           playerId: bubble.playerId,
           units: bubble.units,
           position: bubble.position,
           radius: bubble.radius,
+          rage:
+            ragePerkLevel === undefined
+              ? false
+              : rageCondition(
+                  ragePerkLevel,
+                  this.eventHistory,
+                  this.timePassed,
+                  bubble.playerId
+                ),
         };
       }),
     };

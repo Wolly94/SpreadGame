@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var rage_1 = require("../skilltree/perks/rage");
 var skilltree_1 = require("../skilltree/skilltree");
 var basicMechanics_1 = __importDefault(require("./mechanics/basicMechanics"));
 var bounceMechanics_1 = __importDefault(require("./mechanics/bounceMechanics"));
@@ -76,14 +77,14 @@ var SpreadGameImplementation = /** @class */ (function () {
             var st1 = _this.players.find(function (pl) { return pl.id === bubble.playerId; });
             var f1 = st1 === undefined
                 ? { attackModifier: 1.0 }
-                : skilltree_1.skillTreeMethods.getAttackerModifier(st1.skills);
+                : skilltree_1.skillTreeMethods.getAttackerModifier(st1.skills, bubble, _this);
             var currentBubble = bubble;
             remainingBubbles = remainingBubbles.map(function (bubble2) {
                 if (currentBubble !== null && bubble2 !== null) {
                     var st2 = _this.players.find(function (pl) { return pl.id === bubble2.playerId; });
                     var f2 = st2 === undefined
                         ? { attackModifier: 1.0 }
-                        : skilltree_1.skillTreeMethods.getAttackerModifier(st2.skills);
+                        : skilltree_1.skillTreeMethods.getAttackerModifier(st2.skills, bubble2, _this);
                     var _a = _this.mechanics.collideBubble(bubble2, currentBubble, f2, f1), rem1 = _a[0], rem2 = _a[1];
                     if (rem1 === null) {
                         eventsToAdd.push({
@@ -123,7 +124,7 @@ var SpreadGameImplementation = /** @class */ (function () {
             var st1 = _this.players.find(function (pl) { return pl.id === bubble.playerId; });
             var f1 = st1 === undefined
                 ? { attackModifier: 1.0 }
-                : skilltree_1.skillTreeMethods.getAttackerModifier(st1.skills);
+                : skilltree_1.skillTreeMethods.getAttackerModifier(st1.skills, bubble, _this);
             var currentBubble = bubble;
             _this.cells = _this.cells.map(function (cell) {
                 if (currentBubble != null &&
@@ -202,6 +203,7 @@ var SpreadGameImplementation = /** @class */ (function () {
         });
     };
     SpreadGameImplementation.prototype.toClientGameState = function () {
+        var _this = this;
         var gs = {
             timePassedInMs: this.timePassed,
             cells: this.cells.map(function (cell) {
@@ -214,12 +216,18 @@ var SpreadGameImplementation = /** @class */ (function () {
                 };
             }),
             bubbles: this.bubbles.map(function (bubble) {
+                var _a;
+                var pl = _this.players.find(function (pl) { return pl.id === bubble.playerId; });
+                var ragePerkLevel = (_a = pl === null || pl === void 0 ? void 0 : pl.skills.find(function (sk) { return sk.perk.name === rage_1.Rage.name; })) === null || _a === void 0 ? void 0 : _a.level;
                 return {
                     id: bubble.id,
                     playerId: bubble.playerId,
                     units: bubble.units,
                     position: bubble.position,
                     radius: bubble.radius,
+                    rage: ragePerkLevel === undefined
+                        ? false
+                        : rage_1.rageCondition(ragePerkLevel, _this.eventHistory, _this.timePassed, bubble.playerId),
                 };
             }),
         };

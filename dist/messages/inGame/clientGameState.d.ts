@@ -4,6 +4,7 @@ export interface ClientBubble {
     position: [number, number];
     playerId: number;
     radius: number;
+    rage: boolean;
 }
 export interface ClientCell {
     id: number;

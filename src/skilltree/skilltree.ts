@@ -1,6 +1,8 @@
 import { SkilledPerkData } from "../messages/inGame/clientLobbyMessage";
 import { SkillTreeData } from "../messages/inGame/gameServerMessages";
 import SpreadReplay from "../messages/replay/replay";
+import { SpreadGameImplementation } from "../spreadGame";
+import Bubble from "../spreadGame/bubble";
 import { GetFightProps } from "./effects";
 import { GeneralPerk } from "./perks/perk";
 import { Attack } from "./skills/attack";
@@ -63,13 +65,21 @@ export const skillTreeMethods = {
       return { level: sp.level, name: sp.perk.name };
     });
   },
-  getAttackerModifier: (skilledPerks: SkilledPerk[]) => {
+  getAttackerModifier: (
+    skilledPerks: SkilledPerk[],
+    attacker: Bubble,
+    spreadGame: SpreadGameImplementation
+  ) => {
     var attackModifier = 0;
     skilledPerks.forEach((skilledPerk) => {
       skilledPerk.perk.effect
         .filter((p): p is GetFightProps => p.type === "FightEffect")
         .forEach((eff) => {
-          attackModifier += eff.getValue(skilledPerk.level).attackModifier;
+          attackModifier += eff.getValue(
+            skilledPerk.level,
+            attacker,
+            spreadGame
+          ).attackModifier;
         });
     });
     return { attackModifier: 1 + attackModifier / 100 };

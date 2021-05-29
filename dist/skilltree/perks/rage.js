@@ -48,6 +48,18 @@ var replay = {
         },
     ],
 };
+exports.rageCondition = function (lvl, eventHistory, timePassed, playerId) {
+    if (lvl <= 0)
+        return false;
+    var val = values[Math.min(lvl, values.length) - 1];
+    var toleratedTimeSpan = val[0];
+    var lostCellEvents = eventHistory.filter(function (ev) {
+        return ev.timestamp >= timePassed - toleratedTimeSpan &&
+            ev.data.type === "LostCell" &&
+            ev.data.playerId === playerId;
+    });
+    return lostCellEvents.length > 0;
+};
 exports.Rage = {
     name: name,
     values: values,
@@ -59,13 +71,16 @@ exports.Rage = {
     effect: [
         {
             type: "FightEffect",
-            getValue: function (lvl) {
-                if (lvl <= 0)
-                    return { attackModifier: 0 };
-                else
+            getValue: function (lvl, attacker, spreadGame) {
+                if (exports.rageCondition(lvl, spreadGame.eventHistory, spreadGame.timePassed, attacker.playerId)) {
+                    var val = values[Math.min(lvl, values.length) - 1];
                     return {
-                        attackModifier: values[Math.min(lvl, values.length) - 1][1],
+                        attackModifier: val[1],
                     };
+                }
+                else {
+                    return { attackModifier: 0 };
+                }
             },
         },
     ],

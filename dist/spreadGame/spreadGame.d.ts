@@ -11,6 +11,7 @@ export interface SpreadGameState {
     cells: Cell[];
     bubbles: Bubble[];
     players: Player[];
+    timePassed: number;
 }
 export interface SpreadGameInteraction {
     applyMove: (move: Move) => void;
