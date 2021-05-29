@@ -88,25 +88,34 @@ const bounceMechanics: SpreadGameMechanics = {
     if (bubble.targetId === cell.id) {
       return basicMechanics.collideCell(bubble, cell, f1, f2);
     }
-    if (overlap(bubble, cell) < calculationAccuracy) return { ...bubble };
+    if (overlap(bubble, cell) < calculationAccuracy)
+      return [{ ...bubble }, { ...cell }];
     const fighters = Math.min(minUnitsOnBounce, bubble.units, cell.units);
     const resBubble = setUnits(bubble, bubble.units - fighters);
-    if (cell.playerId === resBubble.playerId) {
-      reinforceCell(cell, fighters);
+    const resCell = { ...cell };
+    if (resCell.playerId === resBubble.playerId) {
+      reinforceCell(resCell, fighters);
     } else {
-      const cellRem = fight(fighters, cell.units, 1, 1);
-      takeOverCell(cell, cellRem, resBubble.playerId);
+      const cellRem = fight(
+        fighters,
+        cell.units,
+        f1.attackModifier,
+        f2.attackModifier
+      );
+      takeOverCell(resCell, cellRem, resBubble.playerId);
     }
-    const dirToCell = normalize(difference(cell.position, resBubble.position));
+    const dirToCell = normalize(
+      difference(resCell.position, resBubble.position)
+    );
     if (dirToCell === null)
-      return basicMechanics.collideCell(resBubble, cell, f1, f2);
+      return basicMechanics.collideCell(resBubble, resCell, f1, f2);
     const newDirection = difference(
       resBubble.direction,
       scalarMul(2 * mul(dirToCell, resBubble.direction), dirToCell)
     );
     resBubble.direction = newDirection;
 
-    return resBubble;
+    return [resBubble, resCell];
   },
   move: (bubble, ms) => {
     bubble = basicMechanics.move(bubble, ms);

@@ -1,4 +1,4 @@
-import Bubble, { setUnits } from "../bubble";
+import Bubble, { createBubble, setUnits } from "../bubble";
 import Cell from "../cell";
 import { radiusToUnits, radiusToUnitsFixPoint } from "../common";
 import { distance } from "../entites";
@@ -49,28 +49,33 @@ const scrapeOffMechanics: SpreadGameMechanics = {
     return [res1, res2];
   },
   collideCell: (bubble: Bubble, cell: Cell, f1: FightProps, f2: FightProps) => {
-    if (overlap(bubble, cell) < minOverlap + calculationAccuracy)
-      return { ...bubble };
+    const resCell = { ...cell };
+    if (overlap(bubble, resCell) < minOverlap + calculationAccuracy)
+      return [{ ...bubble }, resCell];
     // if collides returns true, then dist <= bubble.radius
-    const bubbleSpace = distance(bubble.position, cell.position) - cell.radius;
+    const bubbleSpace =
+      distance(bubble.position, resCell.position) - resCell.radius;
     if (bubbleSpace <= calculationAccuracy) {
-      return basicMechanics.collideCell(bubble, cell, f1, f2);
+      return basicMechanics.collideCell(bubble, resCell, f1, f2);
     } else {
       const fighters = cellFighters(bubble.units, bubbleSpace);
       // fighters >= here
-      if (bubble.playerId === cell.playerId) {
-        reinforceCell(cell, fighters);
+      if (bubble.playerId === resCell.playerId) {
+        reinforceCell(resCell, fighters);
       } else {
         const result = fight(
           fighters,
-          cell.units,
+          resCell.units,
           f1.attackModifier,
           f2.attackModifier
         );
-        takeOverCell(cell, result, bubble.playerId);
+        takeOverCell(resCell, result, bubble.playerId);
       }
-      const res = setUnits(bubble, bubble.units - fighters);
-      return res;
+      const resBubble = createBubble({
+        ...bubble,
+        units: bubble.units - fighters,
+      });
+      return [resBubble, resCell];
     }
   },
   move: basicMechanics.move,
