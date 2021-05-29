@@ -1,3 +1,4 @@
+import { FightResultEvent } from "../../skilltree/events";
 import Bubble from "../bubble";
 import Cell from "../cell";
 import { radiusToUnits, radiusToUnitsFixPoint } from "../common";
@@ -99,4 +100,6 @@ export interface SpreadGameMechanics {
     f2: FightProps
   ) => Bubble | null;
   move: (bubble: Bubble, ms: number) => Bubble;
+  grow: (cell: Cell, ms: number) => Cell;
+  sendBubble: (sender: Cell, target: Cell) => Bubble | null;
 }

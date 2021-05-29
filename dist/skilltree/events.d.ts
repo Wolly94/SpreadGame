@@ -1,7 +1,15 @@
 export interface LostCellEvent {
     type: "LostCell";
     cellId: number;
-    oldPlayerId: number;
-    newPlayerId: number;
+    playerId: number;
+    opponentPlayerId: number;
+    opponentBubbleId: number;
 }
-export declare type SpreadGameEvent = LostCellEvent;
+export interface LostBubbleEvent {
+    type: "LostBubble";
+    playerId: number;
+    opponentPlayerId: number;
+    opponentBubbleId: number;
+}
+export declare type FightResultEvent = LostCellEvent | LostBubbleEvent;
+export declare type SpreadGameEvent = FightResultEvent;

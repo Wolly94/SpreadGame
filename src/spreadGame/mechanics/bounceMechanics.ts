@@ -118,6 +118,8 @@ const bounceMechanics: SpreadGameMechanics = {
     );
     return bubble;
   },
+  grow: basicMechanics.grow,
+  sendBubble: basicMechanics.sendBubble,
 };
 
 export default bounceMechanics;

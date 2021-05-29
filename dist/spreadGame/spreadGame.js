@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var skilltree_1 = require("../skilltree/skilltree");
-var cell_1 = __importDefault(require("./cell"));
 var basicMechanics_1 = __importDefault(require("./mechanics/basicMechanics"));
 var bounceMechanics_1 = __importDefault(require("./mechanics/bounceMechanics"));
 var scrapeOffMechanics_1 = __importDefault(require("./mechanics/scrapeOffMechanics"));
@@ -29,13 +28,20 @@ var SpreadGameImplementation = /** @class */ (function () {
         this.mechanics = getMechanics(gameSettings);
         this.map = map;
         this.cells = map.cells.map(function (mapCell) {
-            var cell = new cell_1.default(mapCell.id, mapCell.playerId, mapCell.position, mapCell.units, mapCell.radius);
+            var cell = {
+                id: mapCell.id,
+                playerId: mapCell.playerId,
+                position: mapCell.position,
+                radius: mapCell.radius,
+                units: mapCell.units,
+            };
             return cell;
         });
         this.bubbles = [];
         this.players = players;
         this.timePassed = 0;
         this.pastMoves = [];
+        this.eventHistory = [];
     }
     SpreadGameImplementation.prototype.getReplay = function () {
         var rep = {
@@ -55,16 +61,14 @@ var SpreadGameImplementation = /** @class */ (function () {
     SpreadGameImplementation.prototype.step = function (ms) {
         var _this = this;
         this.bubbles.map(function (bubble) { return _this.mechanics.move(bubble, ms); });
-        this.cells.forEach(function (cell) {
-            if (cell.playerId !== null)
-                cell.grow(ms);
-        });
+        this.cells.map(function (cell) { return _this.mechanics.grow(cell, ms); });
         this.collideBubblesWithCells();
         this.collideBubblesWithBubbles();
         this.timePassed += ms;
     };
     SpreadGameImplementation.prototype.collideBubblesWithBubbles = function () {
         var _this = this;
+        var eventsToAdd = [];
         var remainingBubbles = [];
         this.bubbles.forEach(function (bubble) {
             var st1 = _this.players.find(function (pl) { return pl.id === bubble.playerId; });
@@ -79,6 +83,7 @@ var SpreadGameImplementation = /** @class */ (function () {
                         ? { attackModifier: 1.0 }
                         : skilltree_1.skillTreeMethods.getAttackerModifier(st2.skills);
                     var _a = _this.mechanics.collideBubble(bubble2, currentBubble, f2, f1), rem1 = _a[0], rem2 = _a[1];
+                    //if (event !== null) eventsToAdd = eventsToAdd.concat(event);
                     currentBubble = rem2;
                     return rem1 !== null;
                 }
@@ -90,9 +95,13 @@ var SpreadGameImplementation = /** @class */ (function () {
             }
         });
         this.bubbles = remainingBubbles;
+        this.eventHistory = this.eventHistory.concat(eventsToAdd.map(function (ev) {
+            return { timestamp: _this.timePassed, data: ev };
+        }));
     };
     SpreadGameImplementation.prototype.collideBubblesWithCells = function () {
         var _this = this;
+        var eventsToAdd = [];
         var remainingBubbles = [];
         this.bubbles.forEach(function (bubble) {
             var st1 = _this.players.find(function (pl) { return pl.id === bubble.playerId; });
@@ -104,9 +113,12 @@ var SpreadGameImplementation = /** @class */ (function () {
                 if (currentBubble != null &&
                     (currentBubble.motherId !== cell.id ||
                         currentBubble.playerId !== cell.playerId)) {
-                    currentBubble = _this.mechanics.collideCell(currentBubble, cell, f1, {
+                    var oldCellData = {};
+                    var newCurrentBubble = _this.mechanics.collideCell(currentBubble, cell, f1, {
                         attackModifier: 1.0,
                     });
+                    currentBubble = newCurrentBubble;
+                    //if (event !== null) eventsToAdd.push(event);
                 }
             });
             if (currentBubble != null) {
@@ -114,6 +126,9 @@ var SpreadGameImplementation = /** @class */ (function () {
             }
         });
         this.bubbles = remainingBubbles;
+        this.eventHistory = this.eventHistory.concat(eventsToAdd.map(function (ev) {
+            return { timestamp: _this.timePassed, data: ev };
+        }));
     };
     SpreadGameImplementation.prototype.sendUnits = function (playerId, senderIds, receiverId) {
         var _this = this;
@@ -129,7 +144,7 @@ var SpreadGameImplementation = /** @class */ (function () {
             });
             if (sender == undefined)
                 return false;
-            var bubble = sender.trySend(targetCell);
+            var bubble = _this.mechanics.sendBubble(sender, targetCell);
             if (bubble != null) {
                 _this.bubbles.push(bubble);
                 return true;

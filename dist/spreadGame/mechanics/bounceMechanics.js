@@ -95,5 +95,7 @@ var bounceMechanics = {
         bubble.direction = adjustedDirection(bubble.position, bubble.direction, bubble.targetPos);
         return bubble;
     },
+    grow: basicMechanics_1.default.grow,
+    sendBubble: basicMechanics_1.default.sendBubble,
 };
 exports.default = bounceMechanics;

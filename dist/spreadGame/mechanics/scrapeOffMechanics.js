@@ -53,5 +53,7 @@ var scrapeOffMechanics = {
         }
     },
     move: basicMechanics_1.default.move,
+    grow: basicMechanics_1.default.grow,
+    sendBubble: basicMechanics_1.default.sendBubble,
 };
 exports.default = scrapeOffMechanics;

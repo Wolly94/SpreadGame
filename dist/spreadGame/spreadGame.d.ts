@@ -1,6 +1,7 @@
 import { ClientGameState } from "../messages/inGame/clientGameState";
 import { GameSettings } from "../messages/inGame/gameServerMessages";
 import SpreadReplay, { HistoryEntry, Move } from "../messages/replay/replay";
+import { SpreadGameEvent } from "../skilltree/events";
 import Bubble from "./bubble";
 import Cell from "./cell";
 import { SpreadMap } from "./map/map";
@@ -32,6 +33,7 @@ export declare class SpreadGameImplementation implements SpreadGame {
     pastMoves: HistoryEntry<Move>[];
     mechanics: SpreadGameMechanics;
     timePassed: number;
+    eventHistory: HistoryEntry<SpreadGameEvent>[];
     constructor(map: SpreadMap, gameSettings: GameSettings, players: Player[]);
     getReplay(): SpreadReplay;
     applyMove(move: Move): void;

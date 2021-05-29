@@ -1,19 +1,28 @@
 import Cell from "../cell";
-import { radiusToUnits } from "../common";
+import { radiusToGrowth, radiusToUnits } from "../common";
+import basicMechanics from "./basicMechanics";
 
 test("units decreasing when too much", () => {
   const radius = 50;
   const maxUnits = radiusToUnits(50);
-  const cell = new Cell(0, 0, [100, 100], maxUnits * 2, radius);
+  var cell: Cell = {
+    id: 0,
+    playerId: 0,
+    position: [100, 100],
+    units: maxUnits * 2,
+    radius: radius,
+  };
   expect(cell.units).toBe(2 * maxUnits);
-  const msPerUnit = 1000 / cell.growthPerSecond;
-  const ms = cell.growthPerSecond * 1000;
-  cell.grow(msPerUnit);
+  const growth = radiusToGrowth(cell.radius);
+  const msPerUnit = 1000 / growth;
+  const ms = growth * 1000;
+  cell = basicMechanics.grow(cell, msPerUnit);
   expect(cell.units).toBe(2 * maxUnits - 1);
-  cell.grow(msPerUnit * (maxUnits - 1));
+  cell = basicMechanics.grow(cell, msPerUnit);
+  cell = basicMechanics.grow(cell, msPerUnit * (maxUnits - 1));
   expect(cell.units).toBe(maxUnits);
-  cell.grow(msPerUnit);
+  cell = basicMechanics.grow(cell, msPerUnit);
   expect(cell.units).toBe(maxUnits);
-  cell.grow(5 * msPerUnit);
+  cell = basicMechanics.grow(cell, 5 * msPerUnit);
   expect(cell.units).toBe(maxUnits);
 });

@@ -1,6 +1,7 @@
 import { ClientGameState } from "../messages/inGame/clientGameState";
 import { GameSettings } from "../messages/inGame/gameServerMessages";
 import SpreadReplay, { HistoryEntry, Move } from "../messages/replay/replay";
+import { SpreadGameEvent } from "../skilltree/events";
 import { skillTreeMethods } from "../skilltree/skilltree";
 import Bubble from "./bubble";
 import Cell from "./cell";
@@ -54,6 +55,7 @@ export class SpreadGameImplementation implements SpreadGame {
   pastMoves: HistoryEntry<Move>[];
   mechanics: SpreadGameMechanics;
   timePassed: number;
+  eventHistory: HistoryEntry<SpreadGameEvent>[];
 
   constructor(map: SpreadMap, gameSettings: GameSettings, players: Player[]) {
     //const players = getPlayerIds(map);
@@ -61,19 +63,20 @@ export class SpreadGameImplementation implements SpreadGame {
     this.mechanics = getMechanics(gameSettings);
     this.map = map;
     this.cells = map.cells.map((mapCell) => {
-      const cell: Cell = new Cell(
-        mapCell.id,
-        mapCell.playerId,
-        mapCell.position,
-        mapCell.units,
-        mapCell.radius
-      );
+      const cell: Cell = {
+        id: mapCell.id,
+        playerId: mapCell.playerId,
+        position: mapCell.position,
+        radius: mapCell.radius,
+        units: mapCell.units,
+      };
       return cell;
     });
     this.bubbles = [];
     this.players = players;
     this.timePassed = 0;
     this.pastMoves = [];
+    this.eventHistory = [];
   }
 
   getReplay() {
@@ -99,15 +102,14 @@ export class SpreadGameImplementation implements SpreadGame {
 
   step(ms: number) {
     this.bubbles.map((bubble) => this.mechanics.move(bubble, ms));
-    this.cells.forEach((cell) => {
-      if (cell.playerId !== null) cell.grow(ms);
-    });
+    this.cells.map((cell) => this.mechanics.grow(cell, ms));
     this.collideBubblesWithCells();
     this.collideBubblesWithBubbles();
     this.timePassed += ms;
   }
 
   collideBubblesWithBubbles() {
+    var eventsToAdd: SpreadGameEvent[] = [];
     var remainingBubbles: Bubble[] = [];
     this.bubbles.forEach((bubble) => {
       const st1 = this.players.find((pl) => pl.id === bubble.playerId);
@@ -131,6 +133,7 @@ export class SpreadGameImplementation implements SpreadGame {
             f2,
             f1
           );
+          //if (event !== null) eventsToAdd = eventsToAdd.concat(event);
           currentBubble = rem2;
           return rem1 !== null;
         } else return true;
@@ -140,8 +143,14 @@ export class SpreadGameImplementation implements SpreadGame {
       }
     });
     this.bubbles = remainingBubbles;
+    this.eventHistory = this.eventHistory.concat(
+      eventsToAdd.map((ev) => {
+        return { timestamp: this.timePassed, data: ev };
+      })
+    );
   }
   collideBubblesWithCells() {
+    const eventsToAdd: SpreadGameEvent[] = [];
     var remainingBubbles: Bubble[] = [];
     this.bubbles.forEach((bubble) => {
       const st1 = this.players.find((pl) => pl.id === bubble.playerId);
@@ -157,9 +166,17 @@ export class SpreadGameImplementation implements SpreadGame {
           (currentBubble.motherId !== cell.id ||
             currentBubble.playerId !== cell.playerId)
         ) {
-          currentBubble = this.mechanics.collideCell(currentBubble, cell, f1, {
-            attackModifier: 1.0,
-          });
+          const oldCellData = {};
+          const newCurrentBubble = this.mechanics.collideCell(
+            currentBubble,
+            cell,
+            f1,
+            {
+              attackModifier: 1.0,
+            }
+          );
+          currentBubble = newCurrentBubble;
+          //if (event !== null) eventsToAdd.push(event);
         }
       });
       if (currentBubble != null) {
@@ -167,6 +184,11 @@ export class SpreadGameImplementation implements SpreadGame {
       }
     });
     this.bubbles = remainingBubbles;
+    this.eventHistory = this.eventHistory.concat(
+      eventsToAdd.map((ev) => {
+        return { timestamp: this.timePassed, data: ev };
+      })
+    );
   }
   sendUnits(playerId: number, senderIds: number[], receiverId: number) {
     const player = this.players.find((p) => p.id == playerId);
@@ -179,7 +201,7 @@ export class SpreadGameImplementation implements SpreadGame {
           c.id == senderId && c.playerId == playerId && senderId != receiverId
       );
       if (sender == undefined) return false;
-      const bubble = sender.trySend(targetCell);
+      const bubble = this.mechanics.sendBubble(sender, targetCell);
       if (bubble != null) {
         this.bubbles.push(bubble);
         return true;

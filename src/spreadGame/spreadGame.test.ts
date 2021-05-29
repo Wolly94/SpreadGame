@@ -22,9 +22,9 @@ const calculatedCollisionTimeInMs = (b1: Bubble, b2: Bubble) => {
 };
 
 test("bubble collision", () => {
-  const cells = [
-    new Cell(0, 0, [100, 100], 50, 50),
-    new Cell(1, 1, [400, 500], 50, 50),
+  const cells: Cell[] = [
+    { id: 0, playerId: 0, position: [100, 100], radius: 50, units: 50 },
+    { id: 1, playerId: 1, position: [400, 500], radius: 50, units: 50 },
   ];
   const gameState = new SpreadGameImplementation(
     createMapHelper(cells),
@@ -49,9 +49,9 @@ test("bubble collision", () => {
 
 test("bubble collision with attack modifier", () => {
   const x = 10;
-  const cells = [
-    new Cell(0, 0, [100, 100], 50, 50),
-    new Cell(1, 1, [400, 500], 50, 50),
+  const cells: Cell[] = [
+    { id: 0, playerId: 0, position: [100, 100], radius: 50, units: 50 },
+    { id: 1, playerId: 1, position: [400, 500], radius: 50, units: 50 },
   ];
   const gameState = new SpreadGameImplementation(
     createMapHelper(cells),

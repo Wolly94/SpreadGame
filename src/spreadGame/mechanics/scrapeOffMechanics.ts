@@ -74,6 +74,8 @@ const scrapeOffMechanics: SpreadGameMechanics = {
     }
   },
   move: basicMechanics.move,
+  grow: basicMechanics.grow,
+  sendBubble: basicMechanics.sendBubble,
 };
 
 export default scrapeOffMechanics;

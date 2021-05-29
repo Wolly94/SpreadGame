@@ -1,10 +1,6 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 var baseAttack_1 = require("../skilltree/perks/baseAttack");
-var cell_1 = __importDefault(require("./cell"));
 var spreadGame_1 = require("./spreadGame");
 var createMapHelper = function (cells) {
     return {
@@ -21,8 +17,8 @@ var calculatedCollisionTimeInMs = function (b1, b2) {
 };
 test("bubble collision", function () {
     var cells = [
-        new cell_1.default(0, 0, [100, 100], 50, 50),
-        new cell_1.default(1, 1, [400, 500], 50, 50),
+        { id: 0, playerId: 0, position: [100, 100], radius: 50, units: 50 },
+        { id: 1, playerId: 1, position: [400, 500], radius: 50, units: 50 },
     ];
     var gameState = new spreadGame_1.SpreadGameImplementation(createMapHelper(cells), {
         mechanics: "basic",
@@ -43,8 +39,8 @@ test("bubble collision", function () {
 test("bubble collision with attack modifier", function () {
     var x = 10;
     var cells = [
-        new cell_1.default(0, 0, [100, 100], 50, 50),
-        new cell_1.default(1, 1, [400, 500], 50, 50),
+        { id: 0, playerId: 0, position: [100, 100], radius: 50, units: 50 },
+        { id: 1, playerId: 1, position: [400, 500], radius: 50, units: 50 },
     ];
     var gameState = new spreadGame_1.SpreadGameImplementation(createMapHelper(cells), {
         updateFrequencyInMs: 50,

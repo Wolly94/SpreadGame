@@ -4,8 +4,18 @@ import Cell from "../spreadGame/cell";
 export interface LostCellEvent {
   type: "LostCell";
   cellId: number;
-  oldPlayerId: number;
-  newPlayerId: number;
+  playerId: number;
+  opponentPlayerId: number;
+  opponentBubbleId: number;
 }
 
-export type SpreadGameEvent = LostCellEvent;
+export interface LostBubbleEvent {
+  type: "LostBubble";
+  playerId: number;
+  opponentPlayerId: number;
+  opponentBubbleId: number;
+}
+
+export type FightResultEvent = LostCellEvent | LostBubbleEvent;
+
+export type SpreadGameEvent = FightResultEvent;
