@@ -10,13 +10,11 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var bubble_1 = __importDefault(require("../bubble"));
+var bubble_1 = require("../bubble");
 var common_1 = require("../common");
 var commonMechanics_1 = require("./commonMechanics");
+exports.defaultSpeed = 90;
 var basicMechanics = {
     collideBubble: function (bubble1, bubble2, f1, f2) {
         if (commonMechanics_1.centerOverlap(bubble1, bubble2) < commonMechanics_1.calculationAccuracy)
@@ -30,14 +28,10 @@ var basicMechanics = {
             return [null, null];
         }
         else if (result > 0) {
-            bubble1.units = result;
-            bubble1.updateRadius();
-            return [bubble1, null];
+            return [bubble_1.setUnits(bubble1, result), null];
         }
         else {
-            bubble2.units = -result;
-            bubble2.updateRadius();
-            return [null, bubble2];
+            return [null, bubble_1.setUnits(bubble2, -result)];
         }
     },
     collideCell: function (bubble, cell, f1, f2) {
@@ -53,8 +47,8 @@ var basicMechanics = {
         return null;
     },
     move: function (bubble, ms) {
-        bubble.position[0] += (bubble.speed * bubble.direction[0] * ms) / 1000.0;
-        bubble.position[1] += (bubble.speed * bubble.direction[1] * ms) / 1000.0;
+        bubble.position[0] += (exports.defaultSpeed * bubble.direction[0] * ms) / 1000.0;
+        bubble.position[1] += (exports.defaultSpeed * bubble.direction[1] * ms) / 1000.0;
         return bubble;
     },
     grow: function (cell, ms) {
@@ -91,8 +85,16 @@ var basicMechanics = {
             sender.position[0] + lambda * direction[0],
             sender.position[1] + lambda * direction[1],
         ];
-        var bubble = new bubble_1.default(sender.playerId, position, normedDirection, attacker, sender.id, target.id, target.position);
-        return bubble;
+        return bubble_1.createBubble({
+            id: bubble_1.getNewBubbleIndex(),
+            direction: normedDirection,
+            motherId: sender.id,
+            playerId: sender.playerId,
+            position: position,
+            units: attacker,
+            targetId: target.id,
+            targetPos: target.position,
+        });
     },
 };
 exports.default = basicMechanics;

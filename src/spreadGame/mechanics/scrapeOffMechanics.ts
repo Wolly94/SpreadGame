@@ -1,4 +1,4 @@
-import Bubble from "../bubble";
+import Bubble, { setUnits } from "../bubble";
 import Cell from "../cell";
 import { radiusToUnits, radiusToUnitsFixPoint } from "../common";
 import { distance } from "../entites";
@@ -38,18 +38,19 @@ const scrapeOffMechanics: SpreadGameMechanics = {
       f2.attackModifier,
       dist
     );
+    var res1: Bubble | null = null;
+    var res2: Bubble | null = null;
     if (u1 !== null) {
-      bubble1.units = u1;
-      bubble1.updateRadius();
+      res1 = setUnits(bubble1, u1);
     }
     if (u2 !== null) {
-      bubble2.units = u2;
-      bubble2.updateRadius();
+      res2 = setUnits(bubble2, u2);
     }
-    return [u1 !== null ? bubble1 : null, u2 !== null ? bubble2 : null];
+    return [res1, res2];
   },
   collideCell: (bubble: Bubble, cell: Cell, f1: FightProps, f2: FightProps) => {
-    if (overlap(bubble, cell) < minOverlap + calculationAccuracy) return bubble;
+    if (overlap(bubble, cell) < minOverlap + calculationAccuracy)
+      return { ...bubble };
     // if collides returns true, then dist <= bubble.radius
     const bubbleSpace = distance(bubble.position, cell.position) - cell.radius;
     if (bubbleSpace <= calculationAccuracy) {
@@ -68,9 +69,8 @@ const scrapeOffMechanics: SpreadGameMechanics = {
         );
         takeOverCell(cell, result, bubble.playerId);
       }
-      bubble.units -= fighters;
-      bubble.updateRadius();
-      return bubble;
+      const res = setUnits(bubble, bubble.units - fighters);
+      return res;
     }
   },
   move: basicMechanics.move,

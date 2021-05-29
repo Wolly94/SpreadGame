@@ -1,11 +1,29 @@
-import Bubble from "../bubble";
+import Bubble, { createBubble } from "../bubble";
 import basicMechanics from "./basicMechanics";
 
 test("collide 50 vs 25 units", () => {
   const u1 = 50;
   const u2 = 25;
-  const b1 = new Bubble(0, [0, 0], [0, 0], u1, 0, 0, [1000, 1000]);
-  const b2 = new Bubble(1, [0, 0], [0, 0], u2, 0, 0, [1000, 1000]);
+  const b1 = createBubble({
+    id: 0,
+    playerId: 0,
+    position: [0, 0],
+    direction: [0, 0],
+    units: u1,
+    targetId: 0,
+    targetPos: [1000, 1000],
+    motherId: 0,
+  });
+  const b2 = createBubble({
+    id: 1,
+    playerId: 1,
+    position: [0, 0],
+    direction: [0, 0],
+    units: u2,
+    targetId: 0,
+    targetPos: [1000, 1000],
+    motherId: 0,
+  });
   const res = basicMechanics.collideBubble(
     b1,
     b2,
@@ -24,8 +42,26 @@ test("collide 50 vs 25 units", () => {
 test("collide 50 vs 50 units", () => {
   const u1 = 50;
   const u2 = 50;
-  const b1 = new Bubble(0, [0, 0], [0, 0], u1, 0, 0, [1000, 1000]);
-  const b2 = new Bubble(1, [0, 0], [0, 0], u2, 0, 0, [1000, 1000]);
+  const b1 = createBubble({
+    id: 0,
+    playerId: 0,
+    position: [0, 0],
+    direction: [0, 0],
+    units: u1,
+    targetId: 0,
+    targetPos: [1000, 1000],
+    motherId: 0,
+  });
+  const b2 = createBubble({
+    id: 1,
+    playerId: 1,
+    position: [0, 0],
+    direction: [0, 0],
+    units: u2,
+    targetId: 0,
+    targetPos: [1000, 1000],
+    motherId: 0,
+  });
   const res = basicMechanics.collideBubble(
     b1,
     b2,
@@ -39,8 +75,26 @@ test("collide 50 vs 50 units", () => {
 test("collide 25 vs 50 units", () => {
   const u1 = 25;
   const u2 = 50;
-  const b1 = new Bubble(0, [0, 0], [0, 0], u1, 0, 0, [1000, 1000]);
-  const b2 = new Bubble(1, [0, 0], [0, 0], u2, 0, 0, [1000, 1000]);
+  const b1 = createBubble({
+    id: 0,
+    playerId: 0,
+    position: [0, 0],
+    direction: [0, 0],
+    units: u1,
+    targetId: 0,
+    targetPos: [1000, 1000],
+    motherId: 0,
+  });
+  const b2 = createBubble({
+    id: 1,
+    playerId: 1,
+    position: [0, 0],
+    direction: [0, 0],
+    units: u2,
+    targetId: 0,
+    targetPos: [1000, 1000],
+    motherId: 0,
+  });
   const res = basicMechanics.collideBubble(
     b1,
     b2,

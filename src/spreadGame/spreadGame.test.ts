@@ -2,6 +2,7 @@ import { BaseAttack } from "../skilltree/perks/baseAttack";
 import Bubble from "./bubble";
 import Cell from "./cell";
 import { SpreadMap } from "./map/map";
+import basicMechanics, { defaultSpeed } from "./mechanics/basicMechanics";
 import { SpreadGameImplementation } from "./spreadGame";
 
 const createMapHelper = (cells: Cell[]): SpreadMap => {
@@ -18,7 +19,7 @@ const calculatedCollisionTimeInMs = (b1: Bubble, b2: Bubble) => {
     (b1.position[0] - b2.position[0]) ** 2 +
       (b1.position[1] - b2.position[1]) ** 2
   );
-  return (distance / 2 / b1.speed) * 1000;
+  return (distance / 2 / defaultSpeed) * 1000;
 };
 
 test("bubble collision", () => {

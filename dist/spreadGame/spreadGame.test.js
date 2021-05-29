@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var baseAttack_1 = require("../skilltree/perks/baseAttack");
+var basicMechanics_1 = require("./mechanics/basicMechanics");
 var spreadGame_1 = require("./spreadGame");
 var createMapHelper = function (cells) {
     return {
@@ -13,7 +14,7 @@ var createMapHelper = function (cells) {
 var calculatedCollisionTimeInMs = function (b1, b2) {
     var distance = Math.sqrt(Math.pow((b1.position[0] - b2.position[0]), 2) +
         Math.pow((b1.position[1] - b2.position[1]), 2));
-    return (distance / 2 / b1.speed) * 1000;
+    return (distance / 2 / basicMechanics_1.defaultSpeed) * 1000;
 };
 test("bubble collision", function () {
     var cells = [

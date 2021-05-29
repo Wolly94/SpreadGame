@@ -1,24 +1,26 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var common_1 = require("./common");
 var bubbleIds = 0;
-var Bubble = /** @class */ (function () {
-    function Bubble(playerId, position, direction, units, motherId, targetId, targetPos) {
-        this.id = bubbleIds;
-        bubbleIds += 1;
-        this.playerId = playerId;
-        this.position = position;
-        this.direction = direction;
-        this.units = units;
-        this.motherId = motherId;
-        this.speed = 90;
-        this.targetId = targetId;
-        this.targetPos = targetPos;
-        this.radius = common_1.unitsToRadius(units);
-    }
-    Bubble.prototype.updateRadius = function () {
-        this.radius = common_1.unitsToRadius(this.units);
-    };
-    return Bubble;
-}());
-exports.default = Bubble;
+exports.getNewBubbleIndex = function () {
+    bubbleIds += 1;
+    return bubbleIds;
+};
+exports.setUnits = function (bubble, units) {
+    return __assign(__assign({}, bubble), { units: units, radius: common_1.unitsToRadius(units) });
+};
+exports.createBubble = function (bc) {
+    var b = __assign(__assign({}, bc), { radius: 0 });
+    return exports.setUnits(b, b.units);
+};

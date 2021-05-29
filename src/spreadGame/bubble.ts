@@ -2,40 +2,40 @@ import { unitsToRadius } from "./common";
 
 var bubbleIds = 0;
 
-export default class Bubble {
+export const getNewBubbleIndex = () => {
+  bubbleIds += 1;
+  return bubbleIds;
+};
+export interface BubbleCreator {
   id: number;
   playerId: number;
   motherId: number;
   position: [number, number];
   direction: [number, number];
-  speed: number;
+  units: number;
+  targetId: number;
+  targetPos: [number, number];
+}
+
+interface Bubble {
+  id: number;
+  playerId: number;
+  motherId: number;
+  position: [number, number];
+  direction: [number, number];
   radius: number;
   units: number;
   targetId: number;
   targetPos: [number, number];
-  constructor(
-    playerId: number,
-    position: [number, number],
-    direction: [number, number],
-    units: number,
-    motherId: number,
-    targetId: number,
-    targetPos: [number, number]
-  ) {
-    this.id = bubbleIds;
-    bubbleIds += 1;
-    this.playerId = playerId;
-    this.position = position;
-    this.direction = direction;
-    this.units = units;
-    this.motherId = motherId;
-    this.speed = 90;
-    this.targetId = targetId;
-    this.targetPos = targetPos;
-    this.radius = unitsToRadius(units);
-  }
-
-  updateRadius() {
-    this.radius = unitsToRadius(this.units);
-  }
 }
+
+export const setUnits = (bubble: Bubble, units: number): Bubble => {
+  return { ...bubble, units: units, radius: unitsToRadius(units) };
+};
+
+export const createBubble = (bc: BubbleCreator): Bubble => {
+  const b: Bubble = { ...bc, radius: 0 };
+  return setUnits(b, b.units);
+};
+
+export default Bubble;

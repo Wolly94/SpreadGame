@@ -1,6 +1,6 @@
-import Bubble from "../bubble";
+import Bubble, { createBubble, getNewBubbleIndex, setUnits } from "../bubble";
 import Cell from "../cell";
-import { radiusToGrowth, radiusToUnits } from "../common";
+import { radiusToGrowth, radiusToUnits, unitsToRadius } from "../common";
 import { FightProps } from "../spreadGame";
 import {
   calculationAccuracy,
@@ -10,6 +10,8 @@ import {
   SpreadGameMechanics,
   takeOverCell,
 } from "./commonMechanics";
+
+export const defaultSpeed = 90;
 
 const basicMechanics: SpreadGameMechanics = {
   collideBubble: (
@@ -32,13 +34,9 @@ const basicMechanics: SpreadGameMechanics = {
     if (Math.abs(result) < calculationAccuracy) {
       return [null, null];
     } else if (result > 0) {
-      bubble1.units = result;
-      bubble1.updateRadius();
-      return [bubble1, null];
+      return [setUnits(bubble1, result), null];
     } else {
-      bubble2.units = -result;
-      bubble2.updateRadius();
-      return [null, bubble2];
+      return [null, setUnits(bubble2, -result)];
     }
   },
   collideCell: (bubble: Bubble, cell: Cell, f1: FightProps, f2: FightProps) => {
@@ -57,8 +55,8 @@ const basicMechanics: SpreadGameMechanics = {
     return null;
   },
   move: (bubble: Bubble, ms: number) => {
-    bubble.position[0] += (bubble.speed * bubble.direction[0] * ms) / 1000.0;
-    bubble.position[1] += (bubble.speed * bubble.direction[1] * ms) / 1000.0;
+    bubble.position[0] += (defaultSpeed * bubble.direction[0] * ms) / 1000.0;
+    bubble.position[1] += (defaultSpeed * bubble.direction[1] * ms) / 1000.0;
     return bubble;
   },
   grow(cell: Cell, ms: number) {
@@ -93,16 +91,16 @@ const basicMechanics: SpreadGameMechanics = {
       sender.position[0] + lambda * direction[0],
       sender.position[1] + lambda * direction[1],
     ];
-    const bubble = new Bubble(
-      sender.playerId,
-      position,
-      normedDirection,
-      attacker,
-      sender.id,
-      target.id,
-      target.position
-    );
-    return bubble;
+    return createBubble({
+      id: getNewBubbleIndex(),
+      direction: normedDirection,
+      motherId: sender.id,
+      playerId: sender.playerId,
+      position: position,
+      units: attacker,
+      targetId: target.id,
+      targetPos: target.position,
+    });
   },
 };
 

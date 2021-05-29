@@ -1,4 +1,4 @@
-import Bubble from "../bubble";
+import Bubble, { setUnits } from "../bubble";
 import Cell from "../cell";
 import { distance } from "../entites";
 import { FightProps } from "../spreadGame";
@@ -88,26 +88,25 @@ const bounceMechanics: SpreadGameMechanics = {
     if (bubble.targetId === cell.id) {
       return basicMechanics.collideCell(bubble, cell, f1, f2);
     }
-    if (overlap(bubble, cell) < calculationAccuracy) return bubble;
+    if (overlap(bubble, cell) < calculationAccuracy) return { ...bubble };
     const fighters = Math.min(minUnitsOnBounce, bubble.units, cell.units);
-    bubble.units -= fighters;
-    bubble.updateRadius();
-    if (cell.playerId === bubble.playerId) {
+    const resBubble = setUnits(bubble, bubble.units - fighters);
+    if (cell.playerId === resBubble.playerId) {
       reinforceCell(cell, fighters);
     } else {
       const cellRem = fight(fighters, cell.units, 1, 1);
-      takeOverCell(cell, cellRem, bubble.playerId);
+      takeOverCell(cell, cellRem, resBubble.playerId);
     }
-    const dirToCell = normalize(difference(cell.position, bubble.position));
+    const dirToCell = normalize(difference(cell.position, resBubble.position));
     if (dirToCell === null)
-      return basicMechanics.collideCell(bubble, cell, f1, f2);
+      return basicMechanics.collideCell(resBubble, cell, f1, f2);
     const newDirection = difference(
-      bubble.direction,
-      scalarMul(2 * mul(dirToCell, bubble.direction), dirToCell)
+      resBubble.direction,
+      scalarMul(2 * mul(dirToCell, resBubble.direction), dirToCell)
     );
-    bubble.direction = newDirection;
+    resBubble.direction = newDirection;
 
-    return bubble;
+    return resBubble;
   },
   move: (bubble, ms) => {
     bubble = basicMechanics.move(bubble, ms);

@@ -1,8 +1,20 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var bubble_1 = require("../bubble");
 var entites_1 = require("../entites");
 var basicMechanics_1 = __importDefault(require("./basicMechanics"));
 var commonMechanics_1 = require("./commonMechanics");
@@ -72,23 +84,22 @@ var bounceMechanics = {
             return basicMechanics_1.default.collideCell(bubble, cell, f1, f2);
         }
         if (commonMechanics_1.overlap(bubble, cell) < commonMechanics_1.calculationAccuracy)
-            return bubble;
+            return __assign({}, bubble);
         var fighters = Math.min(minUnitsOnBounce, bubble.units, cell.units);
-        bubble.units -= fighters;
-        bubble.updateRadius();
-        if (cell.playerId === bubble.playerId) {
+        var resBubble = bubble_1.setUnits(bubble, bubble.units - fighters);
+        if (cell.playerId === resBubble.playerId) {
             commonMechanics_1.reinforceCell(cell, fighters);
         }
         else {
             var cellRem = commonMechanics_1.fight(fighters, cell.units, 1, 1);
-            commonMechanics_1.takeOverCell(cell, cellRem, bubble.playerId);
+            commonMechanics_1.takeOverCell(cell, cellRem, resBubble.playerId);
         }
-        var dirToCell = normalize(difference(cell.position, bubble.position));
+        var dirToCell = normalize(difference(cell.position, resBubble.position));
         if (dirToCell === null)
-            return basicMechanics_1.default.collideCell(bubble, cell, f1, f2);
-        var newDirection = difference(bubble.direction, scalarMul(2 * mul(dirToCell, bubble.direction), dirToCell));
-        bubble.direction = newDirection;
-        return bubble;
+            return basicMechanics_1.default.collideCell(resBubble, cell, f1, f2);
+        var newDirection = difference(resBubble.direction, scalarMul(2 * mul(dirToCell, resBubble.direction), dirToCell));
+        resBubble.direction = newDirection;
+        return resBubble;
     },
     move: function (bubble, ms) {
         bubble = basicMechanics_1.default.move(bubble, ms);
