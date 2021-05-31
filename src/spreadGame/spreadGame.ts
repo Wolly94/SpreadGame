@@ -253,6 +253,7 @@ export class SpreadGameImplementation implements SpreadGame {
     );
   }
   sendUnits(playerId: number, senderIds: number[], receiverId: number) {
+    const eventsToAdd: SpreadGameEvent[] = [];
     const player = this.players.find((p) => p.id == playerId);
     if (player == undefined) return false;
     const targetCell = this.cells.find((c) => c.id == receiverId);
@@ -271,6 +272,11 @@ export class SpreadGameImplementation implements SpreadGame {
         );
         if (bubble !== null) {
           this.bubbles.push(bubble);
+          eventsToAdd.push({
+            type: "SendBubbleEvent",
+            sender: sender,
+            receiver: targetCell,
+          });
           sentIds.push(sender.id);
         }
         return remCell;
@@ -289,6 +295,11 @@ export class SpreadGameImplementation implements SpreadGame {
         },
       },
     });
+    this.eventHistory = this.eventHistory.concat(
+      eventsToAdd.map((ev) => {
+        return { timestamp: this.timePassed, data: ev };
+      })
+    );
   }
 
   toClientGameState() {

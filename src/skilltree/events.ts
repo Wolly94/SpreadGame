@@ -28,4 +28,10 @@ export interface FightEvent {
   defender: { type: "Bubble"; bubble: Bubble } | { type: "cell"; cell: Cell };
 }
 
-export type SpreadGameEvent = FightEvent | FightResultEvent;
+export interface SendBubbleEvent {
+  type: "SendBubbleEvent";
+  sender: Cell;
+  receiver: Cell;
+}
+
+export type SpreadGameEvent = FightEvent | FightResultEvent | SendBubbleEvent;

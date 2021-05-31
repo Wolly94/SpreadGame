@@ -186,6 +186,7 @@ var SpreadGameImplementation = /** @class */ (function () {
     };
     SpreadGameImplementation.prototype.sendUnits = function (playerId, senderIds, receiverId) {
         var _this = this;
+        var eventsToAdd = [];
         var player = this.players.find(function (p) { return p.id == playerId; });
         if (player == undefined)
             return false;
@@ -200,6 +201,11 @@ var SpreadGameImplementation = /** @class */ (function () {
                 var _a = _this.mechanics.sendBubble(sender, targetCell, _this.timePassed), remCell = _a[0], bubble = _a[1];
                 if (bubble !== null) {
                     _this.bubbles.push(bubble);
+                    eventsToAdd.push({
+                        type: "SendBubbleEvent",
+                        sender: sender,
+                        receiver: targetCell,
+                    });
                     sentIds.push(sender.id);
                 }
                 return remCell;
@@ -219,6 +225,9 @@ var SpreadGameImplementation = /** @class */ (function () {
                 },
             },
         });
+        this.eventHistory = this.eventHistory.concat(eventsToAdd.map(function (ev) {
+            return { timestamp: _this.timePassed, data: ev };
+        }));
     };
     SpreadGameImplementation.prototype.toClientGameState = function () {
         var _this = this;

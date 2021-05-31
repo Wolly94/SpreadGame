@@ -30,4 +30,9 @@ export interface FightEvent {
         cell: Cell;
     };
 }
-export declare type SpreadGameEvent = FightEvent | FightResultEvent;
+export interface SendBubbleEvent {
+    type: "SendBubbleEvent";
+    sender: Cell;
+    receiver: Cell;
+}
+export declare type SpreadGameEvent = FightEvent | FightResultEvent | SendBubbleEvent;

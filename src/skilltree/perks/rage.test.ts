@@ -1,5 +1,4 @@
 import { SpreadGameImplementation } from "../../spreadGame";
-import { playerFromData } from "../../spreadGame/player";
 import { Rage } from "./rage";
 
 test("test rage", () => {
