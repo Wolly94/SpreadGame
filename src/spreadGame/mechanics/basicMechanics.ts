@@ -78,7 +78,11 @@ const basicMechanics: SpreadGameMechanics = {
         : nextUnits;
     return { ...cell, units: newUnits };
   },
-  sendBubble(sender: Cell, target: Cell): [Cell, Bubble | null] {
+  sendBubble(
+    sender: Cell,
+    target: Cell,
+    timePassed: number
+  ): [Cell, Bubble | null] {
     if (sender.playerId == null) return [{ ...sender }, null];
     var direction = [
       target.position[0] - sender.position[0],
@@ -108,6 +112,7 @@ const basicMechanics: SpreadGameMechanics = {
         units: attacker,
         targetId: target.id,
         targetPos: target.position,
+        creationTime: timePassed,
       }),
     ];
   },

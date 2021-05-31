@@ -68,7 +68,7 @@ var basicMechanics = {
             : nextUnits;
         return __assign(__assign({}, cell), { units: newUnits });
     },
-    sendBubble: function (sender, target) {
+    sendBubble: function (sender, target, timePassed) {
         if (sender.playerId == null)
             return [__assign({}, sender), null];
         var direction = [
@@ -100,6 +100,7 @@ var basicMechanics = {
                 units: attacker,
                 targetId: target.id,
                 targetPos: target.position,
+                creationTime: timePassed,
             }),
         ];
     },

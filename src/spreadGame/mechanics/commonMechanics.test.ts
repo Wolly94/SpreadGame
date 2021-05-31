@@ -13,6 +13,7 @@ test("overlapCenter", () => {
     targetId: 0,
     motherId: 0,
     playerId: 0,
+    creationTime: 0,
   });
   const b2 = createBubble({
     id: 1,
@@ -23,6 +24,7 @@ test("overlapCenter", () => {
     targetId: 0,
     motherId: 0,
     playerId: 0,
+    creationTime: 0,
   });
   const overl = centerOverlap(b1, b2);
   expect(overl).toBe(40);

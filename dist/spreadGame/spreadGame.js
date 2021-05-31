@@ -197,7 +197,7 @@ var SpreadGameImplementation = /** @class */ (function () {
             if (senderIds.some(function (id) { return id === sender.id; }) &&
                 sender.playerId === playerId &&
                 sender.id !== receiverId) {
-                var _a = _this.mechanics.sendBubble(sender, targetCell), remCell = _a[0], bubble = _a[1];
+                var _a = _this.mechanics.sendBubble(sender, targetCell, _this.timePassed), remCell = _a[0], bubble = _a[1];
                 if (bubble !== null) {
                     _this.bubbles.push(bubble);
                     sentIds.push(sender.id);

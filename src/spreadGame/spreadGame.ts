@@ -264,7 +264,11 @@ export class SpreadGameImplementation implements SpreadGame {
         sender.playerId === playerId &&
         sender.id !== receiverId
       ) {
-        const [remCell, bubble] = this.mechanics.sendBubble(sender, targetCell);
+        const [remCell, bubble] = this.mechanics.sendBubble(
+          sender,
+          targetCell,
+          this.timePassed
+        );
         if (bubble !== null) {
           this.bubbles.push(bubble);
           sentIds.push(sender.id);

@@ -101,5 +101,9 @@ export interface SpreadGameMechanics {
   ) => [Bubble | null, Cell];
   move: (bubble: Bubble, ms: number) => Bubble;
   grow: (cell: Cell, ms: number) => Cell;
-  sendBubble: (sender: Cell, target: Cell) => [Cell, Bubble | null];
+  sendBubble: (
+    sender: Cell,
+    target: Cell,
+    timePassed: number
+  ) => [Cell, Bubble | null];
 }

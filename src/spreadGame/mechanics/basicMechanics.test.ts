@@ -13,6 +13,7 @@ test("collide 50 vs 25 units", () => {
     targetId: 0,
     targetPos: [1000, 1000],
     motherId: 0,
+    creationTime: 0,
   });
   const b2 = createBubble({
     id: 1,
@@ -23,6 +24,7 @@ test("collide 50 vs 25 units", () => {
     targetId: 0,
     targetPos: [1000, 1000],
     motherId: 0,
+    creationTime: 0,
   });
   const res = basicMechanics.collideBubble(
     b1,
@@ -51,6 +53,7 @@ test("collide 50 vs 50 units", () => {
     targetId: 0,
     targetPos: [1000, 1000],
     motherId: 0,
+    creationTime: 0,
   });
   const b2 = createBubble({
     id: 1,
@@ -61,6 +64,7 @@ test("collide 50 vs 50 units", () => {
     targetId: 0,
     targetPos: [1000, 1000],
     motherId: 0,
+    creationTime: 0,
   });
   const res = basicMechanics.collideBubble(
     b1,
@@ -84,6 +88,7 @@ test("collide 25 vs 50 units", () => {
     targetId: 0,
     targetPos: [1000, 1000],
     motherId: 0,
+    creationTime: 0,
   });
   const b2 = createBubble({
     id: 1,
@@ -94,6 +99,7 @@ test("collide 25 vs 50 units", () => {
     targetId: 0,
     targetPos: [1000, 1000],
     motherId: 0,
+    creationTime: 0,
   });
   const res = basicMechanics.collideBubble(
     b1,

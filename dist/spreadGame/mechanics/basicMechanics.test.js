@@ -17,6 +17,7 @@ test("collide 50 vs 25 units", function () {
         targetId: 0,
         targetPos: [1000, 1000],
         motherId: 0,
+        creationTime: 0,
     });
     var b2 = bubble_1.createBubble({
         id: 1,
@@ -27,6 +28,7 @@ test("collide 50 vs 25 units", function () {
         targetId: 0,
         targetPos: [1000, 1000],
         motherId: 0,
+        creationTime: 0,
     });
     var res = basicMechanics_1.default.collideBubble(b1, b2, { attackModifier: 1.0 }, { attackModifier: 1.0 });
     expect(res[0]).not.toBe(null);
@@ -50,6 +52,7 @@ test("collide 50 vs 50 units", function () {
         targetId: 0,
         targetPos: [1000, 1000],
         motherId: 0,
+        creationTime: 0,
     });
     var b2 = bubble_1.createBubble({
         id: 1,
@@ -60,6 +63,7 @@ test("collide 50 vs 50 units", function () {
         targetId: 0,
         targetPos: [1000, 1000],
         motherId: 0,
+        creationTime: 0,
     });
     var res = basicMechanics_1.default.collideBubble(b1, b2, { attackModifier: 1.0 }, { attackModifier: 1.0 });
     expect(res[0]).toBe(null);
@@ -77,6 +81,7 @@ test("collide 25 vs 50 units", function () {
         targetId: 0,
         targetPos: [1000, 1000],
         motherId: 0,
+        creationTime: 0,
     });
     var b2 = bubble_1.createBubble({
         id: 1,
@@ -87,6 +92,7 @@ test("collide 25 vs 50 units", function () {
         targetId: 0,
         targetPos: [1000, 1000],
         motherId: 0,
+        creationTime: 0,
     });
     var res = basicMechanics_1.default.collideBubble(b1, b2, { attackModifier: 1.0 }, { attackModifier: 1.0 });
     expect(res[0]).toBe(null);

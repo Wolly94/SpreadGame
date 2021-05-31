@@ -14,6 +14,7 @@ test("overlapCenter", function () {
         targetId: 0,
         motherId: 0,
         playerId: 0,
+        creationTime: 0,
     });
     var b2 = bubble_1.createBubble({
         id: 1,
@@ -24,6 +25,7 @@ test("overlapCenter", function () {
         targetId: 0,
         motherId: 0,
         playerId: 0,
+        creationTime: 0,
     });
     var overl = commonMechanics_1.centerOverlap(b1, b2);
     expect(overl).toBe(40);

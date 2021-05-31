@@ -15,6 +15,7 @@ export interface BubbleCreator {
   units: number;
   targetId: number;
   targetPos: [number, number];
+  creationTime: number;
 }
 
 interface Bubble {
@@ -27,6 +28,7 @@ interface Bubble {
   units: number;
   targetId: number;
   targetPos: [number, number];
+  creationTime: number;
 }
 
 export const setUnits = (bubble: Bubble, units: number): Bubble => {
