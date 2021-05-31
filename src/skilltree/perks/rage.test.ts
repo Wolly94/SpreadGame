@@ -7,7 +7,9 @@ test("test rage", () => {
   const game = SpreadGameImplementation.fromReplay(Rage.replay);
   game.runReplay(rep, 3000);
   var clientState = game.toClientGameState();
-  const ragedBubbles = clientState.bubbles.filter((bubble) => bubble.rage);
+  const ragedBubbles = clientState.bubbles.filter(
+    (bubble) => bubble.attackCombatAbilities > 1
+  );
   expect(ragedBubbles.length).toBe(1);
   game.runReplay(rep, 2000);
   clientState = game.toClientGameState();

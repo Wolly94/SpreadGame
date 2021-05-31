@@ -7,7 +7,7 @@ test("test rage", function () {
     var game = spreadGame_1.SpreadGameImplementation.fromReplay(rage_1.Rage.replay);
     game.runReplay(rep, 3000);
     var clientState = game.toClientGameState();
-    var ragedBubbles = clientState.bubbles.filter(function (bubble) { return bubble.rage; });
+    var ragedBubbles = clientState.bubbles.filter(function (bubble) { return bubble.attackCombatAbilities > 1; });
     expect(ragedBubbles.length).toBe(1);
     game.runReplay(rep, 2000);
     clientState = game.toClientGameState();

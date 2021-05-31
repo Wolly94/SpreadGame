@@ -3,7 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var rage_1 = require("../skilltree/perks/rage");
 var skilltree_1 = require("../skilltree/skilltree");
 var basicMechanics_1 = __importDefault(require("./mechanics/basicMechanics"));
 var bounceMechanics_1 = __importDefault(require("./mechanics/bounceMechanics"));
@@ -235,18 +234,18 @@ var SpreadGameImplementation = /** @class */ (function () {
                 };
             }),
             bubbles: this.bubbles.map(function (bubble) {
-                var _a;
                 var pl = _this.players.find(function (pl) { return pl.id === bubble.playerId; });
-                var ragePerkLevel = (_a = pl === null || pl === void 0 ? void 0 : pl.skills.find(function (sk) { return sk.perk.name === rage_1.Rage.name; })) === null || _a === void 0 ? void 0 : _a.level;
+                var st = _this.players.find(function (pl) { return pl.id === bubble.playerId; });
+                var fightProps = st === undefined
+                    ? { attackModifier: 1.0 }
+                    : skilltree_1.skillTreeMethods.getAttackerModifier(st.skills, bubble, _this);
                 return {
                     id: bubble.id,
                     playerId: bubble.playerId,
                     units: bubble.units,
                     position: bubble.position,
                     radius: bubble.radius,
-                    rage: ragePerkLevel === undefined
-                        ? false
-                        : rage_1.rageCondition(ragePerkLevel, _this.eventHistory, _this.timePassed, bubble.playerId),
+                    attackCombatAbilities: fightProps.attackModifier,
                 };
             }),
         };

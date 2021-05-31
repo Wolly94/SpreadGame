@@ -49,7 +49,7 @@ const replay: SpreadReplay = {
   ],
 };
 
-export const rageCondition = (
+const rageCondition = (
   lvl: number,
   eventHistory: HistoryEntry<SpreadGameEvent>[],
   timePassed: number,

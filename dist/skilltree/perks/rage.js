@@ -41,7 +41,7 @@ var replay = {
         },
     ],
 };
-exports.rageCondition = function (lvl, eventHistory, timePassed, playerId) {
+var rageCondition = function (lvl, eventHistory, timePassed, playerId) {
     if (lvl <= 0)
         return false;
     var val = values[Math.min(lvl, values.length) - 1];
@@ -65,7 +65,7 @@ exports.Rage = {
         {
             type: "FightEffect",
             getValue: function (lvl, attacker, spreadGame) {
-                if (exports.rageCondition(lvl, spreadGame.eventHistory, spreadGame.timePassed, attacker.playerId)) {
+                if (rageCondition(lvl, spreadGame.eventHistory, spreadGame.timePassed, attacker.playerId)) {
                     var val = values[Math.min(lvl, values.length) - 1];
                     return {
                         attackModifier: val[1],

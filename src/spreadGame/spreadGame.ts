@@ -2,7 +2,7 @@ import { ClientGameState } from "../messages/inGame/clientGameState";
 import { GameSettings } from "../messages/inGame/gameServerMessages";
 import SpreadReplay, { HistoryEntry, Move } from "../messages/replay/replay";
 import { SpreadGameEvent } from "../skilltree/events";
-import { Rage, rageCondition } from "../skilltree/perks/rage";
+import { Rage } from "../skilltree/perks/rage";
 import { skillTreeMethods } from "../skilltree/skilltree";
 import Bubble from "./bubble";
 import Cell from "./cell";
@@ -301,25 +301,18 @@ export class SpreadGameImplementation implements SpreadGame {
       }),
       bubbles: this.bubbles.map((bubble) => {
         const pl = this.players.find((pl) => pl.id === bubble.playerId);
-        const ragePerkLevel = pl?.skills.find(
-          (sk) => sk.perk.name === Rage.name
-        )?.level;
-
+        const st = this.players.find((pl) => pl.id === bubble.playerId);
+        const fightProps =
+          st === undefined
+            ? { attackModifier: 1.0 }
+            : skillTreeMethods.getAttackerModifier(st.skills, bubble, this);
         return {
           id: bubble.id,
           playerId: bubble.playerId,
           units: bubble.units,
           position: bubble.position,
           radius: bubble.radius,
-          rage:
-            ragePerkLevel === undefined
-              ? false
-              : rageCondition(
-                  ragePerkLevel,
-                  this.eventHistory,
-                  this.timePassed,
-                  bubble.playerId
-                ),
+          attackCombatAbilities: fightProps.attackModifier,
         };
       }),
     };
