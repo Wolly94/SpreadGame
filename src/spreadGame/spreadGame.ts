@@ -44,6 +44,10 @@ export interface FightProps {
   attackModifier: number;
 }
 
+export interface ConquerCellProps {
+  additionalUnits: number;
+}
+
 export type SpreadGame = SpreadGameState &
   SpreadGameFunctions &
   SpreadGameInteraction;
@@ -210,7 +214,7 @@ export class SpreadGameImplementation implements SpreadGame {
           (currentBubble.motherId !== cell.id ||
             currentBubble.playerId !== cell.playerId)
         ) {
-          const [newCurrentBubble, newCell] = this.mechanics.collideCell(
+          let [newCurrentBubble, newCell] = this.mechanics.collideCell(
             currentBubble,
             cell,
             f1,
@@ -226,6 +230,14 @@ export class SpreadGameImplementation implements SpreadGame {
               cellId: newCell.id,
               playerId: cell.playerId,
             });
+            const conquerProps =
+              st1 === undefined
+                ? { additionalUnits: 0 }
+                : skillTreeMethods.getConquerProps(st1.skills);
+            newCell = {
+              ...newCell,
+              units: newCell.units + conquerProps.additionalUnits,
+            };
           }
           if (newCurrentBubble === null) {
             eventsToAdd.push({

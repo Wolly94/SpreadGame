@@ -3,7 +3,7 @@ import { SkillTreeData } from "../messages/inGame/gameServerMessages";
 import SpreadReplay from "../messages/replay/replay";
 import { SpreadGameImplementation } from "../spreadGame";
 import Bubble from "../spreadGame/bubble";
-import { GetFightProps } from "./effects";
+import { GetConquerBubbleProps, GetFightProps } from "./effects";
 import { GeneralPerk } from "./perks/perk";
 import { Attack } from "./skills/attack";
 
@@ -83,6 +83,17 @@ export const skillTreeMethods = {
         });
     });
     return { attackModifier: 1 + attackModifier / 100 };
+  },
+  getConquerProps: (skilledPerks: SkilledPerk[]) => {
+    var additionalUnits = 0;
+    skilledPerks.forEach((skilledPerk) => {
+      skilledPerk.perk.effect
+        .filter((p): p is GetConquerBubbleProps => p.type === "ConquerBubble")
+        .forEach((eff) => {
+          additionalUnits += eff.getValue(skilledPerk.level).additionalUnits;
+        });
+    });
+    return { additionalUnits: additionalUnits };
   },
 };
 

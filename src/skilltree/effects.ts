@@ -1,6 +1,11 @@
 import { HistoryEntry } from "../messages/replay/replay";
 import Bubble from "../spreadGame/bubble";
-import { FightProps, SpreadGameImplementation } from "../spreadGame/spreadGame";
+import Cell from "../spreadGame/cell";
+import {
+  ConquerCellProps,
+  FightProps,
+  SpreadGameImplementation,
+} from "../spreadGame/spreadGame";
 import { FightEvent, SpreadGameEvent } from "./events";
 
 export interface GetFightProps {
@@ -12,4 +17,11 @@ export interface GetFightProps {
   ) => FightProps;
 }
 
-export type PerkEffect = GetFightProps;
+export interface GetConquerBubbleProps {
+  type: "ConquerBubble";
+  getValue: (
+    level: number // level of perk
+  ) => ConquerCellProps;
+}
+
+export type PerkEffect = GetFightProps | GetConquerBubbleProps;
