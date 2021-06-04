@@ -23,6 +23,9 @@ export declare const skillTreeMethods: {
     getAttackerModifier: (skilledPerks: SkilledPerk[], attacker: Bubble, spreadGame: SpreadGameImplementation) => {
         attackModifier: number;
     };
+    getConquerProps: (skilledPerks: SkilledPerk[]) => {
+        additionalUnits: number;
+    };
 };
 export declare const defaultSkillTree: SkillTree;
 export declare const fullSkillTree: SkillTree;

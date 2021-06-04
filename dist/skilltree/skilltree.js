@@ -52,6 +52,17 @@ exports.skillTreeMethods = {
         });
         return { attackModifier: 1 + attackModifier / 100 };
     },
+    getConquerProps: function (skilledPerks) {
+        var additionalUnits = 0;
+        skilledPerks.forEach(function (skilledPerk) {
+            skilledPerk.perk.effect
+                .filter(function (p) { return p.type === "ConquerBubble"; })
+                .forEach(function (eff) {
+                additionalUnits += eff.getValue(skilledPerk.level).additionalUnits;
+            });
+        });
+        return { additionalUnits: additionalUnits };
+    },
 };
 exports.defaultSkillTree = {
     skills: [attack_1.Attack],

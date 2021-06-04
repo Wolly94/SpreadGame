@@ -36,7 +36,7 @@ test("bubble collision", function () {
     var ms = calculatedCollisionTimeInMs(b1, b2);
     gameState.step(ms);
     expect(gameState.bubbles.length).toBe(0);
-    expect(gameState.eventHistory.length).toBe(2);
+    expect(gameState.eventHistory.length).toBe(4);
 });
 test("bubble collision with attack modifier", function () {
     var x = 10;

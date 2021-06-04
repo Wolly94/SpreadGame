@@ -24,6 +24,9 @@ export interface SpreadGameFunctions {
 export interface FightProps {
     attackModifier: number;
 }
+export interface ConquerCellProps {
+    additionalUnits: number;
+}
 export declare type SpreadGame = SpreadGameState & SpreadGameFunctions & SpreadGameInteraction;
 export declare class SpreadGameImplementation implements SpreadGame {
     map: SpreadMap;
