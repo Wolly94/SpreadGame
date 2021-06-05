@@ -11,7 +11,7 @@ var simpleMap = {
         {
             id: 0,
             playerId: 0,
-            position: [100, 100],
+            position: [200, 200],
             radius: common_1.unitsToRadius(204),
             units: 204,
         },

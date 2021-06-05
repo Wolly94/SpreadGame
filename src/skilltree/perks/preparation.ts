@@ -16,7 +16,7 @@ const simpleMap: SpreadMap = {
     {
       id: 0,
       playerId: 0,
-      position: [100, 100],
+      position: [200, 200],
       radius: unitsToRadius(204),
       units: 204,
     },
