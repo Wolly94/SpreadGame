@@ -48,11 +48,7 @@ var replay = {
         },
     ],
 };
-var currentAttacksSent = function (lvl, attacker, eventHistory) {
-    if (lvl <= 0)
-        return 0;
-    var val = values[Math.min(lvl, values.length) - 1];
-    var toleratedTimeSpan = val[0];
+var currentAttacksSent = function (toleratedTimeSpan, attacker, eventHistory) {
     var attacksSentBeforeCreation = eventHistory.filter(function (ev) {
         return ev.data.type === "SendBubbleEvent" &&
             ev.data.sender.id === attacker.motherId &&
@@ -76,8 +72,9 @@ exports.Berserk = {
             getValue: function (lvl, attacker, spreadGame) {
                 if (lvl <= 0)
                     return { combatAbilityModifier: 0 };
-                var attacksSent = currentAttacksSent(lvl, attacker, spreadGame.eventHistory);
                 var val = values[Math.min(lvl, values.length) - 1];
+                var toleratedTimeSpan = val[0];
+                var attacksSent = currentAttacksSent(toleratedTimeSpan, attacker, spreadGame.eventHistory);
                 return {
                     combatAbilityModifier: val[1] * attacksSent,
                 };

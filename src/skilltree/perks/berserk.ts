@@ -56,13 +56,10 @@ const replay: SpreadReplay = {
 };
 
 const currentAttacksSent = (
-  lvl: number,
+  toleratedTimeSpan: number,
   attacker: Bubble,
   eventHistory: HistoryEntry<SpreadGameEvent>[]
 ) => {
-  if (lvl <= 0) return 0;
-  const val = values[Math.min(lvl, values.length) - 1];
-  const toleratedTimeSpan = val[0];
   const attacksSentBeforeCreation = eventHistory.filter(
     (ev) =>
       ev.data.type === "SendBubbleEvent" &&
@@ -88,12 +85,13 @@ export const Berserk: Perk<[number, number]> = {
       type: "FightEffect",
       getValue: (lvl, attacker, spreadGame) => {
         if (lvl <= 0) return { combatAbilityModifier: 0 };
+        const val = values[Math.min(lvl, values.length) - 1];
+        const toleratedTimeSpan = val[0];
         const attacksSent = currentAttacksSent(
-          lvl,
+          toleratedTimeSpan,
           attacker,
           spreadGame.eventHistory
         );
-        const val = values[Math.min(lvl, values.length) - 1];
         return {
           combatAbilityModifier: val[1] * attacksSent,
         };
