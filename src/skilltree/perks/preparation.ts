@@ -7,7 +7,10 @@ import { formatDescription } from "../utils";
 import { Perk } from "./perk";
 
 const name = "Preparation";
-const values = [1, 2];
+const values: [number, number][] = [
+  [1, 50],
+  [2, 100],
+];
 
 const simpleMap: SpreadMap = {
   width: 500,
@@ -70,13 +73,15 @@ const latestMoveTimeStamp = (
   return latestTimeStamp;
 };
 
-export const Preparation: Perk<number> = {
+export const Preparation: Perk<[number, number]> = {
   name: name,
   values: values,
   description:
     "Raises combat abilities of your cells by " +
-    formatDescription(values, (val) => val.toString() + "%", "/") +
-    " for each second that cell did not send an attack.",
+    formatDescription(values, (val) => val[0].toString() + "%", "/") +
+    " for each second that cell did not send an attack, capped at " +
+    formatDescription(values, (val) => val[1].toString() + "%", "/") +
+    ".",
   effect: [
     {
       type: "DefenderFightEffect",
@@ -87,11 +92,12 @@ export const Preparation: Perk<number> = {
             defender,
             spreadGame.eventHistory
           );
+          const val = values[Math.min(lvl, values.length) - 1];
           return {
-            combatAbilityModifier:
-              (values[Math.min(lvl, values.length) - 1] *
-                (spreadGame.timePassed - idleSince)) /
-              1000,
+            combatAbilityModifier: Math.min(
+              (val[0] * (spreadGame.timePassed - idleSince)) / 1000,
+              val[1]
+            ),
           };
         }
       },

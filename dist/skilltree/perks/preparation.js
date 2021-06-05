@@ -3,7 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var common_1 = require("../../spreadGame/common");
 var utils_1 = require("../utils");
 var name = "Preparation";
-var values = [1, 2];
+var values = [
+    [1, 50],
+    [2, 100],
+];
 var simpleMap = {
     width: 500,
     height: 500,
@@ -59,8 +62,10 @@ exports.Preparation = {
     name: name,
     values: values,
     description: "Raises combat abilities of your cells by " +
-        utils_1.formatDescription(values, function (val) { return val.toString() + "%"; }, "/") +
-        " for each second that cell did not send an attack.",
+        utils_1.formatDescription(values, function (val) { return val[0].toString() + "%"; }, "/") +
+        " for each second that cell did not send an attack, capped at " +
+        utils_1.formatDescription(values, function (val) { return val[1].toString() + "%"; }, "/") +
+        ".",
     effect: [
         {
             type: "DefenderFightEffect",
@@ -69,10 +74,9 @@ exports.Preparation = {
                     return { combatAbilityModifier: 0 };
                 else {
                     var idleSince = latestMoveTimeStamp(defender, spreadGame.eventHistory);
+                    var val = values[Math.min(lvl, values.length) - 1];
                     return {
-                        combatAbilityModifier: (values[Math.min(lvl, values.length) - 1] *
-                            (spreadGame.timePassed - idleSince)) /
-                            1000,
+                        combatAbilityModifier: Math.min((val[0] * (spreadGame.timePassed - idleSince)) / 1000, val[1]),
                     };
                 }
             },
