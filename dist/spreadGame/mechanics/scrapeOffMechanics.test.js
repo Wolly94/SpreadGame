@@ -25,7 +25,7 @@ var replay = {
         ],
     },
     players: [
-        { id: 0, skills: [] },
+        { id: 0, skills: [{ level: 2, name: "BaseAttack" }] },
         { id: 1, skills: [] },
     ],
     moveHistory: [
