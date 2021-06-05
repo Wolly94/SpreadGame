@@ -12,4 +12,5 @@ test("test baseDefense", () => {
   var clientState = game.toClientGameState();
   cell2 = clientState.cells.find((c) => c.id === 1);
   expect(cell2?.playerId).toBe(1);
+  expect(cell2?.defenderCombatAbilities).toBe(1.3);
 });

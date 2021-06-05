@@ -251,16 +251,20 @@ var SpreadGameImplementation = /** @class */ (function () {
         var gs = {
             timePassedInMs: this.timePassed,
             cells: this.cells.map(function (cell) {
+                var st = _this.players.find(function (pl) { return pl.id === cell.playerId; });
+                var fightProps = st === undefined
+                    ? { combatAbilityModifier: 1.0 }
+                    : skilltree_1.skillTreeMethods.getDefenderModifier(st.skills, cell, _this);
                 return {
                     id: cell.id,
                     playerId: cell.playerId,
                     units: cell.units,
                     position: cell.position,
                     radius: cell.radius,
+                    defenderCombatAbilities: fightProps.combatAbilityModifier,
                 };
             }),
             bubbles: this.bubbles.map(function (bubble) {
-                var pl = _this.players.find(function (pl) { return pl.id === bubble.playerId; });
                 var st = _this.players.find(function (pl) { return pl.id === bubble.playerId; });
                 var fightProps = st === undefined
                     ? { combatAbilityModifier: 1.0 }

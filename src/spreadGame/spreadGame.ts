@@ -325,16 +325,22 @@ export class SpreadGameImplementation implements SpreadGame {
     const gs: ClientGameState = {
       timePassedInMs: this.timePassed,
       cells: this.cells.map((cell) => {
+        const st = this.players.find((pl) => pl.id === cell.playerId);
+        const fightProps: DefenderFightProps =
+          st === undefined
+            ? { combatAbilityModifier: 1.0 }
+            : skillTreeMethods.getDefenderModifier(st.skills, cell, this);
         return {
           id: cell.id,
           playerId: cell.playerId,
           units: cell.units,
           position: cell.position,
           radius: cell.radius,
+
+          defenderCombatAbilities: fightProps.combatAbilityModifier,
         };
       }),
       bubbles: this.bubbles.map((bubble) => {
-        const pl = this.players.find((pl) => pl.id === bubble.playerId);
         const st = this.players.find((pl) => pl.id === bubble.playerId);
         const fightProps: AttackerFightProps =
           st === undefined
@@ -346,6 +352,7 @@ export class SpreadGameImplementation implements SpreadGame {
           units: bubble.units,
           position: bubble.position,
           radius: bubble.radius,
+
           attackCombatAbilities: fightProps.combatAbilityModifier,
         };
       }),

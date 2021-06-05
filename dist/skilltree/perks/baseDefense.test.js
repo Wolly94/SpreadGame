@@ -13,4 +13,5 @@ test("test baseDefense", function () {
     var clientState = game.toClientGameState();
     cell2 = clientState.cells.find(function (c) { return c.id === 1; });
     expect(cell2 === null || cell2 === void 0 ? void 0 : cell2.playerId).toBe(1);
+    expect(cell2 === null || cell2 === void 0 ? void 0 : cell2.defenderCombatAbilities).toBe(1.3);
 });
