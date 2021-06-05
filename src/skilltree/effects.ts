@@ -3,18 +3,27 @@ import Bubble from "../spreadGame/bubble";
 import Cell from "../spreadGame/cell";
 import {
   ConquerCellProps,
-  FightProps,
+  AttackerFightProps,
   SpreadGameImplementation,
 } from "../spreadGame/spreadGame";
 import { FightEvent, SpreadGameEvent } from "./events";
 
-export interface GetFightProps {
+export interface GetAttackerFightProps {
   type: "FightEffect";
   getValue: (
     level: number, // level of perk
     attacker: Bubble,
     spreadGame: SpreadGameImplementation
-  ) => FightProps;
+  ) => AttackerFightProps;
+}
+
+export interface GetDefenderFightProps {
+  type: "DefenderFightEffect";
+  getValue: (
+    level: number, // level of perk
+    defender: Cell,
+    spreadGame: SpreadGameImplementation
+  ) => AttackerFightProps;
 }
 
 export interface GetConquerBubbleProps {
@@ -24,4 +33,7 @@ export interface GetConquerBubbleProps {
   ) => ConquerCellProps;
 }
 
-export type PerkEffect = GetFightProps | GetConquerBubbleProps;
+export type PerkEffect =
+  | GetAttackerFightProps
+  | GetDefenderFightProps
+  | GetConquerBubbleProps;

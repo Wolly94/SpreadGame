@@ -90,10 +90,10 @@ export const Rage: Perk<[number, number]> = {
         ) {
           const val = values[Math.min(lvl, values.length) - 1];
           return {
-            attackModifier: val[1],
+            combatAbilityModifier: val[1],
           };
         } else {
-          return { attackModifier: 0 };
+          return { combatAbilityModifier: 0 };
         }
       },
     },

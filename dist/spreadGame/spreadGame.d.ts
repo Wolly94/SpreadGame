@@ -21,8 +21,11 @@ export interface SpreadGameFunctions {
     toClientGameState: () => ClientGameState;
     getReplay: () => SpreadReplay;
 }
-export interface FightProps {
-    attackModifier: number;
+export interface AttackerFightProps {
+    combatAbilityModifier: number;
+}
+export interface DefenderFightProps {
+    combatAbilityModifier: number;
 }
 export interface ConquerCellProps {
     additionalUnits: number;

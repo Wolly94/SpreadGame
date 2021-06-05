@@ -61,9 +61,11 @@ export const BaseAttack: Perk<number> = {
     {
       type: "FightEffect",
       getValue: (lvl) => {
-        if (lvl <= 0) return { attackModifier: 0 };
+        if (lvl <= 0) return { combatAbilityModifier: 0 };
         else
-          return { attackModifier: values[Math.min(lvl, values.length) - 1] };
+          return {
+            combatAbilityModifier: values[Math.min(lvl, values.length) - 1],
+          };
       },
     },
   ],

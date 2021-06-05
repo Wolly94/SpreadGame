@@ -1,7 +1,7 @@
 import Bubble, { setUnits } from "../bubble";
 import Cell from "../cell";
 import { distance } from "../entites";
-import { FightProps } from "../spreadGame";
+import { AttackerFightProps } from "../spreadGame";
 import basicMechanics from "./basicMechanics";
 import {
   calculationAccuracy,
@@ -78,12 +78,17 @@ const bounceMechanics: SpreadGameMechanics = {
   collideBubble: (
     bubble1: Bubble,
     bubble2: Bubble,
-    f1: FightProps,
-    f2: FightProps
+    f1: AttackerFightProps,
+    f2: AttackerFightProps
   ) => {
     return scrapeOffMechanics.collideBubble(bubble1, bubble2, f1, f2);
   },
-  collideCell: (bubble: Bubble, cell: Cell, f1: FightProps, f2: FightProps) => {
+  collideCell: (
+    bubble: Bubble,
+    cell: Cell,
+    f1: AttackerFightProps,
+    f2: AttackerFightProps
+  ) => {
     // bubble reached its destiny?
     if (bubble.targetId === cell.id) {
       return basicMechanics.collideCell(bubble, cell, f1, f2);
@@ -99,8 +104,8 @@ const bounceMechanics: SpreadGameMechanics = {
       const cellRem = fight(
         fighters,
         cell.units,
-        f1.attackModifier,
-        f2.attackModifier
+        f1.combatAbilityModifier,
+        f2.combatAbilityModifier
       );
       takeOverCell(resCell, cellRem, resBubble.playerId);
     }

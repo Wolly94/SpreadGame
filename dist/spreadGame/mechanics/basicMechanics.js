@@ -23,7 +23,7 @@ var basicMechanics = {
         // return
         if (bubble1.playerId === bubble2.playerId)
             return [__assign({}, bubble1), __assign({}, bubble2)];
-        var result = commonMechanics_1.fight(bubble1.units, bubble2.units, f1.attackModifier, f2.attackModifier);
+        var result = commonMechanics_1.fight(bubble1.units, bubble2.units, f1.combatAbilityModifier, f2.combatAbilityModifier);
         if (Math.abs(result) < commonMechanics_1.calculationAccuracy) {
             return [null, null];
         }
@@ -43,7 +43,7 @@ var basicMechanics = {
             commonMechanics_1.reinforceCell(resCell, resBubble.units);
         }
         else {
-            var result = commonMechanics_1.fight(resBubble.units, resCell.units, f1.attackModifier, f2.attackModifier);
+            var result = commonMechanics_1.fight(resBubble.units, resCell.units, f1.combatAbilityModifier, f2.combatAbilityModifier);
             commonMechanics_1.takeOverCell(resCell, result, resBubble.playerId);
         }
         return [null, resCell];

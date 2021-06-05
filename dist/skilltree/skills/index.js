@@ -9,3 +9,5 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var attack = __importStar(require("./attack"));
 exports.attack = attack;
+var defense = __importStar(require("./defense"));
+exports.defense = defense;

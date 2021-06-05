@@ -87,7 +87,7 @@ export const Berserk: Perk<[number, number]> = {
     {
       type: "FightEffect",
       getValue: (lvl, attacker, spreadGame) => {
-        if (lvl <= 0) return { attackModifier: 0 };
+        if (lvl <= 0) return { combatAbilityModifier: 0 };
         const attacksSent = currentAttacksSent(
           lvl,
           attacker,
@@ -95,7 +95,7 @@ export const Berserk: Perk<[number, number]> = {
         );
         const val = values[Math.min(lvl, values.length) - 1];
         return {
-          attackModifier: val[1] * attacksSent,
+          combatAbilityModifier: val[1] * attacksSent,
         };
       },
     },

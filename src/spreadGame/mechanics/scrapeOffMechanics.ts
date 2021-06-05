@@ -2,7 +2,7 @@ import Bubble, { createBubble, setUnits } from "../bubble";
 import Cell from "../cell";
 import { radiusToUnits, radiusToUnitsFixPoint } from "../common";
 import { distance } from "../entites";
-import { FightProps } from "../spreadGame";
+import { AttackerFightProps } from "../spreadGame";
 import basicMechanics from "./basicMechanics";
 import {
   calculationAccuracy,
@@ -24,8 +24,8 @@ const scrapeOffMechanics: SpreadGameMechanics = {
   collideBubble: (
     bubble1: Bubble,
     bubble2: Bubble,
-    f1: FightProps,
-    f2: FightProps
+    f1: AttackerFightProps,
+    f2: AttackerFightProps
   ) => {
     if (overlap(bubble1, bubble2) < minOverlap + calculationAccuracy)
       return [bubble1, bubble2];
@@ -34,8 +34,8 @@ const scrapeOffMechanics: SpreadGameMechanics = {
     const [u1, u2] = fightBubblePartial(
       bubble1.units,
       bubble2.units,
-      f1.attackModifier,
-      f2.attackModifier,
+      f1.combatAbilityModifier,
+      f2.combatAbilityModifier,
       dist
     );
     var res1: Bubble | null = null;
@@ -48,7 +48,12 @@ const scrapeOffMechanics: SpreadGameMechanics = {
     }
     return [res1, res2];
   },
-  collideCell: (bubble: Bubble, cell: Cell, f1: FightProps, f2: FightProps) => {
+  collideCell: (
+    bubble: Bubble,
+    cell: Cell,
+    f1: AttackerFightProps,
+    f2: AttackerFightProps
+  ) => {
     const resCell = { ...cell };
     if (overlap(bubble, resCell) < minOverlap + calculationAccuracy)
       return [{ ...bubble }, resCell];
@@ -66,8 +71,8 @@ const scrapeOffMechanics: SpreadGameMechanics = {
         const result = fight(
           fighters,
           resCell.units,
-          f1.attackModifier,
-          f2.attackModifier
+          f1.combatAbilityModifier,
+          f2.combatAbilityModifier
         );
         takeOverCell(resCell, result, bubble.playerId);
       }

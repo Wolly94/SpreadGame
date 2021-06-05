@@ -29,8 +29,8 @@ test("collide 50 vs 25 units", () => {
   const res = basicMechanics.collideBubble(
     b1,
     b2,
-    { attackModifier: 1.0 },
-    { attackModifier: 1.0 }
+    { combatAbilityModifier: 1.0 },
+    { combatAbilityModifier: 1.0 }
   );
   expect(res[0]).not.toBe(null);
   expect(res[1]).toBe(null);
@@ -69,8 +69,8 @@ test("collide 50 vs 50 units", () => {
   const res = basicMechanics.collideBubble(
     b1,
     b2,
-    { attackModifier: 1.0 },
-    { attackModifier: 1.0 }
+    { combatAbilityModifier: 1.0 },
+    { combatAbilityModifier: 1.0 }
   );
   expect(res[0]).toBe(null);
   expect(res[1]).toBe(null);
@@ -104,8 +104,8 @@ test("collide 25 vs 50 units", () => {
   const res = basicMechanics.collideBubble(
     b1,
     b2,
-    { attackModifier: 1.0 },
-    { attackModifier: 1.0 }
+    { combatAbilityModifier: 1.0 },
+    { combatAbilityModifier: 1.0 }
   );
   expect(res[0]).toBe(null);
   expect(res[1]).not.toBe(null);

@@ -1,11 +1,20 @@
 import { SkilledPerkData } from "../messages/inGame/clientLobbyMessage";
 import { SkillTreeData } from "../messages/inGame/gameServerMessages";
-import SpreadReplay from "../messages/replay/replay";
 import { SpreadGameImplementation } from "../spreadGame";
 import Bubble from "../spreadGame/bubble";
-import { GetConquerBubbleProps, GetFightProps } from "./effects";
+import Cell from "../spreadGame/cell";
+import {
+  AttackerFightProps,
+  DefenderFightProps,
+} from "../spreadGame/spreadGame";
+import {
+  GetAttackerFightProps,
+  GetConquerBubbleProps,
+  GetDefenderFightProps,
+} from "./effects";
 import { GeneralPerk } from "./perks/perk";
 import { Attack } from "./skills/attack";
+import { Defense } from "./skills/defense";
 
 export interface SkilledPerk {
   perk: GeneralPerk;
@@ -69,20 +78,41 @@ export const skillTreeMethods = {
     skilledPerks: SkilledPerk[],
     attacker: Bubble,
     spreadGame: SpreadGameImplementation
-  ) => {
+  ): AttackerFightProps => {
     var attackModifier = 0;
     skilledPerks.forEach((skilledPerk) => {
       skilledPerk.perk.effect
-        .filter((p): p is GetFightProps => p.type === "FightEffect")
+        .filter((p): p is GetAttackerFightProps => p.type === "FightEffect")
         .forEach((eff) => {
           attackModifier += eff.getValue(
             skilledPerk.level,
             attacker,
             spreadGame
-          ).attackModifier;
+          ).combatAbilityModifier;
         });
     });
-    return { attackModifier: 1 + attackModifier / 100 };
+    return { combatAbilityModifier: 1 + attackModifier / 100 };
+  },
+  getDefenderModifier: (
+    skilledPerks: SkilledPerk[],
+    defender: Cell,
+    spreadGame: SpreadGameImplementation
+  ): DefenderFightProps => {
+    var attackModifier = 0;
+    skilledPerks.forEach((skilledPerk) => {
+      skilledPerk.perk.effect
+        .filter(
+          (p): p is GetDefenderFightProps => p.type === "DefenderFightEffect"
+        )
+        .forEach((eff) => {
+          attackModifier += eff.getValue(
+            skilledPerk.level,
+            defender,
+            spreadGame
+          ).combatAbilityModifier;
+        });
+    });
+    return { combatAbilityModifier: 1 + attackModifier / 100 };
   },
   getConquerProps: (skilledPerks: SkilledPerk[]) => {
     var additionalUnits = 0;
@@ -97,13 +127,11 @@ export const skillTreeMethods = {
   },
 };
 
-export const defaultSkillTree: SkillTree = {
-  skills: [Attack],
+export const fullSkillTree: SkillTree = {
+  skills: [Attack, Defense],
 };
 
-export const fullSkillTree: SkillTree = {
-  skills: [Attack],
-};
+export const defaultSkillTree: SkillTree = fullSkillTree;
 
 export const allPerks: GeneralPerk[] = fullSkillTree.skills.flatMap(
   (sk) => sk.perks

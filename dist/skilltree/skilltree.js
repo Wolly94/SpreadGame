@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var attack_1 = require("./skills/attack");
+var defense_1 = require("./skills/defense");
 exports.validSkillTree = function (skillTree, skilledPerks) {
     return true;
 };
@@ -47,10 +48,21 @@ exports.skillTreeMethods = {
             skilledPerk.perk.effect
                 .filter(function (p) { return p.type === "FightEffect"; })
                 .forEach(function (eff) {
-                attackModifier += eff.getValue(skilledPerk.level, attacker, spreadGame).attackModifier;
+                attackModifier += eff.getValue(skilledPerk.level, attacker, spreadGame).combatAbilityModifier;
             });
         });
-        return { attackModifier: 1 + attackModifier / 100 };
+        return { combatAbilityModifier: 1 + attackModifier / 100 };
+    },
+    getDefenderModifier: function (skilledPerks, defender, spreadGame) {
+        var attackModifier = 0;
+        skilledPerks.forEach(function (skilledPerk) {
+            skilledPerk.perk.effect
+                .filter(function (p) { return p.type === "DefenderFightEffect"; })
+                .forEach(function (eff) {
+                attackModifier += eff.getValue(skilledPerk.level, defender, spreadGame).combatAbilityModifier;
+            });
+        });
+        return { combatAbilityModifier: 1 + attackModifier / 100 };
     },
     getConquerProps: function (skilledPerks) {
         var additionalUnits = 0;
@@ -64,12 +76,10 @@ exports.skillTreeMethods = {
         return { additionalUnits: additionalUnits };
     },
 };
-exports.defaultSkillTree = {
-    skills: [attack_1.Attack],
-};
 exports.fullSkillTree = {
-    skills: [attack_1.Attack],
+    skills: [attack_1.Attack, defense_1.Defense],
 };
+exports.defaultSkillTree = exports.fullSkillTree;
 exports.allPerks = exports.fullSkillTree.skills.flatMap(function (sk) { return sk.perks; });
 exports.getSkillByName = function (name) {
     var skill = exports.fullSkillTree.skills.find(function (sk) { return sk.name === name; });

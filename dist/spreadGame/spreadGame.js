@@ -105,14 +105,14 @@ var SpreadGameImplementation = /** @class */ (function () {
         this.bubbles.forEach(function (bubble) {
             var st1 = _this.players.find(function (pl) { return pl.id === bubble.playerId; });
             var f1 = st1 === undefined
-                ? { attackModifier: 1.0 }
+                ? { combatAbilityModifier: 1.0 }
                 : skilltree_1.skillTreeMethods.getAttackerModifier(st1.skills, bubble, _this);
             var currentBubble = bubble;
             remainingBubbles = remainingBubbles.map(function (bubble2) {
                 if (currentBubble !== null && bubble2 !== null) {
                     var st2 = _this.players.find(function (pl) { return pl.id === bubble2.playerId; });
                     var f2 = st2 === undefined
-                        ? { attackModifier: 1.0 }
+                        ? { combatAbilityModifier: 1.0 }
                         : skilltree_1.skillTreeMethods.getAttackerModifier(st2.skills, bubble2, _this);
                     var _a = _this.mechanics.collideBubble(bubble2, currentBubble, f2, f1), rem1 = _a[0], rem2 = _a[1];
                     if (rem1 === null) {
@@ -152,16 +152,18 @@ var SpreadGameImplementation = /** @class */ (function () {
         this.bubbles.forEach(function (bubble) {
             var st1 = _this.players.find(function (pl) { return pl.id === bubble.playerId; });
             var f1 = st1 === undefined
-                ? { attackModifier: 1.0 }
+                ? { combatAbilityModifier: 1.0 }
                 : skilltree_1.skillTreeMethods.getAttackerModifier(st1.skills, bubble, _this);
             var currentBubble = bubble;
             _this.cells = _this.cells.map(function (cell) {
                 if (currentBubble != null &&
                     (currentBubble.motherId !== cell.id ||
                         currentBubble.playerId !== cell.playerId)) {
-                    var _a = _this.mechanics.collideCell(currentBubble, cell, f1, {
-                        attackModifier: 1.0,
-                    }), newCurrentBubble = _a[0], newCell = _a[1];
+                    var st2 = _this.players.find(function (pl) { return pl.id === cell.playerId; });
+                    var f2 = st2 === undefined
+                        ? { combatAbilityModifier: 1.0 }
+                        : skilltree_1.skillTreeMethods.getDefenderModifier(st2.skills, cell, _this);
+                    var _a = _this.mechanics.collideCell(currentBubble, cell, f1, f2), newCurrentBubble = _a[0], newCell = _a[1];
                     if (newCell.playerId !== cell.playerId) {
                         eventsToAdd.push({
                             type: "LostCell",
@@ -261,7 +263,7 @@ var SpreadGameImplementation = /** @class */ (function () {
                 var pl = _this.players.find(function (pl) { return pl.id === bubble.playerId; });
                 var st = _this.players.find(function (pl) { return pl.id === bubble.playerId; });
                 var fightProps = st === undefined
-                    ? { attackModifier: 1.0 }
+                    ? { combatAbilityModifier: 1.0 }
                     : skilltree_1.skillTreeMethods.getAttackerModifier(st.skills, bubble, _this);
                 return {
                     id: bubble.id,
@@ -269,7 +271,7 @@ var SpreadGameImplementation = /** @class */ (function () {
                     units: bubble.units,
                     position: bubble.position,
                     radius: bubble.radius,
-                    attackCombatAbilities: fightProps.attackModifier,
+                    attackCombatAbilities: fightProps.combatAbilityModifier,
                 };
             }),
         };

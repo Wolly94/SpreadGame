@@ -30,7 +30,7 @@ var scrapeOffMechanics = {
         if (bubble1.playerId === bubble2.playerId)
             return [bubble1, bubble2];
         var dist = entites_1.distance(bubble1.position, bubble2.position);
-        var _a = commonMechanics_1.fightBubblePartial(bubble1.units, bubble2.units, f1.attackModifier, f2.attackModifier, dist), u1 = _a[0], u2 = _a[1];
+        var _a = commonMechanics_1.fightBubblePartial(bubble1.units, bubble2.units, f1.combatAbilityModifier, f2.combatAbilityModifier, dist), u1 = _a[0], u2 = _a[1];
         var res1 = null;
         var res2 = null;
         if (u1 !== null) {
@@ -57,7 +57,7 @@ var scrapeOffMechanics = {
                 commonMechanics_1.reinforceCell(resCell, fighters);
             }
             else {
-                var result = commonMechanics_1.fight(fighters, resCell.units, f1.attackModifier, f2.attackModifier);
+                var result = commonMechanics_1.fight(fighters, resCell.units, f1.combatAbilityModifier, f2.combatAbilityModifier);
                 commonMechanics_1.takeOverCell(resCell, result, bubble.playerId);
             }
             var resBubble = bubble_1.createBubble(__assign(__assign({}, bubble), { units: bubble.units - fighters }));

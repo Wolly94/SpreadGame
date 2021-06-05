@@ -35,7 +35,7 @@ exports.Slavery = {
     values: values,
     description: "Every newly conquered cell gains +" +
         utils_1.formatDescription(values, function (val) { return val.toString(); }, "/") +
-        "population.",
+        " population.",
     effect: [
         {
             type: "ConquerBubble",

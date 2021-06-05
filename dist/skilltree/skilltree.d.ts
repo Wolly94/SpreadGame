@@ -2,6 +2,8 @@ import { SkilledPerkData } from "../messages/inGame/clientLobbyMessage";
 import { SkillTreeData } from "../messages/inGame/gameServerMessages";
 import { SpreadGameImplementation } from "../spreadGame";
 import Bubble from "../spreadGame/bubble";
+import Cell from "../spreadGame/cell";
+import { AttackerFightProps, DefenderFightProps } from "../spreadGame/spreadGame";
 import { GeneralPerk } from "./perks/perk";
 export interface SkilledPerk {
     perk: GeneralPerk;
@@ -20,15 +22,14 @@ export declare const skillTreeMethods: {
     fromData: (skillTreeData: SkillTreeData) => SkillTree;
     toSkilledPerks: (skilledPerkData: SkilledPerkData[]) => SkilledPerk[];
     toSkilledPerkData: (skilledPerks: SkilledPerk[]) => SkilledPerkData[];
-    getAttackerModifier: (skilledPerks: SkilledPerk[], attacker: Bubble, spreadGame: SpreadGameImplementation) => {
-        attackModifier: number;
-    };
+    getAttackerModifier: (skilledPerks: SkilledPerk[], attacker: Bubble, spreadGame: SpreadGameImplementation) => AttackerFightProps;
+    getDefenderModifier: (skilledPerks: SkilledPerk[], defender: Cell, spreadGame: SpreadGameImplementation) => DefenderFightProps;
     getConquerProps: (skilledPerks: SkilledPerk[]) => {
         additionalUnits: number;
     };
 };
-export declare const defaultSkillTree: SkillTree;
 export declare const fullSkillTree: SkillTree;
+export declare const defaultSkillTree: SkillTree;
 export declare const allPerks: GeneralPerk[];
 export declare const getSkillByName: (name: string) => Skill | null;
 export declare const getPerkByName: (name: string) => GeneralPerk | null;

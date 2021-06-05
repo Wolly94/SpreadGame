@@ -1,2 +1,3 @@
 import * as attack from "./attack";
-export { attack };
+import * as defense from "./defense";
+export { attack, defense };
