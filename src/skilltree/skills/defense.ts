@@ -3,6 +3,6 @@ import { Preparation } from "../perks/preparation";
 import { Skill } from "../skilltree";
 
 export const Defense: Skill = {
-  name: "Attack",
+  name: "Defense",
   perks: [BaseDefense, Preparation],
 };
