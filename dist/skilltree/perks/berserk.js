@@ -63,7 +63,7 @@ exports.Berserk = {
     values: values,
     description: "For every consecutive (within " +
         utils_1.formatDescription(values, function (val) { return (val[0] / 1000).toString(); }, "/") +
-        +" seconds after the last) attack a cell orders it's attack increases by " +
+        " seconds after the last) attack a cell orders it's attack increases by " +
         utils_1.formatDescription(values, function (val) { return val[1].toString() + "%"; }, "/") +
         ".",
     effect: [

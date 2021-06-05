@@ -77,7 +77,7 @@ export const Berserk: Perk<[number, number]> = {
   description:
     "For every consecutive (within " +
     formatDescription(values, (val) => (val[0] / 1000).toString(), "/") +
-    +" seconds after the last) attack a cell orders it's attack increases by " +
+    " seconds after the last) attack a cell orders it's attack increases by " +
     formatDescription(values, (val) => val[1].toString() + "%", "/") +
     ".",
   effect: [
