@@ -22,6 +22,29 @@ const calculatedCollisionTimeInMs = (b1: Bubble, b2: Bubble) => {
   return (distance / 2 / defaultSpeed) * 1000;
 };
 
+test("cell collision", () => {
+  const cells: Cell[] = [
+    { id: 0, playerId: 0, position: [100, 100], radius: 50, units: 50 },
+    { id: 1, playerId: 1, position: [400, 500], radius: 50, units: 50 },
+  ];
+  const gameState = new SpreadGameImplementation(
+    createMapHelper(cells),
+    {
+      mechanics: "basic",
+      updateFrequencyInMs: 50,
+    },
+    [
+      { id: 0, skills: [] },
+      { id: 1, skills: [] },
+    ]
+  );
+  gameState.sendUnits(0, [0], 1);
+  expect(gameState.bubbles.length).toBe(1);
+  gameState.run(5000, 25);
+  expect(gameState.bubbles.length).toBe(0);
+  expect(gameState.eventHistory.length).toBe(4);
+});
+
 test("bubble collision", () => {
   const cells: Cell[] = [
     { id: 0, playerId: 0, position: [100, 100], radius: 50, units: 50 },

@@ -1,10 +1,23 @@
+import { createConfigItem } from "@babel/core";
 import { ClientGameState } from "../messages/inGame/clientGameState";
 import { GameSettings } from "../messages/inGame/gameServerMessages";
 import SpreadReplay, { HistoryEntry, Move } from "../messages/replay/replay";
-import { SpreadGameEvent } from "../skilltree/events";
+import {
+  AfterFightState,
+  BeforeFightState,
+  CapturedCellEvent,
+  combinedFightEvents,
+  createFightEvent,
+  FightEvent,
+  fightEventFinished,
+  finishFightEvent,
+  latestDistance,
+  SpreadGameEvent,
+} from "../skilltree/events";
 import { skillTreeMethods } from "../skilltree/skilltree";
 import Bubble from "./bubble";
 import Cell from "./cell";
+import { distance } from "./entites";
 import { SpreadMap } from "./map/map";
 import basicMechanics from "./mechanics/basicMechanics";
 import bounceMechanics from "./mechanics/bounceMechanics";
@@ -123,6 +136,14 @@ export class SpreadGameImplementation implements SpreadGame {
     }
   }
 
+  run(ms: number, updateFrequencyInMs: number) {
+    if (ms <= 0) return;
+    else {
+      this.step(updateFrequencyInMs);
+      this.run(ms - updateFrequencyInMs, updateFrequencyInMs);
+    }
+  }
+
   step(ms: number) {
     this.bubbles = this.bubbles.map((bubble) =>
       this.mechanics.move(bubble, ms)
@@ -134,7 +155,7 @@ export class SpreadGameImplementation implements SpreadGame {
   }
 
   collideBubblesWithBubbles() {
-    var eventsToAdd: SpreadGameEvent[] = [];
+    const fightResults: [BeforeFightState, AfterFightState][] = [];
     var remainingBubbles: (Bubble | null)[] = [];
     this.bubbles.forEach((bubble) => {
       const skills1 = this.getSkilledPerks(bubble.playerId);
@@ -146,7 +167,11 @@ export class SpreadGameImplementation implements SpreadGame {
 
       var currentBubble: Bubble | null = bubble;
       remainingBubbles = remainingBubbles.map((bubble2) => {
-        if (currentBubble !== null && bubble2 !== null) {
+        if (
+          currentBubble !== null &&
+          bubble2 !== null &&
+          this.mechanics.collidesWithBubble(bubble2, currentBubble)
+        ) {
           const skills2 = this.getSkilledPerks(bubble2.playerId);
           const f2: AttackerFightProps = skillTreeMethods.getAttackerModifier(
             skills2,
@@ -160,6 +185,16 @@ export class SpreadGameImplementation implements SpreadGame {
             f2,
             f1
           );
+          fightResults.push([
+            {
+              attacker: bubble2,
+              defender: { type: "Bubble", val: currentBubble },
+            },
+            {
+              attacker: rem1,
+              defender: { type: "Bubble", val: rem2 },
+            },
+          ]);
           currentBubble = rem2;
           return rem1;
         } else {
@@ -171,14 +206,80 @@ export class SpreadGameImplementation implements SpreadGame {
       }
     });
     this.bubbles = remainingBubbles.filter((b): b is Bubble => b !== null);
-    this.eventHistory = this.eventHistory.concat(
-      eventsToAdd.map((ev) => {
-        return { timestamp: this.timePassed, data: ev };
-      })
-    );
+    fightResults.forEach(([before, after]) => this.processFight(before, after));
+  }
+  checkForFinishedFights() {
+    this.eventHistory = this.eventHistory.map((ev) => {
+      if (ev.data.type === "FightEvent" && !ev.data.finished) {
+        let returnEvent = { ...ev.data };
+        const eventData = ev.data;
+        const currentAttacker = this.bubbles.find(
+          (b) => b.id === eventData.before.attacker.id
+        );
+        const currentDefender =
+          eventData.before.defender.type === "Cell"
+            ? this.cells.find((c) => c.id === eventData.before.defender.val.id)
+            : this.bubbles.find(
+                (b) => b.id === eventData.before.defender.val.id
+              );
+        if (currentAttacker === undefined || currentDefender === undefined) {
+          // attacker or defender got killed by someone else
+          finishFightEvent(returnEvent);
+        } else if (
+          latestDistance(eventData) <
+          distance(currentAttacker.position, currentDefender.position)
+        ) {
+          // they are moving away from each other
+          finishFightEvent(returnEvent);
+        }
+        return { ...ev, data: returnEvent };
+      } else return ev;
+    });
+  }
+  // this either adds a FightEvent or a PartialFightEvent or modifies a PartialFightEvent in the event history
+  processFight(before: BeforeFightState, after: AfterFightState) {
+    const captureEvent: CapturedCellEvent | null =
+      before.defender.type === "Cell" &&
+      after.defender.val !== null &&
+      after.defender.val.playerId !== null &&
+      before.defender.val.playerId !== after.defender.val.playerId
+        ? {
+            afterPlayerId: after.defender.val.playerId,
+            beforePlayerId: before.defender.val.playerId,
+            type: "CapturedCell",
+          }
+        : null;
+    const existingPartialFightEvent:
+      | FightEvent
+      | undefined = this.eventHistory.find(
+      (ev): ev is HistoryEntry<FightEvent> =>
+        ev.data.type === "FightEvent" &&
+        !ev.data.finished &&
+        ev.data.before.attacker.id === before.attacker.id &&
+        ev.data.before.defender.type === before.defender.type &&
+        ev.data.before.defender.val.id === before.defender.val.id
+    )?.data;
+    if (
+      existingPartialFightEvent !== undefined &&
+      combinedFightEvents(
+        existingPartialFightEvent,
+        before,
+        after,
+        this.timePassed
+      )
+    ) {
+    } else {
+      const newEvent = createFightEvent(before, after, this.timePassed);
+      this.eventHistory.push({ timestamp: this.timePassed, data: newEvent });
+    }
+    if (captureEvent !== null)
+      this.eventHistory.push({
+        timestamp: this.timePassed,
+        data: captureEvent,
+      });
   }
   collideBubblesWithCells() {
-    const eventsToAdd: SpreadGameEvent[] = [];
+    const fightResults: [BeforeFightState, AfterFightState][] = [];
     var remainingBubbles: Bubble[] = [];
     this.bubbles.forEach((bubble) => {
       const skills1 = this.getSkilledPerks(bubble.playerId);
@@ -189,7 +290,8 @@ export class SpreadGameImplementation implements SpreadGame {
         if (
           currentBubble != null &&
           (currentBubble.motherId !== cell.id ||
-            currentBubble.playerId !== cell.playerId)
+            currentBubble.playerId !== cell.playerId) &&
+          this.mechanics.collidesWithCell(bubble, cell)
         ) {
           const skills2 =
             cell.playerId !== null ? this.getSkilledPerks(cell.playerId) : [];
@@ -204,11 +306,13 @@ export class SpreadGameImplementation implements SpreadGame {
             f1,
             f2
           );
-          eventsToAdd.push({
-            type: "FightEvent",
-            attacker: { before: currentBubble, after: newCurrentBubble },
-            defender: { type: "Cell", before: cell, after: newCell },
-          });
+          fightResults.push([
+            { attacker: currentBubble, defender: { type: "Cell", val: cell } },
+            {
+              attacker: newCurrentBubble,
+              defender: { type: "Cell", val: newCell },
+            },
+          ]);
 
           if (newCell.playerId !== cell.playerId) {
             const conquerProps = skillTreeMethods.getConquerCellProps(skills1);
@@ -226,8 +330,6 @@ export class SpreadGameImplementation implements SpreadGame {
               units: newCell.units + defendCellProps.additionalUnits,
             };
           }
-          if (newCurrentBubble === null) {
-          }
           currentBubble = newCurrentBubble;
           //if (event !== null) eventsToAdd.push(event);
           return newCell;
@@ -240,11 +342,7 @@ export class SpreadGameImplementation implements SpreadGame {
       }
     });
     this.bubbles = remainingBubbles;
-    this.eventHistory = this.eventHistory.concat(
-      eventsToAdd.map((ev) => {
-        return { timestamp: this.timePassed, data: ev };
-      })
-    );
+    fightResults.forEach(([before, after]) => this.processFight(before, after));
   }
   sendUnits(playerId: number, senderIds: number[], receiverId: number) {
     const eventsToAdd: SpreadGameEvent[] = [];

@@ -1,5 +1,38 @@
 import Bubble, { createBubble, getNewBubbleIndex } from "../bubble";
-import { centerOverlap, fight } from "./commonMechanics";
+import { approaching, centerOverlap, fight } from "./commonMechanics";
+
+test("approaching", () => {
+  const setupBubble = (
+    position: [number, number],
+    direction: [number, number]
+  ) => {
+    return createBubble({
+      id: 0,
+      position: position,
+      targetId: 0,
+      targetPos: [0, 0],
+      units: 10,
+      creationTime: 0,
+      direction: direction,
+      motherId: 0,
+      playerId: 0,
+    });
+  };
+  const position1: [number, number] = [100, 0];
+  const position2: [number, number] = [0, 100];
+  const direcitons1: [number, number][] = [
+    [1, 0],
+    [0, 1],
+    [-1, 1],
+  ];
+  const results: boolean[] = [false, true, true];
+  direcitons1.forEach((dir, index) => {
+    const b1 = setupBubble(position1, dir);
+    const b2 = setupBubble(position2, [0, 0]);
+    const approach = approaching(b1, b2);
+    expect(approach).toBe(results[index]);
+  });
+});
 
 test("overlapCenter", () => {
   const pos1: [number, number] = [100, 100];

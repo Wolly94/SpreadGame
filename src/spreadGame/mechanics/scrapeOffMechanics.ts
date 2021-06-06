@@ -21,14 +21,20 @@ export const cellFighters = (bubbleUnits: number, bubbleSpace: number) => {
 };
 
 const scrapeOffMechanics: SpreadGameMechanics = {
+  collidesWithBubble: (bubble1, bubble2) => {
+    return !(overlap(bubble1, bubble2) < minOverlap + calculationAccuracy);
+  },
+  collidesWithCell: (bubble, cell) => {
+    return !(overlap(bubble, cell) < minOverlap + calculationAccuracy);
+  },
   collideBubble: (
     bubble1: Bubble,
     bubble2: Bubble,
     f1: AttackerFightProps,
     f2: AttackerFightProps
   ) => {
-    if (overlap(bubble1, bubble2) < minOverlap + calculationAccuracy)
-      return [bubble1, bubble2];
+    if (!scrapeOffMechanics.collidesWithBubble(bubble1, bubble2))
+      return [{ ...bubble1 }, { ...bubble2 }];
     if (bubble1.playerId === bubble2.playerId) return [bubble1, bubble2];
     const dist = distance(bubble1.position, bubble2.position);
     const [u1, u2] = fightBubblePartial(
@@ -55,8 +61,8 @@ const scrapeOffMechanics: SpreadGameMechanics = {
     f2: DefenderFightProps
   ) => {
     const resCell = { ...cell };
-    if (overlap(bubble, resCell) < minOverlap + calculationAccuracy)
-      return [{ ...bubble }, resCell];
+    if (!scrapeOffMechanics.collidesWithCell(bubble, cell))
+      return [{ ...bubble }, { ...cell }];
     // if collides returns true, then dist <= bubble.radius
     const bubbleSpace =
       distance(bubble.position, resCell.position) - resCell.radius;

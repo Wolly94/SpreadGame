@@ -75,14 +75,10 @@ const adjustedDirection = (
 };
 
 const bounceMechanics: SpreadGameMechanics = {
-  collideBubble: (
-    bubble1: Bubble,
-    bubble2: Bubble,
-    f1: AttackerFightProps,
-    f2: AttackerFightProps
-  ) => {
-    return scrapeOffMechanics.collideBubble(bubble1, bubble2, f1, f2);
-  },
+  collidesWithBubble: scrapeOffMechanics.collidesWithBubble,
+
+  collidesWithCell: basicMechanics.collidesWithCell,
+  collideBubble: scrapeOffMechanics.collideBubble,
   collideCell: (
     bubble: Bubble,
     cell: Cell,
@@ -93,7 +89,7 @@ const bounceMechanics: SpreadGameMechanics = {
     if (bubble.targetId === cell.id) {
       return basicMechanics.collideCell(bubble, cell, f1, f2);
     }
-    if (overlap(bubble, cell) < calculationAccuracy)
+    if (!bounceMechanics.collidesWithCell(bubble, cell))
       return [{ ...bubble }, { ...cell }];
     const fighters = Math.min(minUnitsOnBounce, bubble.units, cell.units);
     const resBubble = setUnits(bubble, bubble.units - fighters);

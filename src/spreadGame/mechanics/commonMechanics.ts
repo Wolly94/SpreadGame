@@ -94,7 +94,26 @@ export const centerOverlapDistance = (b: Bubble, e: Bubble | Cell) => {
   return Math.max(-centerOverlap(b, e), 0);
 };
 
+export const isBubble = (val: any): val is Bubble => {
+  return val.direction !== undefined;
+};
+
+export const approaching = (b: Bubble, e: Bubble | Cell) => {
+  let direction: [number, number] = b.direction;
+  if (isBubble(e)) {
+    direction = [direction[0] - e.direction[0], direction[1] - e.direction[1]];
+  }
+  const relPosition: [number, number] = [
+    b.position[0] - e.position[0],
+    b.position[1] - e.position[1],
+  ];
+  const res = direction[0] * relPosition[0] + direction[1] * relPosition[1];
+  return res < 0;
+};
+
 export interface SpreadGameMechanics {
+  collidesWithBubble: (bubble1: Bubble, bubble2: Bubble) => boolean;
+  collidesWithCell: (bubble: Bubble, cell: Cell) => boolean;
   collideBubble: (
     bubble1: Bubble,
     bubble2: Bubble,

@@ -14,14 +14,21 @@ import {
 export const defaultSpeed = 90;
 
 const basicMechanics: SpreadGameMechanics = {
+  collidesWithBubble: (bubble1: Bubble, bubble2: Bubble): boolean => {
+    return !(centerOverlap(bubble1, bubble2) < calculationAccuracy);
+  },
+  collidesWithCell: (bubble: Bubble, cell: Cell): boolean => {
+    return !(centerOverlap(bubble, cell) < calculationAccuracy);
+  },
   collideBubble: (
     bubble1: Bubble,
     bubble2: Bubble,
     f1: AttackerFightProps,
     f2: AttackerFightProps
   ) => {
-    if (centerOverlap(bubble1, bubble2) < calculationAccuracy)
+    if (!basicMechanics.collidesWithBubble(bubble1, bubble2)) {
       return [{ ...bubble1 }, { ...bubble2 }];
+    }
     // TODO modify 'this' accordingly
     // return
     if (bubble1.playerId === bubble2.playerId)
@@ -43,8 +50,9 @@ const basicMechanics: SpreadGameMechanics = {
   ) => {
     const resBubble = { ...bubble };
     const resCell = { ...cell };
-    if (centerOverlap(resBubble, resCell) < calculationAccuracy)
-      return [{ ...resBubble }, { ...resCell }];
+    if (!basicMechanics.collidesWithCell(bubble, cell)) {
+      [resBubble, resCell];
+    }
     if (resBubble.playerId === resCell.playerId) {
       reinforceCell(resCell, resBubble.units);
     } else {
