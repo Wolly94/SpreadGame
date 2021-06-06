@@ -111,20 +111,6 @@ var SpreadGameImplementation = /** @class */ (function () {
                     var skills2 = _this.getSkilledPerks(bubble2.playerId);
                     var f2 = skilltree_1.skillTreeMethods.getAttackerModifier(skills2, bubble2, _this);
                     var _a = _this.mechanics.collideBubble(bubble2, currentBubble, f2, f1), rem1 = _a[0], rem2 = _a[1];
-                    if (rem1 === null) {
-                        eventsToAdd.push({
-                            type: "LostBubble",
-                            playerId: bubble2.playerId,
-                            opponentEntity: { type: "Bubble", bubble: currentBubble },
-                        });
-                    }
-                    if (rem2 === null) {
-                        eventsToAdd.push({
-                            type: "LostBubble",
-                            playerId: currentBubble.playerId,
-                            opponentEntity: { type: "Bubble", bubble: bubble2 },
-                        });
-                    }
                     currentBubble = rem2;
                     return rem1;
                 }
@@ -156,28 +142,21 @@ var SpreadGameImplementation = /** @class */ (function () {
                     var skills2 = cell.playerId !== null ? _this.getSkilledPerks(cell.playerId) : [];
                     var f2 = skilltree_1.skillTreeMethods.getDefenderModifier(skills2, cell, _this);
                     var _a = _this.mechanics.collideCell(currentBubble, cell, f1, f2), newCurrentBubble = _a[0], newCell = _a[1];
+                    eventsToAdd.push({
+                        type: "FightEvent",
+                        attacker: { before: currentBubble, after: newCurrentBubble },
+                        defender: { type: "Cell", before: cell, after: newCell },
+                    });
                     if (newCell.playerId !== cell.playerId) {
-                        eventsToAdd.push({
-                            type: "LostCell",
-                            opponentPlayerId: newCell.id,
-                            opponentBubbleId: currentBubble.id,
-                            cellId: newCell.id,
-                            playerId: cell.playerId,
-                        });
                         var conquerProps = skilltree_1.skillTreeMethods.getConquerCellProps(skills1);
                         newCell = __assign(__assign({}, newCell), { units: newCell.units + conquerProps.additionalUnits });
                     }
                     else {
-                        // if (newCell.playerId === cell.playerId) {
+                        /* if (newCell.playerId === cell.playerId) { */
                         var defendCellProps = skilltree_1.skillTreeMethods.getDefendCellProps(skills2);
                         newCell = __assign(__assign({}, newCell), { units: newCell.units + defendCellProps.additionalUnits });
                     }
                     if (newCurrentBubble === null) {
-                        eventsToAdd.push({
-                            type: "LostBubble",
-                            playerId: currentBubble.playerId,
-                            opponentEntity: { type: "Cell", cell: cell },
-                        });
                     }
                     currentBubble = newCurrentBubble;
                     //if (event !== null) eventsToAdd.push(event);

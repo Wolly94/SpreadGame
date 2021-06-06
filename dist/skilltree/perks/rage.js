@@ -48,8 +48,10 @@ var rageCondition = function (lvl, eventHistory, timePassed, playerId) {
     var toleratedTimeSpan = val[0];
     var lostCellEvents = eventHistory.filter(function (ev) {
         return ev.timestamp >= timePassed - toleratedTimeSpan &&
-            ev.data.type === "LostCell" &&
-            ev.data.playerId === playerId;
+            ev.data.type === "FightEvent" &&
+            ev.data.defender.type === "Cell" &&
+            ev.data.defender.before.playerId === playerId &&
+            ev.data.defender.after.playerId !== playerId;
     });
     return lostCellEvents.length > 0;
 };

@@ -14,12 +14,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var spreadGame_1 = require("../../spreadGame");
 var membrane_1 = require("./membrane");
 test("test membrane", function () {
-    var rep = membrane_1.Membrane.replay;
+    var rep = __assign({}, membrane_1.Membrane.replay);
     var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);
     game.runReplay(rep, rep.lengthInMs);
     var cstate = game.toClientGameState();
     var cell = cstate.cells.find(function (c) { return c.id === 0; });
     expect(cell === null || cell === void 0 ? void 0 : cell.playerId).toBe(0);
+    expect(cell === null || cell === void 0 ? void 0 : cell.units).toBeLessThan(25);
 });
 test("test no membrane", function () {
     var rep = __assign(__assign({}, membrane_1.Membrane.replay), { players: [

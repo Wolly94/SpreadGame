@@ -160,20 +160,6 @@ export class SpreadGameImplementation implements SpreadGame {
             f2,
             f1
           );
-          if (rem1 === null) {
-            eventsToAdd.push({
-              type: "LostBubble",
-              playerId: bubble2.playerId,
-              opponentEntity: { type: "Bubble", bubble: currentBubble },
-            });
-          }
-          if (rem2 === null) {
-            eventsToAdd.push({
-              type: "LostBubble",
-              playerId: currentBubble.playerId,
-              opponentEntity: { type: "Bubble", bubble: bubble2 },
-            });
-          }
           currentBubble = rem2;
           return rem1;
         } else {
@@ -218,21 +204,20 @@ export class SpreadGameImplementation implements SpreadGame {
             f1,
             f2
           );
+          eventsToAdd.push({
+            type: "FightEvent",
+            attacker: { before: currentBubble, after: newCurrentBubble },
+            defender: { type: "Cell", before: cell, after: newCell },
+          });
+
           if (newCell.playerId !== cell.playerId) {
-            eventsToAdd.push({
-              type: "LostCell",
-              opponentPlayerId: newCell.id,
-              opponentBubbleId: currentBubble.id,
-              cellId: newCell.id,
-              playerId: cell.playerId,
-            });
             const conquerProps = skillTreeMethods.getConquerCellProps(skills1);
             newCell = {
               ...newCell,
               units: newCell.units + conquerProps.additionalUnits,
             };
           } else {
-            // if (newCell.playerId === cell.playerId) {
+            /* if (newCell.playerId === cell.playerId) { */
             const defendCellProps = skillTreeMethods.getDefendCellProps(
               skills2
             );
@@ -242,11 +227,6 @@ export class SpreadGameImplementation implements SpreadGame {
             };
           }
           if (newCurrentBubble === null) {
-            eventsToAdd.push({
-              type: "LostBubble",
-              playerId: currentBubble.playerId,
-              opponentEntity: { type: "Cell", cell: cell },
-            });
           }
           currentBubble = newCurrentBubble;
           //if (event !== null) eventsToAdd.push(event);

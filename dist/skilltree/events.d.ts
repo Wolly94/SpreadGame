@@ -1,33 +1,19 @@
 import Bubble from "../spreadGame/bubble";
 import Cell from "../spreadGame/cell";
-export interface LostCellEvent {
-    type: "LostCell";
-    cellId: number;
-    playerId: number | null;
-    opponentPlayerId: number;
-    opponentBubbleId: number;
-}
-export interface LostBubbleEvent {
-    type: "LostBubble";
-    playerId: number;
-    opponentEntity: {
-        type: "Bubble";
-        bubble: Bubble;
-    } | {
-        type: "Cell";
-        cell: Cell;
-    };
-}
-export declare type FightResultEvent = LostCellEvent | LostBubbleEvent;
 export interface FightEvent {
     type: "FightEvent";
-    attacker: Bubble;
+    attacker: {
+        before: Bubble;
+        after: Bubble | null;
+    };
     defender: {
         type: "Bubble";
-        bubble: Bubble;
+        before: Bubble;
+        after: Bubble | null;
     } | {
-        type: "cell";
-        cell: Cell;
+        type: "Cell";
+        before: Cell;
+        after: Cell;
     };
 }
 export interface SendBubbleEvent {
@@ -35,4 +21,4 @@ export interface SendBubbleEvent {
     sender: Cell;
     receiver: Cell;
 }
-export declare type SpreadGameEvent = FightEvent | FightResultEvent | SendBubbleEvent;
+export declare type SpreadGameEvent = FightEvent | SendBubbleEvent;

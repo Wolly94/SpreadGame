@@ -74,7 +74,7 @@ export const Membrane: Perk<number> = {
   effects: [
     {
       type: "DefenderFightEffect",
-      getValue: (lvl) => {
+      getValue: (lvl, defender, spreadGame) => {
         const val = getValue(values, lvl, defaultValue);
         return {
           combatAbilityModifier: 0,

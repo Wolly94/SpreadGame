@@ -1,4 +1,3 @@
-import { FightResultEvent } from "../../skilltree/events";
 import Bubble from "../bubble";
 import Cell from "../cell";
 import { radiusToUnits, radiusToUnitsFixPoint } from "../common";

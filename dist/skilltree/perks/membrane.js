@@ -68,7 +68,7 @@ exports.Membrane = {
     effects: [
         {
             type: "DefenderFightEffect",
-            getValue: function (lvl) {
+            getValue: function (lvl, defender, spreadGame) {
                 var val = perk_1.getValue(values, lvl, defaultValue);
                 return {
                     combatAbilityModifier: 0,
