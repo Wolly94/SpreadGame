@@ -82,7 +82,7 @@ export const Preparation: Perk<[number, number]> = {
     " for each second that cell did not send an attack, capped at " +
     formatDescription(values, (val) => val[1].toString() + "%", "/") +
     ".",
-  effect: [
+  effects: [
     {
       type: "DefenderFightEffect",
       getValue: (lvl, defender, spreadGame) => {

@@ -57,9 +57,9 @@ export const BaseAttack: Perk<number> = {
     "Raises combat abilities of your bubbles by " +
     formatDescription(values, (val) => val.toString() + "%", "/") +
     ".",
-  effect: [
+  effects: [
     {
-      type: "FightEffect",
+      type: "AttackerFightEffect",
       getValue: (lvl) => {
         if (lvl <= 0) return { combatAbilityModifier: 0 };
         else

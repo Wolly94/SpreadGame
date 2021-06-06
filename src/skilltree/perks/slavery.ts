@@ -45,9 +45,9 @@ export const Slavery: Perk<number> = {
     "Every newly conquered cell gains +" +
     formatDescription(values, (val) => val.toString(), "/") +
     " population.",
-  effect: [
+  effects: [
     {
-      type: "ConquerBubble",
+      type: "ConquerCellEffect",
       getValue: (lvl) => {
         if (lvl <= 0) {
           return { additionalUnits: 0 };

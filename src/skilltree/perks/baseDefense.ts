@@ -42,7 +42,7 @@ export const BaseDefense: Perk<number> = {
     "Raises combat abilities of your cells by " +
     formatDescription(values, (val) => val.toString() + "%", "/") +
     ".",
-  effect: [
+  effects: [
     {
       type: "DefenderFightEffect",
       getValue: (lvl) => {

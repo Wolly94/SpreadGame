@@ -76,9 +76,9 @@ export const Rage: Perk<[number, number]> = {
     " for " +
     formatDescription(values, (val) => (val[0] / 1000).toString(), "/") +
     " seconds.",
-  effect: [
+  effects: [
     {
-      type: "FightEffect",
+      type: "AttackerFightEffect",
       getValue: (lvl, attacker, spreadGame) => {
         if (
           rageCondition(

@@ -80,9 +80,9 @@ export const Berserk: Perk<[number, number]> = {
     " seconds after the last) attack a cell orders it's attack increases by " +
     formatDescription(values, (val) => val[1].toString() + "%", "/") +
     ".",
-  effect: [
+  effects: [
     {
-      type: "FightEffect",
+      type: "AttackerFightEffect",
       getValue: (lvl, attacker, spreadGame) => {
         if (lvl <= 0) return { combatAbilityModifier: 0 };
         const val = values[Math.min(lvl, values.length) - 1];

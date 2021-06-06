@@ -2,7 +2,6 @@ import { ClientGameState } from "../messages/inGame/clientGameState";
 import { GameSettings } from "../messages/inGame/gameServerMessages";
 import SpreadReplay, { HistoryEntry, Move } from "../messages/replay/replay";
 import { SpreadGameEvent } from "../skilltree/events";
-import { Rage } from "../skilltree/perks/rage";
 import { skillTreeMethods } from "../skilltree/skilltree";
 import Bubble from "./bubble";
 import Cell from "./cell";
@@ -12,6 +11,7 @@ import bounceMechanics from "./mechanics/bounceMechanics";
 import { SpreadGameMechanics } from "./mechanics/commonMechanics";
 import scrapeOffMechanics from "./mechanics/scrapeOffMechanics";
 import Player, { dataFromPlayer, playerFromData } from "./player";
+import { AttackerFightProps, DefenderFightProps } from "./spreadGameProps";
 
 const getMechanics = (settings: GameSettings): SpreadGameMechanics => {
   if (settings.mechanics === "basic") {
@@ -38,18 +38,6 @@ export interface SpreadGameFunctions {
   step: (ms: number) => void;
   toClientGameState: () => ClientGameState;
   getReplay: () => SpreadReplay;
-}
-
-export interface AttackerFightProps {
-  combatAbilityModifier: number;
-}
-
-export interface DefenderFightProps {
-  combatAbilityModifier: number;
-}
-
-export interface ConquerCellProps {
-  additionalUnits: number;
 }
 
 export type SpreadGame = SpreadGameState &
@@ -150,19 +138,21 @@ export class SpreadGameImplementation implements SpreadGame {
     var remainingBubbles: (Bubble | null)[] = [];
     this.bubbles.forEach((bubble) => {
       const st1 = this.players.find((pl) => pl.id === bubble.playerId);
-      const f1: AttackerFightProps =
-        st1 === undefined
-          ? { combatAbilityModifier: 1.0 }
-          : skillTreeMethods.getAttackerModifier(st1.skills, bubble, this);
+      const f1: AttackerFightProps = skillTreeMethods.getAttackerModifier(
+        st1 === undefined ? [] : st1.skills,
+        bubble,
+        this
+      );
 
       var currentBubble: Bubble | null = bubble;
       remainingBubbles = remainingBubbles.map((bubble2) => {
         if (currentBubble !== null && bubble2 !== null) {
           const st2 = this.players.find((pl) => pl.id === bubble2.playerId);
-          const f2: AttackerFightProps =
-            st2 === undefined
-              ? { combatAbilityModifier: 1.0 }
-              : skillTreeMethods.getAttackerModifier(st2.skills, bubble2, this);
+          const f2: AttackerFightProps = skillTreeMethods.getAttackerModifier(
+            st2 === undefined ? [] : st2.skills,
+            bubble2,
+            this
+          );
 
           const [rem1, rem2] = this.mechanics.collideBubble(
             bubble2,
@@ -206,10 +196,11 @@ export class SpreadGameImplementation implements SpreadGame {
     var remainingBubbles: Bubble[] = [];
     this.bubbles.forEach((bubble) => {
       const st1 = this.players.find((pl) => pl.id === bubble.playerId);
-      const f1 =
-        st1 === undefined
-          ? { combatAbilityModifier: 1.0 }
-          : skillTreeMethods.getAttackerModifier(st1.skills, bubble, this);
+      const f1 = skillTreeMethods.getAttackerModifier(
+        st1 === undefined ? [] : st1.skills,
+        bubble,
+        this
+      );
 
       var currentBubble: Bubble | null = bubble;
       this.cells = this.cells.map((cell) => {
@@ -219,10 +210,11 @@ export class SpreadGameImplementation implements SpreadGame {
             currentBubble.playerId !== cell.playerId)
         ) {
           const st2 = this.players.find((pl) => pl.id === cell.playerId);
-          const f2: DefenderFightProps =
-            st2 === undefined
-              ? { combatAbilityModifier: 1.0 }
-              : skillTreeMethods.getDefenderModifier(st2.skills, cell, this);
+          const f2: DefenderFightProps = skillTreeMethods.getDefenderModifier(
+            st2 === undefined ? [] : st2.skills,
+            cell,
+            this
+          );
           let [newCurrentBubble, newCell] = this.mechanics.collideCell(
             currentBubble,
             cell,
@@ -237,10 +229,9 @@ export class SpreadGameImplementation implements SpreadGame {
               cellId: newCell.id,
               playerId: cell.playerId,
             });
-            const conquerProps =
-              st1 === undefined
-                ? { additionalUnits: 0 }
-                : skillTreeMethods.getConquerProps(st1.skills);
+            const conquerProps = skillTreeMethods.getConquerCellProps(
+              st1 === undefined ? [] : st1.skills
+            );
             newCell = {
               ...newCell,
               units: newCell.units + conquerProps.additionalUnits,
@@ -326,10 +317,11 @@ export class SpreadGameImplementation implements SpreadGame {
       timePassedInMs: this.timePassed,
       cells: this.cells.map((cell) => {
         const st = this.players.find((pl) => pl.id === cell.playerId);
-        const fightProps: DefenderFightProps =
-          st === undefined
-            ? { combatAbilityModifier: 1.0 }
-            : skillTreeMethods.getDefenderModifier(st.skills, cell, this);
+        const fightProps: DefenderFightProps = skillTreeMethods.getDefenderModifier(
+          st === undefined ? [] : st.skills,
+          cell,
+          this
+        );
         return {
           id: cell.id,
           playerId: cell.playerId,
@@ -342,10 +334,11 @@ export class SpreadGameImplementation implements SpreadGame {
       }),
       bubbles: this.bubbles.map((bubble) => {
         const st = this.players.find((pl) => pl.id === bubble.playerId);
-        const fightProps: AttackerFightProps =
-          st === undefined
-            ? { combatAbilityModifier: 1.0 }
-            : skillTreeMethods.getAttackerModifier(st.skills, bubble, this);
+        const fightProps: AttackerFightProps = skillTreeMethods.getAttackerModifier(
+          st === undefined ? [] : st.skills,
+          bubble,
+          this
+        );
         return {
           id: bubble.id,
           playerId: bubble.playerId,

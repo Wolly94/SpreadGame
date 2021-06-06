@@ -5,11 +5,18 @@ import Bubble from "../spreadGame/bubble";
 import Cell from "../spreadGame/cell";
 import {
   AttackerFightProps,
+  combineAttackerFightProps,
+  combineConquerCellProps,
+  combineDefendCellProps,
+  combineDefenderFightProps,
+  ConquerCellProps,
+  DefendCellProps,
   DefenderFightProps,
-} from "../spreadGame/spreadGame";
+} from "../spreadGame/spreadGameProps";
 import {
   GetAttackerFightProps,
-  GetConquerBubbleProps,
+  GetConquerCellProps,
+  GetDefendCellProps,
   GetDefenderFightProps,
 } from "./effects";
 import { GeneralPerk } from "./perks/perk";
@@ -79,51 +86,66 @@ export const skillTreeMethods = {
     attacker: Bubble,
     spreadGame: SpreadGameImplementation
   ): AttackerFightProps => {
-    var attackModifier = 0;
-    skilledPerks.forEach((skilledPerk) => {
-      skilledPerk.perk.effect
-        .filter((p): p is GetAttackerFightProps => p.type === "FightEffect")
-        .forEach((eff) => {
-          attackModifier += eff.getValue(
-            skilledPerk.level,
-            attacker,
-            spreadGame
-          ).combatAbilityModifier;
-        });
-    });
-    return { combatAbilityModifier: 1 + attackModifier / 100 };
+    const combined = skilledPerks
+      .flatMap((skilledPerk) => {
+        return skilledPerk.perk.effects
+          .filter(
+            (p): p is GetAttackerFightProps => p.type === "AttackerFightEffect"
+          )
+          .map(
+            (getProps): AttackerFightProps =>
+              getProps.getValue(skilledPerk.level, attacker, spreadGame)
+          );
+      })
+      .reduce(
+        combineAttackerFightProps.combine,
+        combineAttackerFightProps.default
+      );
+    return { combatAbilityModifier: 1 + combined.combatAbilityModifier / 100 };
   },
   getDefenderModifier: (
     skilledPerks: SkilledPerk[],
     defender: Cell,
     spreadGame: SpreadGameImplementation
   ): DefenderFightProps => {
-    var attackModifier = 0;
-    skilledPerks.forEach((skilledPerk) => {
-      skilledPerk.perk.effect
-        .filter(
-          (p): p is GetDefenderFightProps => p.type === "DefenderFightEffect"
-        )
-        .forEach((eff) => {
-          attackModifier += eff.getValue(
-            skilledPerk.level,
-            defender,
-            spreadGame
-          ).combatAbilityModifier;
-        });
-    });
-    return { combatAbilityModifier: 1 + attackModifier / 100 };
+    const combined = skilledPerks
+      .flatMap((skilledPerk) => {
+        return skilledPerk.perk.effects
+          .filter(
+            (p): p is GetDefenderFightProps => p.type === "DefenderFightEffect"
+          )
+          .map(
+            (getProps): DefenderFightProps =>
+              getProps.getValue(skilledPerk.level, defender, spreadGame)
+          );
+      })
+      .reduce(
+        combineDefenderFightProps.combine,
+        combineDefenderFightProps.default
+      );
+    return { combatAbilityModifier: 1 + combined.combatAbilityModifier / 100 };
   },
-  getConquerProps: (skilledPerks: SkilledPerk[]) => {
-    var additionalUnits = 0;
-    skilledPerks.forEach((skilledPerk) => {
-      skilledPerk.perk.effect
-        .filter((p): p is GetConquerBubbleProps => p.type === "ConquerBubble")
-        .forEach((eff) => {
-          additionalUnits += eff.getValue(skilledPerk.level).additionalUnits;
-        });
-    });
-    return { additionalUnits: additionalUnits };
+  getConquerCellProps: (skilledPerks: SkilledPerk[]): ConquerCellProps => {
+    return skilledPerks
+      .flatMap((skilledPerk) => {
+        return skilledPerk.perk.effects
+          .filter(
+            (p): p is GetConquerCellProps => p.type === "ConquerCellEffect"
+          )
+          .map((getProps) => getProps.getValue(skilledPerk.level));
+      })
+      .reduce(combineConquerCellProps.combine, combineConquerCellProps.default);
+  },
+  getDefendCellProps: (skilledPerks: SkilledPerk[]): DefendCellProps => {
+    return skilledPerks
+      .flatMap((skilledPerk) => {
+        return skilledPerk.perk.effects
+          .filter((p): p is GetDefendCellProps => p.type === "DefendCellEffect")
+          .map(
+            (getProps): DefendCellProps => getProps.getValue(skilledPerk.level)
+          );
+      })
+      .reduce(combineDefendCellProps.combine, combineDefendCellProps.default);
   },
 };
 
