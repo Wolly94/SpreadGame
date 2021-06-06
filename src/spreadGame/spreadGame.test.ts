@@ -1,3 +1,5 @@
+import { HistoryEntry } from "../messages/replay/replay";
+import { FightEvent } from "../skilltree/events";
 import { BaseAttack } from "../skilltree/perks/baseAttack";
 import Bubble from "./bubble";
 import Cell from "./cell";
@@ -40,9 +42,21 @@ test("cell collision", () => {
   );
   gameState.sendUnits(0, [0], 1);
   expect(gameState.bubbles.length).toBe(1);
-  gameState.run(5000, 25);
+  gameState.run(10000, 25);
   expect(gameState.bubbles.length).toBe(0);
-  expect(gameState.eventHistory.length).toBe(4);
+  const sendUnitsEvent = gameState.eventHistory.find(
+    (ev) => ev.data.type === "SendBubbleEvent"
+  );
+  const fightEvent: FightEvent | undefined = gameState.eventHistory.find(
+    (ev): ev is HistoryEntry<FightEvent> => ev.data.type === "FightEvent"
+  )?.data;
+  const defeatBubbleEvent = gameState.eventHistory.find(
+    (ev) => ev.data.type === "DefeatedBubble"
+  );
+  expect(sendUnitsEvent?.timestamp).not.toBe(undefined);
+  expect(fightEvent?.finished).toBe(true);
+  expect(defeatBubbleEvent?.timestamp).not.toBe(undefined);
+  expect(gameState.eventHistory.length).toBe(3);
 });
 
 test("bubble collision", () => {
@@ -67,9 +81,29 @@ test("bubble collision", () => {
   const b1 = gameState.bubbles[0];
   const b2 = gameState.bubbles[1];
   const ms = calculatedCollisionTimeInMs(b1, b2);
-  gameState.step(ms);
+  gameState.run(5000, 25);
   expect(gameState.bubbles.length).toBe(0);
-  expect(gameState.eventHistory.length).toBe(4);
+  const sendUnitsEvent = gameState.eventHistory.find(
+    (ev) => ev.data.type === "SendBubbleEvent"
+  );
+  const fightEvent: FightEvent | undefined = gameState.eventHistory.find(
+    (ev): ev is HistoryEntry<FightEvent> => ev.data.type === "FightEvent"
+  )?.data;
+  const defeatBubbleEvent = gameState.eventHistory.find(
+    (ev) => ev.data.type === "DefeatedBubble"
+  );
+  expect(
+    gameState.eventHistory.filter((ev) => ev.data.type === "SendBubbleEvent")
+      .length
+  ).toBe(2);
+  expect(
+    gameState.eventHistory.filter((ev) => ev.data.type === "FightEvent").length
+  ).toBe(1);
+  expect(
+    gameState.eventHistory.filter((ev) => ev.data.type === "DefeatedBubble")
+      .length
+  ).toBe(2);
+  expect(gameState.eventHistory.length).toBe(5);
 });
 
 test("bubble collision with attack modifier", () => {

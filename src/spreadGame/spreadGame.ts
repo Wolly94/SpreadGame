@@ -8,6 +8,7 @@ import {
   CapturedCellEvent,
   combinedFightEvents,
   createFightEvent,
+  DefeatedBubbleEvent,
   FightEvent,
   fightEventFinished,
   finishFightEvent,
@@ -151,6 +152,7 @@ export class SpreadGameImplementation implements SpreadGame {
     this.cells = this.cells.map((cell) => this.mechanics.grow(cell, ms));
     this.collideBubblesWithCells();
     this.collideBubblesWithBubbles();
+    this.checkForFinishedFights();
     this.timePassed += ms;
   }
 
@@ -238,7 +240,7 @@ export class SpreadGameImplementation implements SpreadGame {
   }
   // this either adds a FightEvent or a PartialFightEvent or modifies a PartialFightEvent in the event history
   processFight(before: BeforeFightState, after: AfterFightState) {
-    const captureEvent: CapturedCellEvent | null =
+    const capturedCellEvent: CapturedCellEvent | null =
       before.defender.type === "Cell" &&
       after.defender.val !== null &&
       after.defender.val.playerId !== null &&
@@ -249,6 +251,19 @@ export class SpreadGameImplementation implements SpreadGame {
             type: "CapturedCell",
           }
         : null;
+    const defeatedBubbleEvents: DefeatedBubbleEvent[] = [];
+    if (after.attacker === null) {
+      defeatedBubbleEvents.push({
+        type: "DefeatedBubble",
+        defender: after.defender,
+      });
+    }
+    if (after.defender.type === "Bubble" && after.defender.val === null) {
+      defeatedBubbleEvents.push({
+        type: "DefeatedBubble",
+        defender: { type: "Bubble", val: after.attacker },
+      });
+    }
     const existingPartialFightEvent:
       | FightEvent
       | undefined = this.eventHistory.find(
@@ -272,11 +287,14 @@ export class SpreadGameImplementation implements SpreadGame {
       const newEvent = createFightEvent(before, after, this.timePassed);
       this.eventHistory.push({ timestamp: this.timePassed, data: newEvent });
     }
-    if (captureEvent !== null)
+    if (capturedCellEvent !== null)
       this.eventHistory.push({
         timestamp: this.timePassed,
-        data: captureEvent,
+        data: capturedCellEvent,
       });
+    defeatedBubbleEvents.forEach((ev) =>
+      this.eventHistory.push({ timestamp: this.timePassed, data: ev })
+    );
   }
   collideBubblesWithCells() {
     const fightResults: [BeforeFightState, AfterFightState][] = [];

@@ -41,11 +41,13 @@ export interface BeforeFightState {
   defender: { type: "Bubble"; val: Bubble } | { type: "Cell"; val: Cell };
 }
 
+export type AfterFightDefenderState =
+  | { type: "Bubble"; val: Bubble | null }
+  | { type: "Cell"; val: Cell };
+
 export interface AfterFightState {
   attacker: Bubble | null;
-  defender:
-    | { type: "Bubble"; val: Bubble | null }
-    | { type: "Cell"; val: Cell };
+  defender: AfterFightDefenderState;
 }
 
 export interface FightEvent {
@@ -140,4 +142,13 @@ export interface CapturedCellEvent {
   afterPlayerId: number;
 }
 
-export type SpreadGameEvent = FightEvent | SendBubbleEvent | CapturedCellEvent;
+export interface DefeatedBubbleEvent {
+  type: "DefeatedBubble";
+  defender: AfterFightDefenderState;
+}
+
+export type SpreadGameEvent =
+  | FightEvent
+  | SendBubbleEvent
+  | CapturedCellEvent
+  | DefeatedBubbleEvent;
