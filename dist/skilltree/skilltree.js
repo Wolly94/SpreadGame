@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var spreadGameProps_1 = require("../spreadGame/spreadGameProps");
 var attack_1 = require("./skills/attack");
@@ -65,7 +76,7 @@ exports.skillTreeMethods = {
             });
         })
             .reduce(spreadGameProps_1.combineDefenderFightProps.combine, spreadGameProps_1.combineDefenderFightProps.default);
-        return { combatAbilityModifier: 1 + combined.combatAbilityModifier / 100 };
+        return __assign(__assign({}, combined), { combatAbilityModifier: 1 + combined.combatAbilityModifier / 100 });
     },
     getConquerCellProps: function (skilledPerks) {
         return skilledPerks

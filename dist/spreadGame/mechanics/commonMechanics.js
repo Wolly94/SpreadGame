@@ -2,15 +2,21 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var common_1 = require("../common");
 var entites_1 = require("../entites");
+var spreadGameProps_1 = require("../spreadGameProps");
 exports.calculationAccuracy = 0.01;
 exports.minOverlap = 2;
 // > 0 means attacker won, <= 0 means defender won
 exports.fight = function (att, def, am, bm) {
-    var unitDiff = att * am - def * bm;
+    if (spreadGameProps_1.isDefenderFightProps(bm)) {
+        att -= bm.membraneAbsorption;
+        if (att <= 0)
+            return -def;
+    }
+    var unitDiff = att * am.combatAbilityModifier - def * bm.combatAbilityModifier;
     if (unitDiff <= 0)
-        return unitDiff / bm;
+        return unitDiff / bm.combatAbilityModifier;
     else
-        return unitDiff / am;
+        return unitDiff / am.combatAbilityModifier;
 };
 // returns remaining fighters from both entities
 exports.fightBubblePartial = function (att, def, am, bm, dist) {

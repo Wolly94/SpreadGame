@@ -101,12 +101,7 @@ const bounceMechanics: SpreadGameMechanics = {
     if (resCell.playerId === resBubble.playerId) {
       reinforceCell(resCell, fighters);
     } else {
-      const cellRem = fight(
-        fighters,
-        cell.units,
-        f1.combatAbilityModifier,
-        f2.combatAbilityModifier
-      );
+      const cellRem = fight(fighters, cell.units, f1, f2);
       takeOverCell(resCell, cellRem, resBubble.playerId);
     }
     const dirToCell = normalize(

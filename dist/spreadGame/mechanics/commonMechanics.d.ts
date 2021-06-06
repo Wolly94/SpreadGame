@@ -3,7 +3,7 @@ import Cell from "../cell";
 import { AttackerFightProps, DefenderFightProps } from "../spreadGameProps";
 export declare const calculationAccuracy = 0.01;
 export declare const minOverlap = 2;
-export declare const fight: (att: number, def: number, am: number, bm: number) => number;
+export declare const fight: (att: number, def: number, am: AttackerFightProps, bm: AttackerFightProps | DefenderFightProps) => number;
 export declare const fightBubblePartial: (att: number, def: number, am: number, bm: number, dist: number) => [number | null, number | null];
 export declare const takeOverCell: (cell: Cell, newCellUnits: number, enemyPlayerId: number) => void;
 export declare const reinforceCell: (cell: Cell, units: number) => void;

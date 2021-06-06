@@ -40,9 +40,24 @@ test("fight with modifiers", () => {
   const rPlusDefense = [2, -10 / dm, -22 / dm];
   aUnits.forEach((att, index) => {
     const def = dUnits[index];
-    const fneutral = fight(att, def, 1, 1);
-    const fPlusAttack = fight(att, def, am, 1);
-    const fPlusDefense = fight(att, def, 1, dm);
+    const fneutral = fight(
+      att,
+      def,
+      { combatAbilityModifier: 1 },
+      { combatAbilityModifier: 1 }
+    );
+    const fPlusAttack = fight(
+      att,
+      def,
+      { combatAbilityModifier: am },
+      { combatAbilityModifier: 1 }
+    );
+    const fPlusDefense = fight(
+      att,
+      def,
+      { combatAbilityModifier: 1 },
+      { combatAbilityModifier: dm }
+    );
     expect(fneutral).toBeCloseTo(rNeutral[index]);
     expect(fPlusAttack).toBeCloseTo(rPlusAttack[index]);
     expect(fPlusDefense).toBeCloseTo(rPlusDefense[index]);

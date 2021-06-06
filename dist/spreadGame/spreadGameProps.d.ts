@@ -8,7 +8,9 @@ export interface AttackerFightProps {
 export declare const combineAttackerFightProps: PropUtils<AttackerFightProps>;
 export interface DefenderFightProps {
     combatAbilityModifier: number;
+    membraneAbsorption: number;
 }
+export declare const isDefenderFightProps: (fightProps: any) => fightProps is DefenderFightProps;
 export declare const combineDefenderFightProps: PropUtils<DefenderFightProps>;
 export interface ConquerCellProps {
     additionalUnits: number;

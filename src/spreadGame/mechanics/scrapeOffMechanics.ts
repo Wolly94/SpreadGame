@@ -68,12 +68,7 @@ const scrapeOffMechanics: SpreadGameMechanics = {
       if (bubble.playerId === resCell.playerId) {
         reinforceCell(resCell, fighters);
       } else {
-        const result = fight(
-          fighters,
-          resCell.units,
-          f1.combatAbilityModifier,
-          f2.combatAbilityModifier
-        );
+        const result = fight(fighters, resCell.units, f1, f2);
         takeOverCell(resCell, result, bubble.playerId);
       }
       const resBubble = createBubble({

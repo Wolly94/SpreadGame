@@ -40,9 +40,9 @@ test("fight with modifiers", function () {
     var rPlusDefense = [2, -10 / dm, -22 / dm];
     aUnits.forEach(function (att, index) {
         var def = dUnits[index];
-        var fneutral = commonMechanics_1.fight(att, def, 1, 1);
-        var fPlusAttack = commonMechanics_1.fight(att, def, am, 1);
-        var fPlusDefense = commonMechanics_1.fight(att, def, 1, dm);
+        var fneutral = commonMechanics_1.fight(att, def, { combatAbilityModifier: 1 }, { combatAbilityModifier: 1 });
+        var fPlusAttack = commonMechanics_1.fight(att, def, { combatAbilityModifier: am }, { combatAbilityModifier: 1 });
+        var fPlusDefense = commonMechanics_1.fight(att, def, { combatAbilityModifier: 1 }, { combatAbilityModifier: dm });
         expect(fneutral).toBeCloseTo(rNeutral[index]);
         expect(fPlusAttack).toBeCloseTo(rPlusAttack[index]);
         expect(fPlusDefense).toBeCloseTo(rPlusDefense[index]);

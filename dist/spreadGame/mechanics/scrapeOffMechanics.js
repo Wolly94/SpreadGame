@@ -57,7 +57,7 @@ var scrapeOffMechanics = {
                 commonMechanics_1.reinforceCell(resCell, fighters);
             }
             else {
-                var result = commonMechanics_1.fight(fighters, resCell.units, f1.combatAbilityModifier, f2.combatAbilityModifier);
+                var result = commonMechanics_1.fight(fighters, resCell.units, f1, f2);
                 commonMechanics_1.takeOverCell(resCell, result, bubble.playerId);
             }
             var resBubble = bubble_1.createBubble(__assign(__assign({}, bubble), { units: bubble.units - fighters }));

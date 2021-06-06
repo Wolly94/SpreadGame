@@ -18,15 +18,23 @@ export const combineAttackerFightProps: PropUtils<AttackerFightProps> = {
 
 export interface DefenderFightProps {
   combatAbilityModifier: number;
+  membraneAbsorption: number;
 }
+
+export const isDefenderFightProps = (
+  fightProps: any
+): fightProps is DefenderFightProps => {
+  return fightProps.membraneAbsorption !== undefined;
+};
 
 export const combineDefenderFightProps: PropUtils<DefenderFightProps> = {
   combine: (a, b) => {
     return {
       combatAbilityModifier: a.combatAbilityModifier + b.combatAbilityModifier,
+      membraneAbsorption: a.membraneAbsorption + b.membraneAbsorption,
     };
   },
-  default: { combatAbilityModifier: 0 },
+  default: { combatAbilityModifier: 0, membraneAbsorption: 0 },
 };
 
 export interface ConquerCellProps {

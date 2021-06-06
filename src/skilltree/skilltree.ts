@@ -123,7 +123,10 @@ export const skillTreeMethods = {
         combineDefenderFightProps.combine,
         combineDefenderFightProps.default
       );
-    return { combatAbilityModifier: 1 + combined.combatAbilityModifier / 100 };
+    return {
+      ...combined,
+      combatAbilityModifier: 1 + combined.combatAbilityModifier / 100,
+    };
   },
   getConquerCellProps: (skilledPerks: SkilledPerk[]): ConquerCellProps => {
     return skilledPerks

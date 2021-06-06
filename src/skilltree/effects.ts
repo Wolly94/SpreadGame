@@ -5,6 +5,7 @@ import {
   AttackerFightProps,
   ConquerCellProps,
   DefendCellProps,
+  DefenderFightProps,
 } from "../spreadGame/spreadGameProps";
 
 export interface GetAttackerFightProps {
@@ -22,7 +23,7 @@ export interface GetDefenderFightProps {
     level: number, // level of perk
     defender: Cell,
     spreadGame: SpreadGameImplementation
-  ) => AttackerFightProps;
+  ) => DefenderFightProps;
 }
 
 export interface GetConquerCellProps {

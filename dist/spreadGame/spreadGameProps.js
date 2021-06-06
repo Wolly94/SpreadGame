@@ -8,13 +8,17 @@ exports.combineAttackerFightProps = {
     },
     default: { combatAbilityModifier: 0 },
 };
+exports.isDefenderFightProps = function (fightProps) {
+    return fightProps.membraneAbsorption !== undefined;
+};
 exports.combineDefenderFightProps = {
     combine: function (a, b) {
         return {
             combatAbilityModifier: a.combatAbilityModifier + b.combatAbilityModifier,
+            membraneAbsorption: a.membraneAbsorption + b.membraneAbsorption,
         };
     },
-    default: { combatAbilityModifier: 0 },
+    default: { combatAbilityModifier: 0, membraneAbsorption: 0 },
 };
 exports.combineConquerCellProps = {
     combine: function (a, b) {

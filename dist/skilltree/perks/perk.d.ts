@@ -7,4 +7,5 @@ export interface Perk<TValue> {
     description: string;
     replay: SpreadReplay;
 }
+export declare const getValue: <T>(values: T[], level: number, defaultValue: T) => T;
 export declare type GeneralPerk = Perk<number | [number, number]>;

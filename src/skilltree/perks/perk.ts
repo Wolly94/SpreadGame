@@ -10,4 +10,12 @@ export interface Perk<TValue> {
   replay: SpreadReplay;
 }
 
+export const getValue = <T>(values: T[], level: number, defaultValue: T): T => {
+  if (level <= 0) return defaultValue;
+  else {
+    const val = values[Math.min(level, values.length) - 1];
+    return val;
+  }
+};
+
 export type GeneralPerk = Perk<number | [number, number]>;

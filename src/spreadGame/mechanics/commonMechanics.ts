@@ -3,7 +3,11 @@ import Bubble from "../bubble";
 import Cell from "../cell";
 import { radiusToUnits, radiusToUnitsFixPoint } from "../common";
 import { distance } from "../entites";
-import { AttackerFightProps, DefenderFightProps } from "../spreadGameProps";
+import {
+  AttackerFightProps,
+  DefenderFightProps,
+  isDefenderFightProps,
+} from "../spreadGameProps";
 
 export const calculationAccuracy = 0.01;
 export const minOverlap = 2;
@@ -12,12 +16,17 @@ export const minOverlap = 2;
 export const fight = (
   att: number,
   def: number,
-  am: number,
-  bm: number
+  am: AttackerFightProps,
+  bm: AttackerFightProps | DefenderFightProps
 ): number => {
-  const unitDiff = att * am - def * bm;
-  if (unitDiff <= 0) return unitDiff / bm;
-  else return unitDiff / am;
+  if (isDefenderFightProps(bm)) {
+    att -= bm.membraneAbsorption;
+    if (att <= 0) return -def;
+  }
+  const unitDiff =
+    att * am.combatAbilityModifier - def * bm.combatAbilityModifier;
+  if (unitDiff <= 0) return unitDiff / bm.combatAbilityModifier;
+  else return unitDiff / am.combatAbilityModifier;
 };
 
 // returns remaining fighters from both entities

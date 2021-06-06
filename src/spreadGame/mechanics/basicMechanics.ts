@@ -26,12 +26,7 @@ const basicMechanics: SpreadGameMechanics = {
     // return
     if (bubble1.playerId === bubble2.playerId)
       return [{ ...bubble1 }, { ...bubble2 }];
-    const result = fight(
-      bubble1.units,
-      bubble2.units,
-      f1.combatAbilityModifier,
-      f2.combatAbilityModifier
-    );
+    const result = fight(bubble1.units, bubble2.units, f1, f2);
     if (Math.abs(result) < calculationAccuracy) {
       return [null, null];
     } else if (result > 0) {
@@ -53,12 +48,7 @@ const basicMechanics: SpreadGameMechanics = {
     if (resBubble.playerId === resCell.playerId) {
       reinforceCell(resCell, resBubble.units);
     } else {
-      const result = fight(
-        resBubble.units,
-        resCell.units,
-        f1.combatAbilityModifier,
-        f2.combatAbilityModifier
-      );
+      const result = fight(resBubble.units, resCell.units, f1, f2);
       takeOverCell(resCell, result, resBubble.playerId);
     }
     return [null, resCell];
