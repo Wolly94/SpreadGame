@@ -22,7 +22,8 @@ export interface GetDefenderFightProps {
   getValue: (
     level: number, // level of perk
     defender: Cell,
-    spreadGame: SpreadGameImplementation
+    spreadGame: SpreadGameImplementation,
+    attacker: Bubble
   ) => DefenderFightProps;
 }
 

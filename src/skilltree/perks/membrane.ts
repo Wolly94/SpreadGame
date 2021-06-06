@@ -1,7 +1,8 @@
-import SpreadReplay from "../../messages/replay/replay";
+import SpreadReplay, { HistoryEntry } from "../../messages/replay/replay";
 import { unitsToRadius } from "../../spreadGame/common";
 import { SpreadMap } from "../../spreadGame/map/map";
 import { combineDefenderFightProps } from "../../spreadGame/spreadGameProps";
+import { FightEvent } from "../events";
 import { formatDescription } from "../utils";
 import { getValue, Perk } from "./perk";
 
@@ -64,6 +65,16 @@ const replay: SpreadReplay = {
   ],
 };
 
+const alreadyAbsorbed = (event: FightEvent): number => {
+  if (event.finished) return 0;
+  else {
+    return event.partialFights.reduce(
+      (prev, curr) => prev + curr.data.attacker.unitsLost,
+      0
+    );
+  }
+};
+
 export const Membrane: Perk<number> = {
   name: name,
   values: values,
@@ -74,11 +85,19 @@ export const Membrane: Perk<number> = {
   effects: [
     {
       type: "DefenderFightEffect",
-      getValue: (lvl, defender, spreadGame) => {
+      getValue: (lvl, defender, spreadGame, attacker) => {
         const val = getValue(values, lvl, defaultValue);
+        const activeEvent:
+          | FightEvent
+          | undefined = spreadGame.eventHistory.find(
+          (ev): ev is HistoryEntry<FightEvent> =>
+            ev.data.type === "FightEvent" && !ev.data.finished
+        )?.data;
+        const absorbed =
+          activeEvent === undefined ? 0 : alreadyAbsorbed(activeEvent);
         return {
           combatAbilityModifier: 0,
-          membraneAbsorption: val,
+          membraneAbsorption: Math.max(val - absorbed, 0),
         };
       },
     },

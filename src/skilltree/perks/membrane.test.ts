@@ -5,7 +5,7 @@ import { Membrane } from "./membrane";
 test("test membrane", () => {
   const rep: SpreadReplay = {
     ...Membrane.replay,
-    //gameSettings: { mechanics: "scrapeoff", updateFrequencyInMs: 25 },
+    gameSettings: { mechanics: "scrapeoff", updateFrequencyInMs: 25 },
   };
   const game = SpreadGameImplementation.fromReplay(rep);
   game.runReplay(rep, rep.lengthInMs);

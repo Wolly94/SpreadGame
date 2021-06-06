@@ -119,7 +119,8 @@ export const combinedFightEvents = (
       (afterFight.defender.type === "Bubble" &&
         afterFight.defender.val === null) ||
       (afterFight.defender.type === "Cell" &&
-        partialFight.defender.currentPlayerId !== null)
+        partialFight.defender.currentPlayerId !==
+          beforeFight.defender.val.playerId)
     ) {
       finishFightEvent(e1);
     }
