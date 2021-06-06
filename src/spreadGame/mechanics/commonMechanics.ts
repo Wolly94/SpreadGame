@@ -3,7 +3,7 @@ import Bubble from "../bubble";
 import Cell from "../cell";
 import { radiusToUnits, radiusToUnitsFixPoint } from "../common";
 import { distance } from "../entites";
-import { AttackerFightProps } from "../spreadGame";
+import { AttackerFightProps, DefenderFightProps } from "../spreadGameProps";
 
 export const calculationAccuracy = 0.01;
 export const minOverlap = 2;
@@ -97,7 +97,7 @@ export interface SpreadGameMechanics {
     bubble: Bubble,
     cell: Cell,
     f1: AttackerFightProps,
-    f2: AttackerFightProps
+    f2: DefenderFightProps
   ) => [Bubble | null, Cell];
   move: (bubble: Bubble, ms: number) => Bubble;
   grow: (cell: Cell, ms: number) => Cell;

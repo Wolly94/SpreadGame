@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var spreadGameProps_1 = require("../spreadGame/spreadGameProps");
 var attack_1 = require("./skills/attack");
 var defense_1 = require("./skills/defense");
 exports.validSkillTree = function (skillTree, skilledPerks) {
@@ -43,37 +44,46 @@ exports.skillTreeMethods = {
         });
     },
     getAttackerModifier: function (skilledPerks, attacker, spreadGame) {
-        var attackModifier = 0;
-        skilledPerks.forEach(function (skilledPerk) {
-            skilledPerk.perk.effect
-                .filter(function (p) { return p.type === "FightEffect"; })
-                .forEach(function (eff) {
-                attackModifier += eff.getValue(skilledPerk.level, attacker, spreadGame).combatAbilityModifier;
+        var combined = skilledPerks
+            .flatMap(function (skilledPerk) {
+            return skilledPerk.perk.effects
+                .filter(function (p) { return p.type === "AttackerFightEffect"; })
+                .map(function (getProps) {
+                return getProps.getValue(skilledPerk.level, attacker, spreadGame);
             });
-        });
-        return { combatAbilityModifier: 1 + attackModifier / 100 };
+        })
+            .reduce(spreadGameProps_1.combineAttackerFightProps.combine, spreadGameProps_1.combineAttackerFightProps.default);
+        return { combatAbilityModifier: 1 + combined.combatAbilityModifier / 100 };
     },
     getDefenderModifier: function (skilledPerks, defender, spreadGame) {
-        var attackModifier = 0;
-        skilledPerks.forEach(function (skilledPerk) {
-            skilledPerk.perk.effect
+        var combined = skilledPerks
+            .flatMap(function (skilledPerk) {
+            return skilledPerk.perk.effects
                 .filter(function (p) { return p.type === "DefenderFightEffect"; })
-                .forEach(function (eff) {
-                attackModifier += eff.getValue(skilledPerk.level, defender, spreadGame).combatAbilityModifier;
+                .map(function (getProps) {
+                return getProps.getValue(skilledPerk.level, defender, spreadGame);
             });
-        });
-        return { combatAbilityModifier: 1 + attackModifier / 100 };
+        })
+            .reduce(spreadGameProps_1.combineDefenderFightProps.combine, spreadGameProps_1.combineDefenderFightProps.default);
+        return { combatAbilityModifier: 1 + combined.combatAbilityModifier / 100 };
     },
-    getConquerProps: function (skilledPerks) {
-        var additionalUnits = 0;
-        skilledPerks.forEach(function (skilledPerk) {
-            skilledPerk.perk.effect
-                .filter(function (p) { return p.type === "ConquerBubble"; })
-                .forEach(function (eff) {
-                additionalUnits += eff.getValue(skilledPerk.level).additionalUnits;
-            });
-        });
-        return { additionalUnits: additionalUnits };
+    getConquerCellProps: function (skilledPerks) {
+        return skilledPerks
+            .flatMap(function (skilledPerk) {
+            return skilledPerk.perk.effects
+                .filter(function (p) { return p.type === "ConquerCellEffect"; })
+                .map(function (getProps) { return getProps.getValue(skilledPerk.level); });
+        })
+            .reduce(spreadGameProps_1.combineConquerCellProps.combine, spreadGameProps_1.combineConquerCellProps.default);
+    },
+    getDefendCellProps: function (skilledPerks) {
+        return skilledPerks
+            .flatMap(function (skilledPerk) {
+            return skilledPerk.perk.effects
+                .filter(function (p) { return p.type === "DefendCellEffect"; })
+                .map(function (getProps) { return getProps.getValue(skilledPerk.level); });
+        })
+            .reduce(spreadGameProps_1.combineDefendCellProps.combine, spreadGameProps_1.combineDefendCellProps.default);
     },
 };
 exports.fullSkillTree = {

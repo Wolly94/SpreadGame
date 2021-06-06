@@ -1,7 +1,7 @@
 import Bubble, { setUnits } from "../bubble";
 import Cell from "../cell";
 import { distance } from "../entites";
-import { AttackerFightProps } from "../spreadGame";
+import { AttackerFightProps, DefenderFightProps } from "../spreadGameProps";
 import basicMechanics from "./basicMechanics";
 import {
   calculationAccuracy,
@@ -87,7 +87,7 @@ const bounceMechanics: SpreadGameMechanics = {
     bubble: Bubble,
     cell: Cell,
     f1: AttackerFightProps,
-    f2: AttackerFightProps
+    f2: DefenderFightProps
   ) => {
     // bubble reached its destiny?
     if (bubble.targetId === cell.id) {

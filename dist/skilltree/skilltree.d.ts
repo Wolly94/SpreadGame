@@ -3,7 +3,7 @@ import { SkillTreeData } from "../messages/inGame/gameServerMessages";
 import { SpreadGameImplementation } from "../spreadGame";
 import Bubble from "../spreadGame/bubble";
 import Cell from "../spreadGame/cell";
-import { AttackerFightProps, DefenderFightProps } from "../spreadGame/spreadGame";
+import { AttackerFightProps, ConquerCellProps, DefendCellProps, DefenderFightProps } from "../spreadGame/spreadGameProps";
 import { GeneralPerk } from "./perks/perk";
 export interface SkilledPerk {
     perk: GeneralPerk;
@@ -24,9 +24,8 @@ export declare const skillTreeMethods: {
     toSkilledPerkData: (skilledPerks: SkilledPerk[]) => SkilledPerkData[];
     getAttackerModifier: (skilledPerks: SkilledPerk[], attacker: Bubble, spreadGame: SpreadGameImplementation) => AttackerFightProps;
     getDefenderModifier: (skilledPerks: SkilledPerk[], defender: Cell, spreadGame: SpreadGameImplementation) => DefenderFightProps;
-    getConquerProps: (skilledPerks: SkilledPerk[]) => {
-        additionalUnits: number;
-    };
+    getConquerCellProps: (skilledPerks: SkilledPerk[]) => ConquerCellProps;
+    getDefendCellProps: (skilledPerks: SkilledPerk[]) => DefendCellProps;
 };
 export declare const fullSkillTree: SkillTree;
 export declare const defaultSkillTree: SkillTree;

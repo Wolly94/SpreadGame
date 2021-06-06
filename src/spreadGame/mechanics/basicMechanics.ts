@@ -1,7 +1,7 @@
 import Bubble, { createBubble, getNewBubbleIndex, setUnits } from "../bubble";
 import Cell from "../cell";
 import { radiusToGrowth, radiusToUnits, unitsToRadius } from "../common";
-import { AttackerFightProps, DefenderFightProps } from "../spreadGame";
+import { AttackerFightProps, DefenderFightProps } from "../spreadGameProps";
 import {
   calculationAccuracy,
   centerOverlap,

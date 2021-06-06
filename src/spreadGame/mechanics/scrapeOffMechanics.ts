@@ -2,7 +2,7 @@ import Bubble, { createBubble, setUnits } from "../bubble";
 import Cell from "../cell";
 import { radiusToUnits, radiusToUnitsFixPoint } from "../common";
 import { distance } from "../entites";
-import { AttackerFightProps } from "../spreadGame";
+import { AttackerFightProps, DefenderFightProps } from "../spreadGameProps";
 import basicMechanics from "./basicMechanics";
 import {
   calculationAccuracy,
@@ -52,7 +52,7 @@ const scrapeOffMechanics: SpreadGameMechanics = {
     bubble: Bubble,
     cell: Cell,
     f1: AttackerFightProps,
-    f2: AttackerFightProps
+    f2: DefenderFightProps
   ) => {
     const resCell = { ...cell };
     if (overlap(bubble, resCell) < minOverlap + calculationAccuracy)

@@ -21,15 +21,6 @@ export interface SpreadGameFunctions {
     toClientGameState: () => ClientGameState;
     getReplay: () => SpreadReplay;
 }
-export interface AttackerFightProps {
-    combatAbilityModifier: number;
-}
-export interface DefenderFightProps {
-    combatAbilityModifier: number;
-}
-export interface ConquerCellProps {
-    additionalUnits: number;
-}
 export declare type SpreadGame = SpreadGameState & SpreadGameFunctions & SpreadGameInteraction;
 export declare class SpreadGameImplementation implements SpreadGame {
     map: SpreadMap;
@@ -51,4 +42,5 @@ export declare class SpreadGameImplementation implements SpreadGame {
     collideBubblesWithCells(): void;
     sendUnits(playerId: number, senderIds: number[], receiverId: number): false | undefined;
     toClientGameState(): ClientGameState;
+    getSkilledPerks(playerId: number): import("../skilltree/skilltree").SkilledPerk[];
 }

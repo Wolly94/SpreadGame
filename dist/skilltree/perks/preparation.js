@@ -66,7 +66,7 @@ exports.Preparation = {
         " for each second that cell did not send an attack, capped at " +
         utils_1.formatDescription(values, function (val) { return val[1].toString() + "%"; }, "/") +
         ".",
-    effect: [
+    effects: [
         {
             type: "DefenderFightEffect",
             getValue: function (lvl, defender, spreadGame) {

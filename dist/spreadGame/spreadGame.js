@@ -103,17 +103,13 @@ var SpreadGameImplementation = /** @class */ (function () {
         var eventsToAdd = [];
         var remainingBubbles = [];
         this.bubbles.forEach(function (bubble) {
-            var st1 = _this.players.find(function (pl) { return pl.id === bubble.playerId; });
-            var f1 = st1 === undefined
-                ? { combatAbilityModifier: 1.0 }
-                : skilltree_1.skillTreeMethods.getAttackerModifier(st1.skills, bubble, _this);
+            var skills1 = _this.getSkilledPerks(bubble.playerId);
+            var f1 = skilltree_1.skillTreeMethods.getAttackerModifier(skills1, bubble, _this);
             var currentBubble = bubble;
             remainingBubbles = remainingBubbles.map(function (bubble2) {
                 if (currentBubble !== null && bubble2 !== null) {
-                    var st2 = _this.players.find(function (pl) { return pl.id === bubble2.playerId; });
-                    var f2 = st2 === undefined
-                        ? { combatAbilityModifier: 1.0 }
-                        : skilltree_1.skillTreeMethods.getAttackerModifier(st2.skills, bubble2, _this);
+                    var skills2 = _this.getSkilledPerks(bubble2.playerId);
+                    var f2 = skilltree_1.skillTreeMethods.getAttackerModifier(skills2, bubble2, _this);
                     var _a = _this.mechanics.collideBubble(bubble2, currentBubble, f2, f1), rem1 = _a[0], rem2 = _a[1];
                     if (rem1 === null) {
                         eventsToAdd.push({
@@ -150,19 +146,15 @@ var SpreadGameImplementation = /** @class */ (function () {
         var eventsToAdd = [];
         var remainingBubbles = [];
         this.bubbles.forEach(function (bubble) {
-            var st1 = _this.players.find(function (pl) { return pl.id === bubble.playerId; });
-            var f1 = st1 === undefined
-                ? { combatAbilityModifier: 1.0 }
-                : skilltree_1.skillTreeMethods.getAttackerModifier(st1.skills, bubble, _this);
+            var skills1 = _this.getSkilledPerks(bubble.playerId);
+            var f1 = skilltree_1.skillTreeMethods.getAttackerModifier(skills1, bubble, _this);
             var currentBubble = bubble;
             _this.cells = _this.cells.map(function (cell) {
                 if (currentBubble != null &&
                     (currentBubble.motherId !== cell.id ||
                         currentBubble.playerId !== cell.playerId)) {
-                    var st2 = _this.players.find(function (pl) { return pl.id === cell.playerId; });
-                    var f2 = st2 === undefined
-                        ? { combatAbilityModifier: 1.0 }
-                        : skilltree_1.skillTreeMethods.getDefenderModifier(st2.skills, cell, _this);
+                    var skills2 = cell.playerId !== null ? _this.getSkilledPerks(cell.playerId) : [];
+                    var f2 = skilltree_1.skillTreeMethods.getDefenderModifier(skills2, cell, _this);
                     var _a = _this.mechanics.collideCell(currentBubble, cell, f1, f2), newCurrentBubble = _a[0], newCell = _a[1];
                     if (newCell.playerId !== cell.playerId) {
                         eventsToAdd.push({
@@ -172,10 +164,13 @@ var SpreadGameImplementation = /** @class */ (function () {
                             cellId: newCell.id,
                             playerId: cell.playerId,
                         });
-                        var conquerProps = st1 === undefined
-                            ? { additionalUnits: 0 }
-                            : skilltree_1.skillTreeMethods.getConquerProps(st1.skills);
+                        var conquerProps = skilltree_1.skillTreeMethods.getConquerCellProps(skills1);
                         newCell = __assign(__assign({}, newCell), { units: newCell.units + conquerProps.additionalUnits });
+                    }
+                    else {
+                        // if (newCell.playerId === cell.playerId) {
+                        var defendCellProps = skilltree_1.skillTreeMethods.getDefendCellProps(skills2);
+                        newCell = __assign(__assign({}, newCell), { units: newCell.units + defendCellProps.additionalUnits });
                     }
                     if (newCurrentBubble === null) {
                         eventsToAdd.push({
@@ -251,10 +246,8 @@ var SpreadGameImplementation = /** @class */ (function () {
         var gs = {
             timePassedInMs: this.timePassed,
             cells: this.cells.map(function (cell) {
-                var st = _this.players.find(function (pl) { return pl.id === cell.playerId; });
-                var fightProps = st === undefined
-                    ? { combatAbilityModifier: 1.0 }
-                    : skilltree_1.skillTreeMethods.getDefenderModifier(st.skills, cell, _this);
+                var skills = cell.playerId !== null ? _this.getSkilledPerks(cell.playerId) : [];
+                var fightProps = skilltree_1.skillTreeMethods.getDefenderModifier(skills, cell, _this);
                 return {
                     id: cell.id,
                     playerId: cell.playerId,
@@ -265,10 +258,8 @@ var SpreadGameImplementation = /** @class */ (function () {
                 };
             }),
             bubbles: this.bubbles.map(function (bubble) {
-                var st = _this.players.find(function (pl) { return pl.id === bubble.playerId; });
-                var fightProps = st === undefined
-                    ? { combatAbilityModifier: 1.0 }
-                    : skilltree_1.skillTreeMethods.getAttackerModifier(st.skills, bubble, _this);
+                var skills = _this.getSkilledPerks(bubble.playerId);
+                var fightProps = skilltree_1.skillTreeMethods.getAttackerModifier(skills, bubble, _this);
                 return {
                     id: bubble.id,
                     playerId: bubble.playerId,
@@ -280,6 +271,13 @@ var SpreadGameImplementation = /** @class */ (function () {
             }),
         };
         return gs;
+    };
+    SpreadGameImplementation.prototype.getSkilledPerks = function (playerId) {
+        var pl = this.players.find(function (pl) { return pl.id === playerId; });
+        if (pl === undefined)
+            return [];
+        else
+            return pl.skills;
     };
     return SpreadGameImplementation;
 }());

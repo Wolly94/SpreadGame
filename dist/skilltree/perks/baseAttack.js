@@ -51,9 +51,9 @@ exports.BaseAttack = {
     description: "Raises combat abilities of your bubbles by " +
         utils_1.formatDescription(values, function (val) { return val.toString() + "%"; }, "/") +
         ".",
-    effect: [
+    effects: [
         {
-            type: "FightEffect",
+            type: "AttackerFightEffect",
             getValue: function (lvl) {
                 if (lvl <= 0)
                     return { combatAbilityModifier: 0 };

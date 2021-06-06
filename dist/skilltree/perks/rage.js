@@ -61,9 +61,9 @@ exports.Rage = {
         " for " +
         utils_1.formatDescription(values, function (val) { return (val[0] / 1000).toString(); }, "/") +
         " seconds.",
-    effect: [
+    effects: [
         {
-            type: "FightEffect",
+            type: "AttackerFightEffect",
             getValue: function (lvl, attacker, spreadGame) {
                 if (rageCondition(lvl, spreadGame.eventHistory, spreadGame.timePassed, attacker.playerId)) {
                     var val = values[Math.min(lvl, values.length) - 1];

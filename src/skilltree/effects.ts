@@ -1,13 +1,11 @@
-import { HistoryEntry } from "../messages/replay/replay";
 import Bubble from "../spreadGame/bubble";
 import Cell from "../spreadGame/cell";
+import { SpreadGameImplementation } from "../spreadGame/spreadGame";
 import {
-  ConquerCellProps,
   AttackerFightProps,
-  SpreadGameImplementation,
+  ConquerCellProps,
   DefendCellProps,
-} from "../spreadGame/spreadGame";
-import { FightEvent, SpreadGameEvent } from "./events";
+} from "../spreadGame/spreadGameProps";
 
 export interface GetAttackerFightProps {
   type: "AttackerFightEffect";

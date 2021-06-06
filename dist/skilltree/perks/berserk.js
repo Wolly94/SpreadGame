@@ -66,9 +66,9 @@ exports.Berserk = {
         " seconds after the last) attack a cell orders it's attack increases by " +
         utils_1.formatDescription(values, function (val) { return val[1].toString() + "%"; }, "/") +
         ".",
-    effect: [
+    effects: [
         {
-            type: "FightEffect",
+            type: "AttackerFightEffect",
             getValue: function (lvl, attacker, spreadGame) {
                 if (lvl <= 0)
                     return { combatAbilityModifier: 0 };

@@ -36,7 +36,7 @@ exports.BaseDefense = {
     description: "Raises combat abilities of your cells by " +
         utils_1.formatDescription(values, function (val) { return val.toString() + "%"; }, "/") +
         ".",
-    effect: [
+    effects: [
         {
             type: "DefenderFightEffect",
             getValue: function (lvl) {
