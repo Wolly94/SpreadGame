@@ -16,9 +16,16 @@ var common_1 = require("../common");
 var commonMechanics_1 = require("./commonMechanics");
 exports.defaultSpeed = 90;
 var basicMechanics = {
+    collidesWithBubble: function (bubble1, bubble2) {
+        return !(commonMechanics_1.centerOverlap(bubble1, bubble2) < commonMechanics_1.calculationAccuracy);
+    },
+    collidesWithCell: function (bubble, cell) {
+        return !(commonMechanics_1.centerOverlap(bubble, cell) < commonMechanics_1.calculationAccuracy);
+    },
     collideBubble: function (bubble1, bubble2, f1, f2) {
-        if (commonMechanics_1.centerOverlap(bubble1, bubble2) < commonMechanics_1.calculationAccuracy)
+        if (!basicMechanics.collidesWithBubble(bubble1, bubble2)) {
             return [__assign({}, bubble1), __assign({}, bubble2)];
+        }
         // TODO modify 'this' accordingly
         // return
         if (bubble1.playerId === bubble2.playerId)
@@ -37,8 +44,9 @@ var basicMechanics = {
     collideCell: function (bubble, cell, f1, f2) {
         var resBubble = __assign({}, bubble);
         var resCell = __assign({}, cell);
-        if (commonMechanics_1.centerOverlap(resBubble, resCell) < commonMechanics_1.calculationAccuracy)
-            return [__assign({}, resBubble), __assign({}, resCell)];
+        if (!basicMechanics.collidesWithCell(bubble, cell)) {
+            [resBubble, resCell];
+        }
         if (resBubble.playerId === resCell.playerId) {
             commonMechanics_1.reinforceCell(resCell, resBubble.units);
         }

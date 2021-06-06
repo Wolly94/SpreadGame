@@ -11,7 +11,11 @@ export declare const overlap: (b: Bubble, e: Bubble | Cell) => number;
 export declare const centerOverlap: (b: Bubble, e: Bubble | Cell) => number;
 export declare const entityDistance: (b: Bubble, e: Bubble | Cell) => number;
 export declare const centerOverlapDistance: (b: Bubble, e: Bubble | Cell) => number;
+export declare const isBubble: (val: any) => val is Bubble;
+export declare const approaching: (b: Bubble, e: Bubble | Cell) => boolean;
 export interface SpreadGameMechanics {
+    collidesWithBubble: (bubble1: Bubble, bubble2: Bubble) => boolean;
+    collidesWithCell: (bubble: Bubble, cell: Cell) => boolean;
     collideBubble: (bubble1: Bubble, bubble2: Bubble, f1: AttackerFightProps, f2: AttackerFightProps) => [Bubble | null, Bubble | null];
     collideCell: (bubble: Bubble, cell: Cell, f1: AttackerFightProps, f2: DefenderFightProps) => [Bubble | null, Cell];
     move: (bubble: Bubble, ms: number) => Bubble;

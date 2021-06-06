@@ -138,6 +138,7 @@ export interface SendBubbleEvent {
 
 export interface CapturedCellEvent {
   type: "CapturedCell";
+  cellId: number;
   beforePlayerId: number | null;
   afterPlayerId: number;
 }

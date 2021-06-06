@@ -248,6 +248,7 @@ export class SpreadGameImplementation implements SpreadGame {
         ? {
             afterPlayerId: after.defender.val.playerId,
             beforePlayerId: before.defender.val.playerId,
+            cellId: before.defender.val.id,
             type: "CapturedCell",
           }
         : null;

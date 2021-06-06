@@ -69,3 +69,18 @@ exports.entityDistance = function (b, e) {
 exports.centerOverlapDistance = function (b, e) {
     return Math.max(-exports.centerOverlap(b, e), 0);
 };
+exports.isBubble = function (val) {
+    return val.direction !== undefined;
+};
+exports.approaching = function (b, e) {
+    var direction = b.direction;
+    if (exports.isBubble(e)) {
+        direction = [direction[0] - e.direction[0], direction[1] - e.direction[1]];
+    }
+    var relPosition = [
+        b.position[0] - e.position[0],
+        b.position[1] - e.position[1],
+    ];
+    var res = direction[0] * relPosition[0] + direction[1] * relPosition[1];
+    return res < 0;
+};

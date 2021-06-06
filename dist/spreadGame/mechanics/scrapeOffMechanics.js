@@ -24,9 +24,15 @@ exports.cellFighters = function (bubbleUnits, bubbleSpace) {
     return fighters;
 };
 var scrapeOffMechanics = {
+    collidesWithBubble: function (bubble1, bubble2) {
+        return !(commonMechanics_1.overlap(bubble1, bubble2) < commonMechanics_1.minOverlap + commonMechanics_1.calculationAccuracy);
+    },
+    collidesWithCell: function (bubble, cell) {
+        return !(commonMechanics_1.overlap(bubble, cell) < commonMechanics_1.minOverlap + commonMechanics_1.calculationAccuracy);
+    },
     collideBubble: function (bubble1, bubble2, f1, f2) {
-        if (commonMechanics_1.overlap(bubble1, bubble2) < commonMechanics_1.minOverlap + commonMechanics_1.calculationAccuracy)
-            return [bubble1, bubble2];
+        if (!scrapeOffMechanics.collidesWithBubble(bubble1, bubble2))
+            return [__assign({}, bubble1), __assign({}, bubble2)];
         if (bubble1.playerId === bubble2.playerId)
             return [bubble1, bubble2];
         var dist = entites_1.distance(bubble1.position, bubble2.position);
@@ -43,8 +49,8 @@ var scrapeOffMechanics = {
     },
     collideCell: function (bubble, cell, f1, f2) {
         var resCell = __assign({}, cell);
-        if (commonMechanics_1.overlap(bubble, resCell) < commonMechanics_1.minOverlap + commonMechanics_1.calculationAccuracy)
-            return [__assign({}, bubble), resCell];
+        if (!scrapeOffMechanics.collidesWithCell(bubble, cell))
+            return [__assign({}, bubble), __assign({}, cell)];
         // if collides returns true, then dist <= bubble.radius
         var bubbleSpace = entites_1.distance(bubble.position, resCell.position) - resCell.radius;
         if (bubbleSpace <= commonMechanics_1.calculationAccuracy) {

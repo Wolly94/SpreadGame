@@ -1,7 +1,7 @@
 import { ClientGameState } from "../messages/inGame/clientGameState";
 import { GameSettings } from "../messages/inGame/gameServerMessages";
 import SpreadReplay, { HistoryEntry, Move } from "../messages/replay/replay";
-import { SpreadGameEvent } from "../skilltree/events";
+import { AfterFightState, BeforeFightState, SpreadGameEvent } from "../skilltree/events";
 import Bubble from "./bubble";
 import Cell from "./cell";
 import { SpreadMap } from "./map/map";
@@ -37,8 +37,11 @@ export declare class SpreadGameImplementation implements SpreadGame {
     runReplay(replay: SpreadReplay, ms: number): void;
     getReplay(): SpreadReplay;
     applyMove(move: Move): void;
+    run(ms: number, updateFrequencyInMs: number): void;
     step(ms: number): void;
     collideBubblesWithBubbles(): void;
+    checkForFinishedFights(): void;
+    processFight(before: BeforeFightState, after: AfterFightState): void;
     collideBubblesWithCells(): void;
     sendUnits(playerId: number, senderIds: number[], receiverId: number): false | undefined;
     toClientGameState(): ClientGameState;

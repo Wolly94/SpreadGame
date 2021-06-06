@@ -68,11 +68,11 @@ var latestMoveTimeStamp = function (cell, eventHistory) {
         .slice(-1)[0];
     var lastConquered = eventHistory
         .filter(function (ev) {
-        return ev.data.type === "FightEvent" &&
-            ev.data.defender.type === "Cell" &&
-            ev.data.defender.after.id === cell.id &&
-            ev.data.defender.before.playerId !== ev.data.defender.after.playerId;
-    })
+        return ev.data.type === "CapturedCell" &&
+            ev.data.cellId === cell.id &&
+            ev.data.beforePlayerId !== ev.data.afterPlayerId;
+    } // this is unneccessary
+    )
         .slice(-1)[0];
     var latestTimeStamp = Math.max(lastAttackSent === undefined ? 0 : lastAttackSent.timestamp, lastConquered === undefined ? 0 : lastConquered.timestamp);
     return latestTimeStamp;

@@ -68,10 +68,9 @@ const latestMoveTimeStamp = (
   const lastConquered = eventHistory
     .filter(
       (ev) =>
-        ev.data.type === "FightEvent" &&
-        ev.data.defender.type === "Cell" &&
-        ev.data.defender.after.id === cell.id &&
-        ev.data.defender.before.playerId !== ev.data.defender.after.playerId
+        ev.data.type === "CapturedCell" &&
+        ev.data.cellId === cell.id &&
+        ev.data.beforePlayerId !== ev.data.afterPlayerId // this is unneccessary
     )
     .slice(-1)[0];
   const latestTimeStamp = Math.max(

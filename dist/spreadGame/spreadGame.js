@@ -14,7 +14,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var events_1 = require("../skilltree/events");
 var skilltree_1 = require("../skilltree/skilltree");
+var entites_1 = require("./entites");
 var basicMechanics_1 = __importDefault(require("./mechanics/basicMechanics"));
 var bounceMechanics_1 = __importDefault(require("./mechanics/bounceMechanics"));
 var scrapeOffMechanics_1 = __importDefault(require("./mechanics/scrapeOffMechanics"));
@@ -88,6 +90,14 @@ var SpreadGameImplementation = /** @class */ (function () {
             this.sendUnits(move.data.playerId, move.data.senderIds, move.data.receiverId);
         }
     };
+    SpreadGameImplementation.prototype.run = function (ms, updateFrequencyInMs) {
+        if (ms <= 0)
+            return;
+        else {
+            this.step(updateFrequencyInMs);
+            this.run(ms - updateFrequencyInMs, updateFrequencyInMs);
+        }
+    };
     SpreadGameImplementation.prototype.step = function (ms) {
         var _this = this;
         this.bubbles = this.bubbles.map(function (bubble) {
@@ -96,21 +106,34 @@ var SpreadGameImplementation = /** @class */ (function () {
         this.cells = this.cells.map(function (cell) { return _this.mechanics.grow(cell, ms); });
         this.collideBubblesWithCells();
         this.collideBubblesWithBubbles();
+        this.checkForFinishedFights();
         this.timePassed += ms;
     };
     SpreadGameImplementation.prototype.collideBubblesWithBubbles = function () {
         var _this = this;
-        var eventsToAdd = [];
+        var fightResults = [];
         var remainingBubbles = [];
         this.bubbles.forEach(function (bubble) {
             var skills1 = _this.getSkilledPerks(bubble.playerId);
             var f1 = skilltree_1.skillTreeMethods.getAttackerModifier(skills1, bubble, _this);
             var currentBubble = bubble;
             remainingBubbles = remainingBubbles.map(function (bubble2) {
-                if (currentBubble !== null && bubble2 !== null) {
+                if (currentBubble !== null &&
+                    bubble2 !== null &&
+                    _this.mechanics.collidesWithBubble(bubble2, currentBubble)) {
                     var skills2 = _this.getSkilledPerks(bubble2.playerId);
                     var f2 = skilltree_1.skillTreeMethods.getAttackerModifier(skills2, bubble2, _this);
                     var _a = _this.mechanics.collideBubble(bubble2, currentBubble, f2, f1), rem1 = _a[0], rem2 = _a[1];
+                    fightResults.push([
+                        {
+                            attacker: bubble2,
+                            defender: { type: "Bubble", val: currentBubble },
+                        },
+                        {
+                            attacker: rem1,
+                            defender: { type: "Bubble", val: rem2 },
+                        },
+                    ]);
                     currentBubble = rem2;
                     return rem1;
                 }
@@ -123,13 +146,90 @@ var SpreadGameImplementation = /** @class */ (function () {
             }
         });
         this.bubbles = remainingBubbles.filter(function (b) { return b !== null; });
-        this.eventHistory = this.eventHistory.concat(eventsToAdd.map(function (ev) {
-            return { timestamp: _this.timePassed, data: ev };
-        }));
+        fightResults.forEach(function (_a) {
+            var before = _a[0], after = _a[1];
+            return _this.processFight(before, after);
+        });
+    };
+    SpreadGameImplementation.prototype.checkForFinishedFights = function () {
+        var _this = this;
+        this.eventHistory = this.eventHistory.map(function (ev) {
+            if (ev.data.type === "FightEvent" && !ev.data.finished) {
+                var returnEvent = __assign({}, ev.data);
+                var eventData_1 = ev.data;
+                var currentAttacker = _this.bubbles.find(function (b) { return b.id === eventData_1.before.attacker.id; });
+                var currentDefender = eventData_1.before.defender.type === "Cell"
+                    ? _this.cells.find(function (c) { return c.id === eventData_1.before.defender.val.id; })
+                    : _this.bubbles.find(function (b) { return b.id === eventData_1.before.defender.val.id; });
+                if (currentAttacker === undefined || currentDefender === undefined) {
+                    // attacker or defender got killed by someone else
+                    events_1.finishFightEvent(returnEvent);
+                }
+                else if (events_1.latestDistance(eventData_1) <
+                    entites_1.distance(currentAttacker.position, currentDefender.position)) {
+                    // they are moving away from each other
+                    events_1.finishFightEvent(returnEvent);
+                }
+                return __assign(__assign({}, ev), { data: returnEvent });
+            }
+            else
+                return ev;
+        });
+    };
+    // this either adds a FightEvent or a PartialFightEvent or modifies a PartialFightEvent in the event history
+    SpreadGameImplementation.prototype.processFight = function (before, after) {
+        var _this = this;
+        var _a;
+        var capturedCellEvent = before.defender.type === "Cell" &&
+            after.defender.val !== null &&
+            after.defender.val.playerId !== null &&
+            before.defender.val.playerId !== after.defender.val.playerId
+            ? {
+                afterPlayerId: after.defender.val.playerId,
+                beforePlayerId: before.defender.val.playerId,
+                cellId: before.defender.val.id,
+                type: "CapturedCell",
+            }
+            : null;
+        var defeatedBubbleEvents = [];
+        if (after.attacker === null) {
+            defeatedBubbleEvents.push({
+                type: "DefeatedBubble",
+                defender: after.defender,
+            });
+        }
+        if (after.defender.type === "Bubble" && after.defender.val === null) {
+            defeatedBubbleEvents.push({
+                type: "DefeatedBubble",
+                defender: { type: "Bubble", val: after.attacker },
+            });
+        }
+        var existingPartialFightEvent = (_a = this.eventHistory.find(function (ev) {
+            return ev.data.type === "FightEvent" &&
+                !ev.data.finished &&
+                ev.data.before.attacker.id === before.attacker.id &&
+                ev.data.before.defender.type === before.defender.type &&
+                ev.data.before.defender.val.id === before.defender.val.id;
+        })) === null || _a === void 0 ? void 0 : _a.data;
+        if (existingPartialFightEvent !== undefined &&
+            events_1.combinedFightEvents(existingPartialFightEvent, before, after, this.timePassed)) {
+        }
+        else {
+            var newEvent = events_1.createFightEvent(before, after, this.timePassed);
+            this.eventHistory.push({ timestamp: this.timePassed, data: newEvent });
+        }
+        if (capturedCellEvent !== null)
+            this.eventHistory.push({
+                timestamp: this.timePassed,
+                data: capturedCellEvent,
+            });
+        defeatedBubbleEvents.forEach(function (ev) {
+            return _this.eventHistory.push({ timestamp: _this.timePassed, data: ev });
+        });
     };
     SpreadGameImplementation.prototype.collideBubblesWithCells = function () {
         var _this = this;
-        var eventsToAdd = [];
+        var fightResults = [];
         var remainingBubbles = [];
         this.bubbles.forEach(function (bubble) {
             var skills1 = _this.getSkilledPerks(bubble.playerId);
@@ -138,15 +238,18 @@ var SpreadGameImplementation = /** @class */ (function () {
             _this.cells = _this.cells.map(function (cell) {
                 if (currentBubble != null &&
                     (currentBubble.motherId !== cell.id ||
-                        currentBubble.playerId !== cell.playerId)) {
+                        currentBubble.playerId !== cell.playerId) &&
+                    _this.mechanics.collidesWithCell(bubble, cell)) {
                     var skills2 = cell.playerId !== null ? _this.getSkilledPerks(cell.playerId) : [];
                     var f2 = skilltree_1.skillTreeMethods.getDefenderModifier(skills2, cell, _this);
                     var _a = _this.mechanics.collideCell(currentBubble, cell, f1, f2), newCurrentBubble = _a[0], newCell = _a[1];
-                    eventsToAdd.push({
-                        type: "FightEvent",
-                        attacker: { before: currentBubble, after: newCurrentBubble },
-                        defender: { type: "Cell", before: cell, after: newCell },
-                    });
+                    fightResults.push([
+                        { attacker: currentBubble, defender: { type: "Cell", val: cell } },
+                        {
+                            attacker: newCurrentBubble,
+                            defender: { type: "Cell", val: newCell },
+                        },
+                    ]);
                     if (newCell.playerId !== cell.playerId) {
                         var conquerProps = skilltree_1.skillTreeMethods.getConquerCellProps(skills1);
                         newCell = __assign(__assign({}, newCell), { units: newCell.units + conquerProps.additionalUnits });
@@ -155,8 +258,6 @@ var SpreadGameImplementation = /** @class */ (function () {
                         /* if (newCell.playerId === cell.playerId) { */
                         var defendCellProps = skilltree_1.skillTreeMethods.getDefendCellProps(skills2);
                         newCell = __assign(__assign({}, newCell), { units: newCell.units + defendCellProps.additionalUnits });
-                    }
-                    if (newCurrentBubble === null) {
                     }
                     currentBubble = newCurrentBubble;
                     //if (event !== null) eventsToAdd.push(event);
@@ -171,9 +272,10 @@ var SpreadGameImplementation = /** @class */ (function () {
             }
         });
         this.bubbles = remainingBubbles;
-        this.eventHistory = this.eventHistory.concat(eventsToAdd.map(function (ev) {
-            return { timestamp: _this.timePassed, data: ev };
-        }));
+        fightResults.forEach(function (_a) {
+            var before = _a[0], after = _a[1];
+            return _this.processFight(before, after);
+        });
     };
     SpreadGameImplementation.prototype.sendUnits = function (playerId, senderIds, receiverId) {
         var _this = this;

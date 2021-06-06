@@ -2,6 +2,35 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var bubble_1 = require("../bubble");
 var commonMechanics_1 = require("./commonMechanics");
+test("approaching", function () {
+    var setupBubble = function (position, direction) {
+        return bubble_1.createBubble({
+            id: 0,
+            position: position,
+            targetId: 0,
+            targetPos: [0, 0],
+            units: 10,
+            creationTime: 0,
+            direction: direction,
+            motherId: 0,
+            playerId: 0,
+        });
+    };
+    var position1 = [100, 0];
+    var position2 = [0, 100];
+    var direcitons1 = [
+        [1, 0],
+        [0, 1],
+        [-1, 1],
+    ];
+    var results = [false, true, true];
+    direcitons1.forEach(function (dir, index) {
+        var b1 = setupBubble(position1, dir);
+        var b2 = setupBubble(position2, [0, 0]);
+        var approach = commonMechanics_1.approaching(b1, b2);
+        expect(approach).toBe(results[index]);
+    });
+});
 test("overlapCenter", function () {
     var pos1 = [100, 100];
     var pos2 = [110, 100];

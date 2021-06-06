@@ -61,10 +61,8 @@ const rageCondition = (
   const lostCellEvents = eventHistory.filter(
     (ev) =>
       ev.timestamp >= timePassed - toleratedTimeSpan &&
-      ev.data.type === "FightEvent" &&
-      ev.data.defender.type === "Cell" &&
-      ev.data.defender.before.playerId === playerId &&
-      ev.data.defender.after.playerId !== playerId
+      ev.data.type === "CapturedCell" &&
+      ev.data.beforePlayerId === playerId
   );
   return lostCellEvents.length > 0;
 };
