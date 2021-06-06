@@ -1,12 +1,26 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var common_1 = require("../../spreadGame/common");
+var spreadGameProps_1 = require("../../spreadGame/spreadGameProps");
 var utils_1 = require("../utils");
+var perk_1 = require("./perk");
 var name = "Preparation";
 var values = [
     [1, 50],
     [2, 100],
 ];
+var defaultValue = [0, 0];
 var simpleMap = {
     width: 500,
     height: 500,
@@ -70,15 +84,9 @@ exports.Preparation = {
         {
             type: "DefenderFightEffect",
             getValue: function (lvl, defender, spreadGame) {
-                if (lvl <= 0)
-                    return { combatAbilityModifier: 0 };
-                else {
-                    var idleSince = latestMoveTimeStamp(defender, spreadGame.eventHistory);
-                    var val = values[Math.min(lvl, values.length) - 1];
-                    return {
-                        combatAbilityModifier: Math.min((val[0] * (spreadGame.timePassed - idleSince)) / 1000, val[1]),
-                    };
-                }
+                var val = perk_1.getValue(values, lvl, defaultValue);
+                var idleSince = latestMoveTimeStamp(defender, spreadGame.eventHistory);
+                return __assign(__assign({}, spreadGameProps_1.combineDefenderFightProps.default), { combatAbilityModifier: Math.min((val[0] * (spreadGame.timePassed - idleSince)) / 1000, val[1]) });
             },
         },
     ],

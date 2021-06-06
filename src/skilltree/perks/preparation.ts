@@ -2,15 +2,17 @@ import SpreadReplay, { HistoryEntry } from "../../messages/replay/replay";
 import Cell from "../../spreadGame/cell";
 import { unitsToRadius } from "../../spreadGame/common";
 import { SpreadMap } from "../../spreadGame/map/map";
+import { combineDefenderFightProps } from "../../spreadGame/spreadGameProps";
 import { SpreadGameEvent } from "../events";
 import { formatDescription } from "../utils";
-import { Perk } from "./perk";
+import { getValue, Perk } from "./perk";
 
 const name = "Preparation";
 const values: [number, number][] = [
   [1, 50],
   [2, 100],
 ];
+const defaultValue: [number, number] = [0, 0];
 
 const simpleMap: SpreadMap = {
   width: 500,
@@ -86,20 +88,18 @@ export const Preparation: Perk<[number, number]> = {
     {
       type: "DefenderFightEffect",
       getValue: (lvl, defender, spreadGame) => {
-        if (lvl <= 0) return { combatAbilityModifier: 0 };
-        else {
-          const idleSince = latestMoveTimeStamp(
-            defender,
-            spreadGame.eventHistory
-          );
-          const val = values[Math.min(lvl, values.length) - 1];
-          return {
-            combatAbilityModifier: Math.min(
-              (val[0] * (spreadGame.timePassed - idleSince)) / 1000,
-              val[1]
-            ),
-          };
-        }
+        const val = getValue(values, lvl, defaultValue);
+        const idleSince = latestMoveTimeStamp(
+          defender,
+          spreadGame.eventHistory
+        );
+        return {
+          ...combineDefenderFightProps.default,
+          combatAbilityModifier: Math.min(
+            (val[0] * (spreadGame.timePassed - idleSince)) / 1000,
+            val[1]
+          ),
+        };
       },
     },
   ],

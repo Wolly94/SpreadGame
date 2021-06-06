@@ -1,10 +1,12 @@
 import SpreadReplay from "../../messages/replay/replay";
 import { SpreadMap } from "../../spreadGame/map/map";
+import { combineDefenderFightProps } from "../../spreadGame/spreadGameProps";
 import { formatDescription } from "../utils";
-import { Perk } from "./perk";
+import { getValue, Perk } from "./perk";
 
 const name = "BaseDefense";
 const values = [10, 20, 30];
+const defaultValue = 0;
 
 const simpleMap: SpreadMap = {
   width: 500,
@@ -46,11 +48,11 @@ export const BaseDefense: Perk<number> = {
     {
       type: "DefenderFightEffect",
       getValue: (lvl) => {
-        if (lvl <= 0) return { combatAbilityModifier: 0 };
-        else
-          return {
-            combatAbilityModifier: values[Math.min(lvl, values.length) - 1],
-          };
+        const val = getValue(values, lvl, defaultValue);
+        return {
+          ...combineDefenderFightProps.default,
+          combatAbilityModifier: val,
+        };
       },
     },
   ],
