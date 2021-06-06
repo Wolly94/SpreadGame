@@ -10,7 +10,7 @@ export interface GetAttackerFightProps {
 export interface GetDefenderFightProps {
     type: "DefenderFightEffect";
     getValue: (level: number, // level of perk
-    defender: Cell, spreadGame: SpreadGameImplementation) => DefenderFightProps;
+    defender: Cell, spreadGame: SpreadGameImplementation, attacker: Bubble | null) => DefenderFightProps;
 }
 export interface GetConquerCellProps {
     type: "ConquerCellEffect";

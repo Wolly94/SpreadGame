@@ -23,7 +23,7 @@ export declare const skillTreeMethods: {
     toSkilledPerks: (skilledPerkData: SkilledPerkData[]) => SkilledPerk[];
     toSkilledPerkData: (skilledPerks: SkilledPerk[]) => SkilledPerkData[];
     getAttackerModifier: (skilledPerks: SkilledPerk[], attacker: Bubble, spreadGame: SpreadGameImplementation) => AttackerFightProps;
-    getDefenderModifier: (skilledPerks: SkilledPerk[], defender: Cell, spreadGame: SpreadGameImplementation) => DefenderFightProps;
+    getDefenderModifier: (skilledPerks: SkilledPerk[], defender: Cell, spreadGame: SpreadGameImplementation, attacker: Bubble | null) => DefenderFightProps;
     getConquerCellProps: (skilledPerks: SkilledPerk[]) => ConquerCellProps;
     getDefendCellProps: (skilledPerks: SkilledPerk[]) => DefendCellProps;
 };

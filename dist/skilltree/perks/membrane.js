@@ -59,6 +59,13 @@ var replay = {
         },
     ],
 };
+var alreadyAbsorbed = function (event) {
+    if (event.finished)
+        return 0;
+    else {
+        return event.partialFights.reduce(function (prev, curr) { return prev + curr.data.attacker.unitsLost; }, 0);
+    }
+};
 exports.Membrane = {
     name: name,
     values: values,
@@ -68,11 +75,22 @@ exports.Membrane = {
     effects: [
         {
             type: "DefenderFightEffect",
-            getValue: function (lvl, defender, spreadGame) {
+            getValue: function (lvl, defender, spreadGame, attacker) {
+                var _a;
                 var val = perk_1.getValue(values, lvl, defaultValue);
+                var activeEvent = attacker === null
+                    ? undefined
+                    : (_a = spreadGame.eventHistory.find(function (ev) {
+                        return ev.data.type === "FightEvent" &&
+                            !ev.data.finished &&
+                            ev.data.before.attacker.id === attacker.id &&
+                            ev.data.before.defender.type === "Cell" &&
+                            ev.data.before.defender.val.id === defender.id;
+                    })) === null || _a === void 0 ? void 0 : _a.data;
+                var absorbed = activeEvent === undefined ? 0 : alreadyAbsorbed(activeEvent);
                 return {
                     combatAbilityModifier: 0,
-                    membraneAbsorption: val,
+                    membraneAbsorption: Math.max(val - absorbed, 0),
                 };
             },
         },

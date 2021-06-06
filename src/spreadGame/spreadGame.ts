@@ -317,7 +317,8 @@ export class SpreadGameImplementation implements SpreadGame {
           const f2: DefenderFightProps = skillTreeMethods.getDefenderModifier(
             skills2,
             cell,
-            this
+            this,
+            bubble
           );
           let [newCurrentBubble, newCell] = this.mechanics.collideCell(
             currentBubble,
@@ -422,7 +423,8 @@ export class SpreadGameImplementation implements SpreadGame {
         const fightProps: DefenderFightProps = skillTreeMethods.getDefenderModifier(
           skills,
           cell,
-          this
+          this,
+          null
         );
         return {
           id: cell.id,

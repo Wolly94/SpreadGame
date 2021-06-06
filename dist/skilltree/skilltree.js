@@ -66,13 +66,13 @@ exports.skillTreeMethods = {
             .reduce(spreadGameProps_1.combineAttackerFightProps.combine, spreadGameProps_1.combineAttackerFightProps.default);
         return { combatAbilityModifier: 1 + combined.combatAbilityModifier / 100 };
     },
-    getDefenderModifier: function (skilledPerks, defender, spreadGame) {
+    getDefenderModifier: function (skilledPerks, defender, spreadGame, attacker) {
         var combined = skilledPerks
             .flatMap(function (skilledPerk) {
             return skilledPerk.perk.effects
                 .filter(function (p) { return p.type === "DefenderFightEffect"; })
                 .map(function (getProps) {
-                return getProps.getValue(skilledPerk.level, defender, spreadGame);
+                return getProps.getValue(skilledPerk.level, defender, spreadGame, attacker);
             });
         })
             .reduce(spreadGameProps_1.combineDefenderFightProps.combine, spreadGameProps_1.combineDefenderFightProps.default);

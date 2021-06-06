@@ -87,12 +87,17 @@ export const Membrane: Perk<number> = {
       type: "DefenderFightEffect",
       getValue: (lvl, defender, spreadGame, attacker) => {
         const val = getValue(values, lvl, defaultValue);
-        const activeEvent:
-          | FightEvent
-          | undefined = spreadGame.eventHistory.find(
-          (ev): ev is HistoryEntry<FightEvent> =>
-            ev.data.type === "FightEvent" && !ev.data.finished
-        )?.data;
+        const activeEvent: FightEvent | undefined =
+          attacker === null
+            ? undefined
+            : spreadGame.eventHistory.find(
+                (ev): ev is HistoryEntry<FightEvent> =>
+                  ev.data.type === "FightEvent" &&
+                  !ev.data.finished &&
+                  ev.data.before.attacker.id === attacker.id &&
+                  ev.data.before.defender.type === "Cell" &&
+                  ev.data.before.defender.val.id === defender.id
+              )?.data;
         const absorbed =
           activeEvent === undefined ? 0 : alreadyAbsorbed(activeEvent);
         return {

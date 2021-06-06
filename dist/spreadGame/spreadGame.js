@@ -241,7 +241,7 @@ var SpreadGameImplementation = /** @class */ (function () {
                         currentBubble.playerId !== cell.playerId) &&
                     _this.mechanics.collidesWithCell(bubble, cell)) {
                     var skills2 = cell.playerId !== null ? _this.getSkilledPerks(cell.playerId) : [];
-                    var f2 = skilltree_1.skillTreeMethods.getDefenderModifier(skills2, cell, _this);
+                    var f2 = skilltree_1.skillTreeMethods.getDefenderModifier(skills2, cell, _this, bubble);
                     var _a = _this.mechanics.collideCell(currentBubble, cell, f1, f2), newCurrentBubble = _a[0], newCell = _a[1];
                     fightResults.push([
                         { attacker: currentBubble, defender: { type: "Cell", val: cell } },
@@ -328,7 +328,7 @@ var SpreadGameImplementation = /** @class */ (function () {
             timePassedInMs: this.timePassed,
             cells: this.cells.map(function (cell) {
                 var skills = cell.playerId !== null ? _this.getSkilledPerks(cell.playerId) : [];
-                var fightProps = skilltree_1.skillTreeMethods.getDefenderModifier(skills, cell, _this);
+                var fightProps = skilltree_1.skillTreeMethods.getDefenderModifier(skills, cell, _this, null);
                 return {
                     id: cell.id,
                     playerId: cell.playerId,

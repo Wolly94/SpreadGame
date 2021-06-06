@@ -106,7 +106,8 @@ export const skillTreeMethods = {
   getDefenderModifier: (
     skilledPerks: SkilledPerk[],
     defender: Cell,
-    spreadGame: SpreadGameImplementation
+    spreadGame: SpreadGameImplementation,
+    attacker: Bubble | null
   ): DefenderFightProps => {
     const combined = skilledPerks
       .flatMap((skilledPerk) => {
@@ -116,7 +117,12 @@ export const skillTreeMethods = {
           )
           .map(
             (getProps): DefenderFightProps =>
-              getProps.getValue(skilledPerk.level, defender, spreadGame)
+              getProps.getValue(
+                skilledPerk.level,
+                defender,
+                spreadGame,
+                attacker
+              )
           );
       })
       .reduce(

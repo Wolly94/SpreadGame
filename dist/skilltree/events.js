@@ -54,7 +54,8 @@ exports.combinedFightEvents = function (e1, beforeFight, afterFight, timePassed)
             (afterFight.defender.type === "Bubble" &&
                 afterFight.defender.val === null) ||
             (afterFight.defender.type === "Cell" &&
-                partialFight.defender.currentPlayerId !== null)) {
+                partialFight.defender.currentPlayerId !==
+                    beforeFight.defender.val.playerId)) {
             exports.finishFightEvent(e1);
         }
         return true;

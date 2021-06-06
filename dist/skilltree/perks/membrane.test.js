@@ -14,7 +14,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var spreadGame_1 = require("../../spreadGame");
 var membrane_1 = require("./membrane");
 test("test membrane", function () {
-    var rep = __assign({}, membrane_1.Membrane.replay);
+    var rep = __assign(__assign({}, membrane_1.Membrane.replay), { gameSettings: { mechanics: "scrapeoff", updateFrequencyInMs: 25 } });
     var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);
     game.runReplay(rep, rep.lengthInMs);
     var cstate = game.toClientGameState();
