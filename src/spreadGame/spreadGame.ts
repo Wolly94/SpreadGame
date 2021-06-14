@@ -161,12 +161,6 @@ export class SpreadGameImplementation implements SpreadGame {
     var remainingBubbles: (Bubble | null)[] = [];
     this.bubbles.forEach((bubble) => {
       const skills1 = this.getSkilledPerks(bubble.playerId);
-      const f1: AttackerFightProps = skillTreeMethods.getAttackerModifier(
-        skills1,
-        bubble,
-        this
-      );
-
       var currentBubble: Bubble | null = bubble;
       remainingBubbles = remainingBubbles.map((bubble2) => {
         if (
@@ -174,11 +168,19 @@ export class SpreadGameImplementation implements SpreadGame {
           bubble2 !== null &&
           this.mechanics.collidesWithBubble(bubble2, currentBubble)
         ) {
+          const f1: AttackerFightProps = skillTreeMethods.getAttackerModifier(
+            skills1,
+            bubble,
+            this,
+            bubble2
+          );
+
           const skills2 = this.getSkilledPerks(bubble2.playerId);
           const f2: AttackerFightProps = skillTreeMethods.getAttackerModifier(
             skills2,
             bubble2,
-            this
+            this,
+            currentBubble
           );
 
           const [rem1, rem2] = this.mechanics.collideBubble(
@@ -302,7 +304,6 @@ export class SpreadGameImplementation implements SpreadGame {
     var remainingBubbles: Bubble[] = [];
     this.bubbles.forEach((bubble) => {
       const skills1 = this.getSkilledPerks(bubble.playerId);
-      const f1 = skillTreeMethods.getAttackerModifier(skills1, bubble, this);
 
       var currentBubble: Bubble | null = bubble;
       this.cells = this.cells.map((cell) => {
@@ -312,6 +313,12 @@ export class SpreadGameImplementation implements SpreadGame {
             currentBubble.playerId !== cell.playerId) &&
           this.mechanics.collidesWithCell(bubble, cell)
         ) {
+          const f1 = skillTreeMethods.getAttackerModifier(
+            skills1,
+            bubble,
+            this,
+            cell
+          );
           const skills2 =
             cell.playerId !== null ? this.getSkilledPerks(cell.playerId) : [];
           const f2: DefenderFightProps = skillTreeMethods.getDefenderModifier(
@@ -441,7 +448,8 @@ export class SpreadGameImplementation implements SpreadGame {
         const fightProps: AttackerFightProps = skillTreeMethods.getAttackerModifier(
           skills,
           bubble,
-          this
+          this,
+          null
         );
         return {
           id: bubble.id,

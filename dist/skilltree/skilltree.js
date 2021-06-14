@@ -14,6 +14,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var spreadGameProps_1 = require("../spreadGame/spreadGameProps");
 var attack_1 = require("./skills/attack");
 var defense_1 = require("./skills/defense");
+var spirit_1 = require("./skills/spirit");
 exports.validSkillTree = function (skillTree, skilledPerks) {
     return true;
 };
@@ -54,13 +55,13 @@ exports.skillTreeMethods = {
             return { level: sp.level, name: sp.perk.name };
         });
     },
-    getAttackerModifier: function (skilledPerks, attacker, spreadGame) {
+    getAttackerModifier: function (skilledPerks, attacker, spreadGame, defender) {
         var combined = skilledPerks
             .flatMap(function (skilledPerk) {
             return skilledPerk.perk.effects
                 .filter(function (p) { return p.type === "AttackerFightEffect"; })
                 .map(function (getProps) {
-                return getProps.getValue(skilledPerk.level, attacker, spreadGame);
+                return getProps.getValue(skilledPerk.level, attacker, spreadGame, defender);
             });
         })
             .reduce(spreadGameProps_1.combineAttackerFightProps.combine, spreadGameProps_1.combineAttackerFightProps.default);
@@ -98,7 +99,7 @@ exports.skillTreeMethods = {
     },
 };
 exports.fullSkillTree = {
-    skills: [attack_1.Attack, defense_1.Defense],
+    skills: [attack_1.Attack, defense_1.Defense, spirit_1.Spirit],
 };
 exports.defaultSkillTree = exports.fullSkillTree;
 exports.allPerks = exports.fullSkillTree.skills.flatMap(function (sk) { return sk.perks; });

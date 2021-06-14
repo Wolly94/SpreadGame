@@ -22,6 +22,7 @@ import {
 import { GeneralPerk } from "./perks/perk";
 import { Attack } from "./skills/attack";
 import { Defense } from "./skills/defense";
+import { Spirit } from "./skills/spirit";
 
 export interface SkilledPerk {
   perk: GeneralPerk;
@@ -84,7 +85,8 @@ export const skillTreeMethods = {
   getAttackerModifier: (
     skilledPerks: SkilledPerk[],
     attacker: Bubble,
-    spreadGame: SpreadGameImplementation
+    spreadGame: SpreadGameImplementation,
+    defender: Cell | null
   ): AttackerFightProps => {
     const combined = skilledPerks
       .flatMap((skilledPerk) => {
@@ -94,7 +96,12 @@ export const skillTreeMethods = {
           )
           .map(
             (getProps): AttackerFightProps =>
-              getProps.getValue(skilledPerk.level, attacker, spreadGame)
+              getProps.getValue(
+                skilledPerk.level,
+                attacker,
+                spreadGame,
+                defender
+              )
           );
       })
       .reduce(
@@ -159,7 +166,7 @@ export const skillTreeMethods = {
 };
 
 export const fullSkillTree: SkillTree = {
-  skills: [Attack, Defense],
+  skills: [Attack, Defense, Spirit],
 };
 
 export const defaultSkillTree: SkillTree = fullSkillTree;

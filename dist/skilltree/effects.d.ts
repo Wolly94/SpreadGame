@@ -5,7 +5,7 @@ import { AttackerFightProps, ConquerCellProps, DefendCellProps, DefenderFightPro
 export interface GetAttackerFightProps {
     type: "AttackerFightEffect";
     getValue: (level: number, // level of perk
-    attacker: Bubble, spreadGame: SpreadGameImplementation) => AttackerFightProps;
+    attacker: Bubble, spreadGame: SpreadGameImplementation, defender: Cell | Bubble | null) => AttackerFightProps;
 }
 export interface GetDefenderFightProps {
     type: "DefenderFightEffect";

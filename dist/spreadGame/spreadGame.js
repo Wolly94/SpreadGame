@@ -115,14 +115,14 @@ var SpreadGameImplementation = /** @class */ (function () {
         var remainingBubbles = [];
         this.bubbles.forEach(function (bubble) {
             var skills1 = _this.getSkilledPerks(bubble.playerId);
-            var f1 = skilltree_1.skillTreeMethods.getAttackerModifier(skills1, bubble, _this);
             var currentBubble = bubble;
             remainingBubbles = remainingBubbles.map(function (bubble2) {
                 if (currentBubble !== null &&
                     bubble2 !== null &&
                     _this.mechanics.collidesWithBubble(bubble2, currentBubble)) {
+                    var f1 = skilltree_1.skillTreeMethods.getAttackerModifier(skills1, bubble, _this, bubble2);
                     var skills2 = _this.getSkilledPerks(bubble2.playerId);
-                    var f2 = skilltree_1.skillTreeMethods.getAttackerModifier(skills2, bubble2, _this);
+                    var f2 = skilltree_1.skillTreeMethods.getAttackerModifier(skills2, bubble2, _this, currentBubble);
                     var _a = _this.mechanics.collideBubble(bubble2, currentBubble, f2, f1), rem1 = _a[0], rem2 = _a[1];
                     fightResults.push([
                         {
@@ -233,13 +233,13 @@ var SpreadGameImplementation = /** @class */ (function () {
         var remainingBubbles = [];
         this.bubbles.forEach(function (bubble) {
             var skills1 = _this.getSkilledPerks(bubble.playerId);
-            var f1 = skilltree_1.skillTreeMethods.getAttackerModifier(skills1, bubble, _this);
             var currentBubble = bubble;
             _this.cells = _this.cells.map(function (cell) {
                 if (currentBubble != null &&
                     (currentBubble.motherId !== cell.id ||
                         currentBubble.playerId !== cell.playerId) &&
                     _this.mechanics.collidesWithCell(bubble, cell)) {
+                    var f1 = skilltree_1.skillTreeMethods.getAttackerModifier(skills1, bubble, _this, cell);
                     var skills2 = cell.playerId !== null ? _this.getSkilledPerks(cell.playerId) : [];
                     var f2 = skilltree_1.skillTreeMethods.getDefenderModifier(skills2, cell, _this, bubble);
                     var _a = _this.mechanics.collideCell(currentBubble, cell, f1, f2), newCurrentBubble = _a[0], newCell = _a[1];
@@ -340,7 +340,7 @@ var SpreadGameImplementation = /** @class */ (function () {
             }),
             bubbles: this.bubbles.map(function (bubble) {
                 var skills = _this.getSkilledPerks(bubble.playerId);
-                var fightProps = skilltree_1.skillTreeMethods.getAttackerModifier(skills, bubble, _this);
+                var fightProps = skilltree_1.skillTreeMethods.getAttackerModifier(skills, bubble, _this, null);
                 return {
                     id: bubble.id,
                     playerId: bubble.playerId,

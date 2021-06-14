@@ -11,3 +11,5 @@ var attack = __importStar(require("./attack"));
 exports.attack = attack;
 var defense = __importStar(require("./defense"));
 exports.defense = defense;
+var spirit = __importStar(require("./spirit"));
+exports.spirit = spirit;
