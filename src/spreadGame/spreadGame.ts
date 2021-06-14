@@ -342,7 +342,9 @@ export class SpreadGameImplementation implements SpreadGame {
           ]);
 
           if (newCell.playerId !== cell.playerId) {
-            const conquerProps = skillTreeMethods.getConquerCellProps(skills1);
+            const conquerProps = skillTreeMethods.getAttackerConquerCellProps(
+              skills1
+            );
             newCell = {
               ...newCell,
               units: newCell.units + conquerProps.additionalUnits,

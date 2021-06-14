@@ -3,9 +3,10 @@ import Cell from "../spreadGame/cell";
 import { SpreadGameImplementation } from "../spreadGame/spreadGame";
 import {
   AttackerFightProps,
-  ConquerCellProps,
+  AttackerConquerCellProps,
   DefendCellProps,
   DefenderFightProps,
+  DefenderConquerCellProps,
 } from "../spreadGame/spreadGameProps";
 
 export interface GetAttackerFightProps {
@@ -28,11 +29,18 @@ export interface GetDefenderFightProps {
   ) => DefenderFightProps;
 }
 
-export interface GetConquerCellProps {
-  type: "ConquerCellEffect";
+export interface GetAttackerConquerCellProps {
+  type: "AttackerConquerCellEffect";
   getValue: (
     level: number // level of perk
-  ) => ConquerCellProps;
+  ) => AttackerConquerCellProps;
+}
+
+export interface GetDefenderConquerCellProps {
+  type: "DefenderConquerCellEffect";
+  getValue: (
+    level: number // level of perk
+  ) => DefenderConquerCellProps;
 }
 
 export interface GetDefendCellProps {
@@ -45,5 +53,6 @@ export interface GetDefendCellProps {
 export type PerkEffect =
   | GetAttackerFightProps
   | GetDefenderFightProps
-  | GetConquerCellProps
+  | GetAttackerConquerCellProps
+  | GetDefenderConquerCellProps
   | GetDefendCellProps;

@@ -1,4 +1,4 @@
-type PropUtils<T> = {
+export type PropUtils<T> = {
   combine: (a: T, b: T) => T;
   default: T;
 };
@@ -37,17 +37,31 @@ export const combineDefenderFightProps: PropUtils<DefenderFightProps> = {
   default: { combatAbilityModifier: 0, membraneAbsorption: 0 },
 };
 
-export interface ConquerCellProps {
+export interface AttackerConquerCellProps {
   additionalUnits: number;
 }
 
-export const combineConquerCellProps: PropUtils<ConquerCellProps> = {
+export const combineAttackerConquerCellProps: PropUtils<AttackerConquerCellProps> = {
   combine: (a, b) => {
     return {
       additionalUnits: a.additionalUnits + b.additionalUnits,
     };
   },
   default: { additionalUnits: 0 },
+};
+
+export interface DefenderConquerCellProps {
+  unitsInPercentToRemain: number;
+}
+
+export const combineDefenderConquerCellProps: PropUtils<DefenderConquerCellProps> = {
+  combine: (a, b) => {
+    return {
+      unitsInPercentToRemain:
+        a.unitsInPercentToRemain * b.unitsInPercentToRemain,
+    };
+  },
+  default: { unitsInPercentToRemain: 1 },
 };
 
 export interface DefendCellProps {

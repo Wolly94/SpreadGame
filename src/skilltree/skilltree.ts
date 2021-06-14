@@ -6,18 +6,22 @@ import Cell from "../spreadGame/cell";
 import {
   AttackerFightProps,
   combineAttackerFightProps,
-  combineConquerCellProps,
+  combineAttackerConquerCellProps,
   combineDefendCellProps,
   combineDefenderFightProps,
-  ConquerCellProps,
+  AttackerConquerCellProps,
   DefendCellProps,
   DefenderFightProps,
+  DefenderConquerCellProps,
+  combineDefenderConquerCellProps,
+  PropUtils,
 } from "../spreadGame/spreadGameProps";
 import {
   GetAttackerFightProps,
-  GetConquerCellProps,
+  GetAttackerConquerCellProps,
   GetDefendCellProps,
   GetDefenderFightProps,
+  GetDefenderConquerCellProps,
 } from "./effects";
 import { GeneralPerk } from "./perks/perk";
 import { Attack } from "./skills/attack";
@@ -141,16 +145,39 @@ export const skillTreeMethods = {
       combatAbilityModifier: 1 + combined.combatAbilityModifier / 100,
     };
   },
-  getConquerCellProps: (skilledPerks: SkilledPerk[]): ConquerCellProps => {
+  getAttackerConquerCellProps: (
+    skilledPerks: SkilledPerk[]
+  ): AttackerConquerCellProps => {
     return skilledPerks
       .flatMap((skilledPerk) => {
         return skilledPerk.perk.effects
           .filter(
-            (p): p is GetConquerCellProps => p.type === "ConquerCellEffect"
+            (p): p is GetAttackerConquerCellProps =>
+              p.type === "AttackerConquerCellEffect"
           )
           .map((getProps) => getProps.getValue(skilledPerk.level));
       })
-      .reduce(combineConquerCellProps.combine, combineConquerCellProps.default);
+      .reduce(
+        combineAttackerConquerCellProps.combine,
+        combineAttackerConquerCellProps.default
+      );
+  },
+  getDefenderConquerCellProps: (
+    skilledPerks: SkilledPerk[]
+  ): DefenderConquerCellProps => {
+    return skilledPerks
+      .flatMap((skilledPerk) => {
+        return skilledPerk.perk.effects
+          .filter(
+            (p): p is GetDefenderConquerCellProps =>
+              p.type === "DefenderConquerCellEffect"
+          )
+          .map((getProps) => getProps.getValue(skilledPerk.level));
+      })
+      .reduce(
+        combineDefenderConquerCellProps.combine,
+        combineDefenderConquerCellProps.default
+      );
   },
   getDefendCellProps: (skilledPerks: SkilledPerk[]): DefendCellProps => {
     return skilledPerks

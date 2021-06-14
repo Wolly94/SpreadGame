@@ -47,7 +47,7 @@ export const Slavery: Perk<number> = {
     " population.",
   effects: [
     {
-      type: "ConquerCellEffect",
+      type: "AttackerConquerCellEffect",
       getValue: (lvl) => {
         if (lvl <= 0) {
           return { additionalUnits: 0 };
