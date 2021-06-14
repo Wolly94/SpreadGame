@@ -64,8 +64,8 @@ exports.Rage = {
     effects: [
         {
             type: "AttackerFightEffect",
-            getValue: function (lvl, attacker, spreadGame) {
-                if (rageCondition(lvl, spreadGame.eventHistory, spreadGame.timePassed, attacker.playerId)) {
+            getValue: function (lvl, trigger, spreadGame) {
+                if (rageCondition(lvl, spreadGame.eventHistory, spreadGame.timePassed, trigger.attacker.playerId)) {
                     var val = values[Math.min(lvl, values.length) - 1];
                     return {
                         combatAbilityModifier: val[1],

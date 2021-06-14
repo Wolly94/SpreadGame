@@ -69,12 +69,12 @@ exports.Berserk = {
     effects: [
         {
             type: "AttackerFightEffect",
-            getValue: function (lvl, attacker, spreadGame) {
+            getValue: function (lvl, trigger, spreadGame) {
                 if (lvl <= 0)
                     return { combatAbilityModifier: 0 };
                 var val = values[Math.min(lvl, values.length) - 1];
                 var toleratedTimeSpan = val[0];
-                var attacksSent = currentAttacksSent(toleratedTimeSpan, attacker, spreadGame.eventHistory);
+                var attacksSent = currentAttacksSent(toleratedTimeSpan, trigger.attacker, spreadGame.eventHistory);
                 return {
                     combatAbilityModifier: val[1] * attacksSent,
                 };

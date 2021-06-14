@@ -82,10 +82,10 @@ exports.BaseSpirit = {
     effects: [
         {
             type: "AttackerFightEffect",
-            getValue: function (lvl, attacker, spreadGame, defender) {
-                if (defender !== null && defender.playerId !== null) {
+            getValue: function (lvl, trigger, spreadGame) {
+                if (trigger.defender !== null && trigger.defender.playerId !== null) {
                     var val = perk_1.getValue(values, lvl, defaultValue);
-                    var x = getCellDiff(spreadGame.cells, defender.playerId, attacker.playerId);
+                    var x = getCellDiff(spreadGame.cells, trigger.defender.playerId, trigger.attacker.playerId);
                     return {
                         combatAbilityModifier: val * x,
                     };

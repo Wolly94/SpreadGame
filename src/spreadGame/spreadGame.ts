@@ -19,6 +19,10 @@ import { skillTreeMethods } from "../skilltree/skilltree";
 import Bubble from "./bubble";
 import Cell from "./cell";
 import { distance } from "./entites";
+import {
+  AttackerFightTrigger,
+  attackerFightUtils,
+} from "./gameProps/attackerFight";
 import { SpreadMap } from "./map/map";
 import basicMechanics from "./mechanics/basicMechanics";
 import bounceMechanics from "./mechanics/bounceMechanics";
@@ -168,19 +172,17 @@ export class SpreadGameImplementation implements SpreadGame {
           bubble2 !== null &&
           this.mechanics.collidesWithBubble(bubble2, currentBubble)
         ) {
-          const f1: AttackerFightProps = skillTreeMethods.getAttackerModifier(
+          const f1: AttackerFightProps = attackerFightUtils.collect(
             skills1,
-            bubble,
-            this,
-            bubble2
+            { attacker: bubble2, defender: currentBubble },
+            this
           );
 
           const skills2 = this.getSkilledPerks(bubble2.playerId);
-          const f2: AttackerFightProps = skillTreeMethods.getAttackerModifier(
+          const f2: AttackerFightProps = attackerFightUtils.collect(
             skills2,
-            bubble2,
-            this,
-            currentBubble
+            { attacker: currentBubble, defender: bubble2 },
+            this
           );
 
           const [rem1, rem2] = this.mechanics.collideBubble(
@@ -313,11 +315,10 @@ export class SpreadGameImplementation implements SpreadGame {
             currentBubble.playerId !== cell.playerId) &&
           this.mechanics.collidesWithCell(bubble, cell)
         ) {
-          const f1 = skillTreeMethods.getAttackerModifier(
+          const f1: AttackerFightProps = attackerFightUtils.collect(
             skills1,
-            bubble,
-            this,
-            cell
+            { attacker: bubble, defender: cell },
+            this
           );
           const skills2 =
             cell.playerId !== null ? this.getSkilledPerks(cell.playerId) : [];
@@ -447,11 +448,10 @@ export class SpreadGameImplementation implements SpreadGame {
       }),
       bubbles: this.bubbles.map((bubble) => {
         const skills = this.getSkilledPerks(bubble.playerId);
-        const fightProps: AttackerFightProps = skillTreeMethods.getAttackerModifier(
+        const fightProps: AttackerFightProps = attackerFightUtils.collect(
           skills,
-          bubble,
-          this,
-          null
+          { attacker: bubble, defender: null },
+          this
         );
         return {
           id: bubble.id,

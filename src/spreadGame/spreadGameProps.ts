@@ -1,6 +1,6 @@
-export type PropUtils<T> = {
-  combine: (a: T, b: T) => T;
-  default: T;
+export type PropUtils<TProps> = {
+  combine: (a: TProps, b: TProps) => TProps;
+  default: TProps;
 };
 
 export interface AttackerFightProps {

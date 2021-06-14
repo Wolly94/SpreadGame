@@ -20,13 +20,21 @@ exports.combineDefenderFightProps = {
     },
     default: { combatAbilityModifier: 0, membraneAbsorption: 0 },
 };
-exports.combineConquerCellProps = {
+exports.combineAttackerConquerCellProps = {
     combine: function (a, b) {
         return {
             additionalUnits: a.additionalUnits + b.additionalUnits,
         };
     },
     default: { additionalUnits: 0 },
+};
+exports.combineDefenderConquerCellProps = {
+    combine: function (a, b) {
+        return {
+            unitsInPercentToRemain: a.unitsInPercentToRemain * b.unitsInPercentToRemain,
+        };
+    },
+    default: { unitsInPercentToRemain: 1 },
 };
 exports.combineDefendCellProps = {
     combine: function (a, b) {

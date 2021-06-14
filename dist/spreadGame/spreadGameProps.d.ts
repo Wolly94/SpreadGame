@@ -1,6 +1,6 @@
-declare type PropUtils<T> = {
-    combine: (a: T, b: T) => T;
-    default: T;
+export declare type PropUtils<TProps> = {
+    combine: (a: TProps, b: TProps) => TProps;
+    default: TProps;
 };
 export interface AttackerFightProps {
     combatAbilityModifier: number;
@@ -12,12 +12,15 @@ export interface DefenderFightProps {
 }
 export declare const isDefenderFightProps: (fightProps: any) => fightProps is DefenderFightProps;
 export declare const combineDefenderFightProps: PropUtils<DefenderFightProps>;
-export interface ConquerCellProps {
+export interface AttackerConquerCellProps {
     additionalUnits: number;
 }
-export declare const combineConquerCellProps: PropUtils<ConquerCellProps>;
+export declare const combineAttackerConquerCellProps: PropUtils<AttackerConquerCellProps>;
+export interface DefenderConquerCellProps {
+    unitsInPercentToRemain: number;
+}
+export declare const combineDefenderConquerCellProps: PropUtils<DefenderConquerCellProps>;
 export interface DefendCellProps {
     additionalUnits: number;
 }
 export declare const combineDefendCellProps: PropUtils<DefendCellProps>;
-export {};

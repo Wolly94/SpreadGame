@@ -17,7 +17,6 @@ import {
   PropUtils,
 } from "../spreadGame/spreadGameProps";
 import {
-  GetAttackerFightProps,
   GetAttackerConquerCellProps,
   GetDefendCellProps,
   GetDefenderFightProps,
@@ -85,34 +84,6 @@ export const skillTreeMethods = {
     return skilledPerks.map((sp) => {
       return { level: sp.level, name: sp.perk.name };
     });
-  },
-  getAttackerModifier: (
-    skilledPerks: SkilledPerk[],
-    attacker: Bubble,
-    spreadGame: SpreadGameImplementation,
-    defender: Cell | null
-  ): AttackerFightProps => {
-    const combined = skilledPerks
-      .flatMap((skilledPerk) => {
-        return skilledPerk.perk.effects
-          .filter(
-            (p): p is GetAttackerFightProps => p.type === "AttackerFightEffect"
-          )
-          .map(
-            (getProps): AttackerFightProps =>
-              getProps.getValue(
-                skilledPerk.level,
-                attacker,
-                spreadGame,
-                defender
-              )
-          );
-      })
-      .reduce(
-        combineAttackerFightProps.combine,
-        combineAttackerFightProps.default
-      );
-    return { combatAbilityModifier: 1 + combined.combatAbilityModifier / 100 };
   },
   getDefenderModifier: (
     skilledPerks: SkilledPerk[],

@@ -86,13 +86,13 @@ export const BaseSpirit: Perk<number> = {
   effects: [
     {
       type: "AttackerFightEffect",
-      getValue: (lvl, attacker, spreadGame, defender) => {
-        if (defender !== null && defender.playerId !== null) {
+      getValue: (lvl, trigger, spreadGame) => {
+        if (trigger.defender !== null && trigger.defender.playerId !== null) {
           const val = getValue(values, lvl, defaultValue);
           const x = getCellDiff(
             spreadGame.cells,
-            defender.playerId,
-            attacker.playerId
+            trigger.defender.playerId,
+            trigger.attacker.playerId
           );
           return {
             combatAbilityModifier: val * x,

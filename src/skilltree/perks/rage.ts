@@ -79,13 +79,13 @@ export const Rage: Perk<[number, number]> = {
   effects: [
     {
       type: "AttackerFightEffect",
-      getValue: (lvl, attacker, spreadGame) => {
+      getValue: (lvl, trigger, spreadGame) => {
         if (
           rageCondition(
             lvl,
             spreadGame.eventHistory,
             spreadGame.timePassed,
-            attacker.playerId
+            trigger.attacker.playerId
           )
         ) {
           const val = values[Math.min(lvl, values.length) - 1];
