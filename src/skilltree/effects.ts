@@ -2,6 +2,7 @@ import Bubble from "../spreadGame/bubble";
 import Cell from "../spreadGame/cell";
 import { AttackerConquerCellEffect } from "../spreadGame/gameProps/attackerConquerCell";
 import { AttackerFightEffect } from "../spreadGame/gameProps/attackerFight";
+import { DefenderConquerCellEffect } from "../spreadGame/gameProps/defenderConquerCell";
 import { DefenderFightEffect } from "../spreadGame/gameProps/defenderFight";
 import { SpreadGameImplementation } from "../spreadGame/spreadGame";
 import {
@@ -46,5 +47,5 @@ export type PerkEffect =
   | AttackerFightEffect
   | DefenderFightEffect
   | AttackerConquerCellEffect
-  | GetDefenderConquerCellProps
+  | DefenderConquerCellEffect
   | GetDefendCellProps;
