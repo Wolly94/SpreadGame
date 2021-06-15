@@ -85,37 +85,6 @@ export const skillTreeMethods = {
       return { level: sp.level, name: sp.perk.name };
     });
   },
-  getDefenderModifier: (
-    skilledPerks: SkilledPerk[],
-    defender: Cell,
-    spreadGame: SpreadGameImplementation,
-    attacker: Bubble | null
-  ): DefenderFightProps => {
-    const combined = skilledPerks
-      .flatMap((skilledPerk) => {
-        return skilledPerk.perk.effects
-          .filter(
-            (p): p is GetDefenderFightProps => p.type === "DefenderFightEffect"
-          )
-          .map(
-            (getProps): DefenderFightProps =>
-              getProps.getValue(
-                skilledPerk.level,
-                defender,
-                spreadGame,
-                attacker
-              )
-          );
-      })
-      .reduce(
-        combineDefenderFightProps.combine,
-        combineDefenderFightProps.default
-      );
-    return {
-      ...combined,
-      combatAbilityModifier: 1 + combined.combatAbilityModifier / 100,
-    };
-  },
   getAttackerConquerCellProps: (
     skilledPerks: SkilledPerk[]
   ): AttackerConquerCellProps => {

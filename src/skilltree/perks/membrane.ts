@@ -85,7 +85,8 @@ export const Membrane: Perk<number> = {
   effects: [
     {
       type: "DefenderFightEffect",
-      getValue: (lvl, defender, spreadGame, attacker) => {
+      getValue: (lvl, trigger, spreadGame) => {
+        const attacker = trigger.attacker;
         const val = getValue(values, lvl, defaultValue);
         const activeEvent: FightEvent | undefined =
           attacker === null
@@ -96,7 +97,7 @@ export const Membrane: Perk<number> = {
                   !ev.data.finished &&
                   ev.data.before.attacker.id === attacker.id &&
                   ev.data.before.defender.type === "Cell" &&
-                  ev.data.before.defender.val.id === defender.id
+                  ev.data.before.defender.val.id === trigger.defender.id
               )?.data;
         const absorbed =
           activeEvent === undefined ? 0 : alreadyAbsorbed(activeEvent);

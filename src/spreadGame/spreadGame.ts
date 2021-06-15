@@ -23,6 +23,7 @@ import {
   AttackerFightTrigger,
   attackerFightUtils,
 } from "./gameProps/attackerFight";
+import { defenderFightUtils } from "./gameProps/defenderFight";
 import { SpreadMap } from "./map/map";
 import basicMechanics from "./mechanics/basicMechanics";
 import bounceMechanics from "./mechanics/bounceMechanics";
@@ -322,11 +323,10 @@ export class SpreadGameImplementation implements SpreadGame {
           );
           const skills2 =
             cell.playerId !== null ? this.getSkilledPerks(cell.playerId) : [];
-          const f2: DefenderFightProps = skillTreeMethods.getDefenderModifier(
+          const f2: DefenderFightProps = defenderFightUtils.collect(
             skills2,
-            cell,
-            this,
-            bubble
+            { defender: cell, attacker: bubble },
+            this
           );
           let [newCurrentBubble, newCell] = this.mechanics.collideCell(
             currentBubble,
@@ -430,11 +430,10 @@ export class SpreadGameImplementation implements SpreadGame {
       cells: this.cells.map((cell) => {
         const skills =
           cell.playerId !== null ? this.getSkilledPerks(cell.playerId) : [];
-        const fightProps: DefenderFightProps = skillTreeMethods.getDefenderModifier(
+        const fightProps: DefenderFightProps = defenderFightUtils.collect(
           skills,
-          cell,
-          this,
-          null
+          { defender: cell, attacker: null },
+          this
         );
         return {
           id: cell.id,

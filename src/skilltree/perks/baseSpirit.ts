@@ -104,19 +104,21 @@ export const BaseSpirit: Perk<number> = {
     },
     {
       type: "DefenderFightEffect",
-      getValue: (lvl, defender, spreadGame, attacker) => {
-        if (defender.playerId !== null && attacker !== null) {
+      getValue: (lvl, trigger, spreadGame) => {
+        if (trigger.defender.playerId !== null && trigger.attacker !== null) {
           const val = getValue(values, lvl, defaultValue);
           const x = getCellDiff(
             spreadGame.cells,
-            attacker.playerId,
-            defender.playerId
+            trigger.attacker.playerId,
+            trigger.defender.playerId
           );
           return {
             ...combineDefenderFightProps.default,
             combatAbilityModifier: val,
           };
-        } else if (defender.playerId !== null /* && attacker === null */) {
+        } else if (
+          trigger.defender.playerId !== null /* && attacker === null */
+        ) {
           // TODO change if you want a visual effect in terms of combat ability modifier for the cells
           return combineDefenderFightProps.default;
         } else {

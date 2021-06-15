@@ -12,7 +12,8 @@ export interface AttackerFightTrigger {
   defender: Bubble | Cell | null;
 }
 
-export interface AttackerFightEffect {
+export interface AttackerFightEffect
+  extends Effect<AttackerFightProps, AttackerFightTrigger> {
   type: "AttackerFightEffect";
   getValue: (
     level: number, // level of perk
