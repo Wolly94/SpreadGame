@@ -18,9 +18,7 @@ export interface AttackerFightEffect
   getValue: (
     level: number, // level of perk
     trigger: AttackerFightTrigger,
-    //attacker: Bubble,
     spreadGame: SpreadGameImplementation
-    //defender: Cell | Bubble | null
   ) => AttackerFightProps;
 }
 

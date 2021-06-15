@@ -21,6 +21,7 @@ import {
   AttackerFightProps,
   attackerFightUtils,
 } from "./gameProps/attackerFight";
+import { growthUtils } from "./gameProps/cellGrowth";
 import { defenderConquerCellUtils } from "./gameProps/defenderConquerCell";
 import { defenderDefendCellUtils } from "./gameProps/defenderDefendCell";
 import {
@@ -156,7 +157,12 @@ export class SpreadGameImplementation implements SpreadGame {
     this.bubbles = this.bubbles.map((bubble) =>
       this.mechanics.move(bubble, ms)
     );
-    this.cells = this.cells.map((cell) => this.mechanics.grow(cell, ms));
+    this.cells = this.cells.map((cell) => {
+      const perks =
+        cell.playerId !== null ? this.getSkilledPerks(cell.playerId) : [];
+      const growthProps = growthUtils.collect(perks, {}, this);
+      return this.mechanics.grow(cell, ms, growthProps);
+    });
     this.collideBubblesWithCells();
     this.collideBubblesWithBubbles();
     this.checkForFinishedFights();

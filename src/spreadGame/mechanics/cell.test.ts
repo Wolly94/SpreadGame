@@ -1,5 +1,6 @@
 import Cell from "../cell";
 import { radiusToGrowth, radiusToUnits } from "../common";
+import { growthUtils } from "../gameProps/cellGrowth";
 import basicMechanics from "./basicMechanics";
 
 test("units decreasing when too much", () => {
@@ -16,13 +17,17 @@ test("units decreasing when too much", () => {
   const growth = radiusToGrowth(cell.radius);
   const msPerUnit = 1000 / growth;
   const ms = growth * 1000;
-  cell = basicMechanics.grow(cell, msPerUnit);
+  cell = basicMechanics.grow(cell, msPerUnit, growthUtils.default);
   expect(cell.units).toBe(2 * maxUnits - 1);
-  cell = basicMechanics.grow(cell, msPerUnit);
-  cell = basicMechanics.grow(cell, msPerUnit * (maxUnits - 1));
+  cell = basicMechanics.grow(cell, msPerUnit, growthUtils.default);
+  cell = basicMechanics.grow(
+    cell,
+    msPerUnit * (maxUnits - 1),
+    growthUtils.default
+  );
   expect(cell.units).toBe(maxUnits);
-  cell = basicMechanics.grow(cell, msPerUnit);
+  cell = basicMechanics.grow(cell, msPerUnit, growthUtils.default);
   expect(cell.units).toBe(maxUnits);
-  cell = basicMechanics.grow(cell, 5 * msPerUnit);
+  cell = basicMechanics.grow(cell, 5 * msPerUnit, growthUtils.default);
   expect(cell.units).toBe(maxUnits);
 });

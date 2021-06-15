@@ -2,6 +2,7 @@ import Bubble, { createBubble, getNewBubbleIndex, setUnits } from "../bubble";
 import Cell from "../cell";
 import { radiusToGrowth, radiusToUnits, unitsToRadius } from "../common";
 import { AttackerFightProps } from "../gameProps/attackerFight";
+import { GrowthProps } from "../gameProps/cellGrowth";
 import { DefenderFightProps } from "../gameProps/defenderFight";
 import {
   calculationAccuracy,
@@ -69,18 +70,20 @@ const basicMechanics: SpreadGameMechanics = {
     ];
     return { ...bubble, position: newPosition };
   },
-  grow(cell: Cell, ms: number) {
+  grow(cell: Cell, ms: number, growthProps: GrowthProps) {
     if (cell.playerId === null) return { ...cell };
-    const saturatedUnitCount = radiusToUnits(cell.radius);
-    const sign = cell.units > saturatedUnitCount ? -1 : 1;
-    const growthPerSecond = radiusToGrowth(cell.radius);
-    let nextUnits = cell.units + (sign * (growthPerSecond * ms)) / 1000;
-    let newUnits =
-      (nextUnits > saturatedUnitCount && sign === 1) ||
-      (nextUnits < saturatedUnitCount && sign === -1)
-        ? saturatedUnitCount
-        : nextUnits;
-    return { ...cell, units: newUnits };
+    const saturatedUnitCount =
+      radiusToUnits(cell.radius) + growthProps.additionalCapacity;
+    const growthFactor = 1 + growthProps.additionalGrowthInPercent / 100;
+    const posGrowthPerSecond = radiusToGrowth(cell.radius) * growthFactor;
+    const negGrowthPerSecond = radiusToGrowth(cell.radius) / growthFactor;
+    const toGrow = (posGrowthPerSecond * ms) / 1000;
+    const toReduce = (negGrowthPerSecond * ms) / 1000;
+    let nextUnits =
+      cell.units < saturatedUnitCount
+        ? Math.min(cell.units + toGrow, saturatedUnitCount)
+        : Math.max(cell.units - toReduce, saturatedUnitCount);
+    return { ...cell, units: nextUnits };
   },
   sendBubble(
     sender: Cell,

@@ -3,6 +3,7 @@ import { SkillTreeData } from "../messages/inGame/gameServerMessages";
 import { GeneralPerk } from "./perks/perk";
 import { Attack } from "./skills/attack";
 import { Defense } from "./skills/defense";
+import { Population } from "./skills/population";
 import { Spirit } from "./skills/spirit";
 
 export interface SkilledPerk {
@@ -66,7 +67,7 @@ export const skillTreeMethods = {
 };
 
 export const fullSkillTree: SkillTree = {
-  skills: [Attack, Defense, Spirit],
+  skills: [Attack, Defense, Spirit, Population],
 };
 
 export const defaultSkillTree: SkillTree = fullSkillTree;
