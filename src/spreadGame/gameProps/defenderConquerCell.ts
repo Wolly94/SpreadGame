@@ -1,5 +1,3 @@
-import Bubble from "../bubble";
-import Cell from "../cell";
 import { SpreadGameImplementation } from "../spreadGame";
 import { Effect, PropUtils } from "./definitions";
 

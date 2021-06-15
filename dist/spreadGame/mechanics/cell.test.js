@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var common_1 = require("../common");
+var cellGrowth_1 = require("../gameProps/cellGrowth");
 var basicMechanics_1 = __importDefault(require("./basicMechanics"));
 test("units decreasing when too much", function () {
     var radius = 50;
@@ -19,13 +20,13 @@ test("units decreasing when too much", function () {
     var growth = common_1.radiusToGrowth(cell.radius);
     var msPerUnit = 1000 / growth;
     var ms = growth * 1000;
-    cell = basicMechanics_1.default.grow(cell, msPerUnit);
+    cell = basicMechanics_1.default.grow(cell, msPerUnit, cellGrowth_1.growthUtils.default);
     expect(cell.units).toBe(2 * maxUnits - 1);
-    cell = basicMechanics_1.default.grow(cell, msPerUnit);
-    cell = basicMechanics_1.default.grow(cell, msPerUnit * (maxUnits - 1));
+    cell = basicMechanics_1.default.grow(cell, msPerUnit, cellGrowth_1.growthUtils.default);
+    cell = basicMechanics_1.default.grow(cell, msPerUnit * (maxUnits - 1), cellGrowth_1.growthUtils.default);
     expect(cell.units).toBe(maxUnits);
-    cell = basicMechanics_1.default.grow(cell, msPerUnit);
+    cell = basicMechanics_1.default.grow(cell, msPerUnit, cellGrowth_1.growthUtils.default);
     expect(cell.units).toBe(maxUnits);
-    cell = basicMechanics_1.default.grow(cell, 5 * msPerUnit);
+    cell = basicMechanics_1.default.grow(cell, 5 * msPerUnit, cellGrowth_1.growthUtils.default);
     expect(cell.units).toBe(maxUnits);
 });

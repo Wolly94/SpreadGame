@@ -18,9 +18,11 @@ var events_1 = require("../skilltree/events");
 var entites_1 = require("./entites");
 var attackerConquerCell_1 = require("./gameProps/attackerConquerCell");
 var attackerFight_1 = require("./gameProps/attackerFight");
+var cellGrowth_1 = require("./gameProps/cellGrowth");
 var defenderConquerCell_1 = require("./gameProps/defenderConquerCell");
 var defenderDefendCell_1 = require("./gameProps/defenderDefendCell");
 var defenderFight_1 = require("./gameProps/defenderFight");
+var defenderStart_1 = require("./gameProps/defenderStart");
 var basicMechanics_1 = __importDefault(require("./mechanics/basicMechanics"));
 var bounceMechanics_1 = __importDefault(require("./mechanics/bounceMechanics"));
 var scrapeOffMechanics_1 = __importDefault(require("./mechanics/scrapeOffMechanics"));
@@ -59,7 +61,16 @@ var SpreadGameImplementation = /** @class */ (function () {
         this.timePassed = 0;
         this.pastMoves = [];
         this.eventHistory = [];
+        this.triggerStart();
     }
+    SpreadGameImplementation.prototype.triggerStart = function () {
+        var _this = this;
+        this.cells = this.cells.map(function (cell) {
+            var perks = cell.playerId !== null ? _this.getSkilledPerks(cell.playerId) : [];
+            var defStartProps = defenderStart_1.defenderStartUtils.collect(perks, {}, _this);
+            return __assign(__assign({}, cell), { units: cell.units + defStartProps.additionalUnits });
+        });
+    };
     SpreadGameImplementation.fromReplay = function (replay) {
         var spreadGame = new SpreadGameImplementation(replay.map, replay.gameSettings, replay.players.map(player_1.playerFromData));
         return spreadGame;
@@ -107,7 +118,11 @@ var SpreadGameImplementation = /** @class */ (function () {
         this.bubbles = this.bubbles.map(function (bubble) {
             return _this.mechanics.move(bubble, ms);
         });
-        this.cells = this.cells.map(function (cell) { return _this.mechanics.grow(cell, ms); });
+        this.cells = this.cells.map(function (cell) {
+            var perks = cell.playerId !== null ? _this.getSkilledPerks(cell.playerId) : [];
+            var growthProps = cellGrowth_1.growthUtils.collect(perks, {}, _this);
+            return _this.mechanics.grow(cell, ms, growthProps);
+        });
         this.collideBubblesWithCells();
         this.collideBubblesWithBubbles();
         this.checkForFinishedFights();

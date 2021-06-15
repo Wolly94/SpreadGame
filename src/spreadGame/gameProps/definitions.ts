@@ -6,6 +6,7 @@ import { DefenderGrowthEffect } from "./cellGrowth";
 import { DefenderConquerCellEffect } from "./defenderConquerCell";
 import { DefenderDefendCellEffect } from "./defenderDefendCell";
 import { DefenderFightEffect } from "./defenderFight";
+import { DefenderStartEffect } from "./defenderStart";
 
 export type PropUtils<TProps, TTrigger> = {
   combine: (a: TProps, b: TProps) => TProps;
@@ -31,4 +32,5 @@ export type PerkEffect =
   | AttackerConquerCellEffect
   | DefenderConquerCellEffect
   | DefenderDefendCellEffect
-  | DefenderGrowthEffect;
+  | DefenderGrowthEffect
+  | DefenderStartEffect;

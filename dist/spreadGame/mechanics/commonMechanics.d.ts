@@ -1,6 +1,7 @@
 import Bubble from "../bubble";
 import Cell from "../cell";
 import { AttackerFightProps } from "../gameProps/attackerFight";
+import { DefenderGrowthProps } from "../gameProps/cellGrowth";
 import { DefenderFightProps } from "../gameProps/defenderFight";
 export declare const calculationAccuracy = 0.01;
 export declare const minOverlap = 2;
@@ -20,6 +21,6 @@ export interface SpreadGameMechanics {
     collideBubble: (bubble1: Bubble, bubble2: Bubble, f1: AttackerFightProps, f2: AttackerFightProps) => [Bubble | null, Bubble | null];
     collideCell: (bubble: Bubble, cell: Cell, f1: AttackerFightProps, f2: DefenderFightProps) => [Bubble | null, Cell];
     move: (bubble: Bubble, ms: number) => Bubble;
-    grow: (cell: Cell, ms: number) => Cell;
+    grow: (cell: Cell, ms: number, growthProps: DefenderGrowthProps) => Cell;
     sendBubble: (sender: Cell, target: Cell, timePassed: number) => [Cell, Bubble | null];
 }

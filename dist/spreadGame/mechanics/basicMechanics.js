@@ -63,18 +63,19 @@ var basicMechanics = {
         ];
         return __assign(__assign({}, bubble), { position: newPosition });
     },
-    grow: function (cell, ms) {
+    grow: function (cell, ms, growthProps) {
         if (cell.playerId === null)
             return __assign({}, cell);
-        var saturatedUnitCount = common_1.radiusToUnits(cell.radius);
-        var sign = cell.units > saturatedUnitCount ? -1 : 1;
-        var growthPerSecond = common_1.radiusToGrowth(cell.radius);
-        var nextUnits = cell.units + (sign * (growthPerSecond * ms)) / 1000;
-        var newUnits = (nextUnits > saturatedUnitCount && sign === 1) ||
-            (nextUnits < saturatedUnitCount && sign === -1)
-            ? saturatedUnitCount
-            : nextUnits;
-        return __assign(__assign({}, cell), { units: newUnits });
+        var saturatedUnitCount = common_1.radiusToUnits(cell.radius) + growthProps.additionalCapacity;
+        var growthFactor = 1 + growthProps.additionalGrowthInPercent / 100;
+        var posGrowthPerSecond = common_1.radiusToGrowth(cell.radius) * growthFactor;
+        var negGrowthPerSecond = common_1.radiusToGrowth(cell.radius) / growthFactor;
+        var toGrow = (posGrowthPerSecond * ms) / 1000;
+        var toReduce = (negGrowthPerSecond * ms) / 1000;
+        var nextUnits = cell.units < saturatedUnitCount
+            ? Math.min(cell.units + toGrow, saturatedUnitCount)
+            : Math.max(cell.units - toReduce, saturatedUnitCount);
+        return __assign(__assign({}, cell), { units: nextUnits });
     },
     sendBubble: function (sender, target, timePassed) {
         if (sender.playerId == null)

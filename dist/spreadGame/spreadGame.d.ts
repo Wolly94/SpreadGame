@@ -33,6 +33,7 @@ export declare class SpreadGameImplementation implements SpreadGame {
     timePassed: number;
     eventHistory: HistoryEntry<SpreadGameEvent>[];
     constructor(map: SpreadMap, gameSettings: GameSettings, players: Player[]);
+    triggerStart(): void;
     static fromReplay(replay: SpreadReplay): SpreadGameImplementation;
     runReplay(replay: SpreadReplay, ms: number): void;
     getReplay(): SpreadReplay;

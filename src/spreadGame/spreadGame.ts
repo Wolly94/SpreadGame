@@ -28,6 +28,10 @@ import {
   DefenderFightProps,
   defenderFightUtils,
 } from "./gameProps/defenderFight";
+import {
+  DefenderStartProps,
+  defenderStartUtils,
+} from "./gameProps/defenderStart";
 import { SpreadMap } from "./map/map";
 import basicMechanics from "./mechanics/basicMechanics";
 import bounceMechanics from "./mechanics/bounceMechanics";
@@ -97,6 +101,20 @@ export class SpreadGameImplementation implements SpreadGame {
     this.timePassed = 0;
     this.pastMoves = [];
     this.eventHistory = [];
+    this.triggerStart();
+  }
+
+  triggerStart() {
+    this.cells = this.cells.map((cell) => {
+      const perks =
+        cell.playerId !== null ? this.getSkilledPerks(cell.playerId) : [];
+      const defStartProps: DefenderStartProps = defenderStartUtils.collect(
+        perks,
+        {},
+        this
+      );
+      return { ...cell, units: cell.units + defStartProps.additionalUnits };
+    });
   }
 
   static fromReplay(replay: SpreadReplay) {

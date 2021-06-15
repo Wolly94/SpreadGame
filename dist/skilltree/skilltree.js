@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var attack_1 = require("./skills/attack");
 var defense_1 = require("./skills/defense");
+var population_1 = require("./skills/population");
 var spirit_1 = require("./skills/spirit");
 exports.validSkillTree = function (skillTree, skilledPerks) {
     return true;
@@ -45,7 +46,7 @@ exports.skillTreeMethods = {
     },
 };
 exports.fullSkillTree = {
-    skills: [attack_1.Attack, defense_1.Defense, spirit_1.Spirit],
+    skills: [attack_1.Attack, defense_1.Defense, spirit_1.Spirit, population_1.Population],
 };
 exports.defaultSkillTree = exports.fullSkillTree;
 exports.allPerks = exports.fullSkillTree.skills.flatMap(function (sk) { return sk.perks; });
