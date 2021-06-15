@@ -1,12 +1,9 @@
 import SpreadReplay from "../../messages/replay/replay";
-import Bubble from "../../spreadGame/bubble";
 import Cell from "../../spreadGame/cell";
 import { unitsToRadius } from "../../spreadGame/common";
+import { attackerFightUtils } from "../../spreadGame/gameProps/attackerFight";
+import { defenderFightUtils } from "../../spreadGame/gameProps/defenderFight";
 import { SpreadMap } from "../../spreadGame/map/map";
-import {
-  combineAttackerFightProps,
-  combineDefenderFightProps,
-} from "../../spreadGame/spreadGameProps";
 import { formatDescription } from "../utils";
 import { getValue, Perk } from "./perk";
 
@@ -95,10 +92,11 @@ export const BaseSpirit: Perk<number> = {
             trigger.attacker.playerId
           );
           return {
+            ...attackerFightUtils.default,
             combatAbilityModifier: val * x,
           };
         } else {
-          return combineAttackerFightProps.default;
+          return attackerFightUtils.default;
         }
       },
     },
@@ -113,16 +111,16 @@ export const BaseSpirit: Perk<number> = {
             trigger.defender.playerId
           );
           return {
-            ...combineDefenderFightProps.default,
+            ...defenderFightUtils.default,
             combatAbilityModifier: val,
           };
         } else if (
           trigger.defender.playerId !== null /* && attacker === null */
         ) {
           // TODO change if you want a visual effect in terms of combat ability modifier for the cells
-          return combineDefenderFightProps.default;
+          return defenderFightUtils.default;
         } else {
-          return combineDefenderFightProps.default;
+          return defenderFightUtils.default;
         }
       },
     },

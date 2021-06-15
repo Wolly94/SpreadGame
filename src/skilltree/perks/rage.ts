@@ -1,6 +1,4 @@
 import SpreadReplay, { HistoryEntry } from "../../messages/replay/replay";
-import { SpreadGameImplementation } from "../../spreadGame";
-import Bubble from "../../spreadGame/bubble";
 import { SpreadMap } from "../../spreadGame/map/map";
 import { SpreadGameEvent } from "../events";
 import { formatDescription } from "../utils";

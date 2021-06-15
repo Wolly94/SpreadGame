@@ -1,8 +1,5 @@
-import SpreadReplay, { HistoryEntry } from "../../messages/replay/replay";
-import Bubble from "../../spreadGame/bubble";
-import { unitsToRadius } from "../../spreadGame/common";
+import SpreadReplay from "../../messages/replay/replay";
 import { SpreadMap } from "../../spreadGame/map/map";
-import { SpreadGameEvent } from "../events";
 import { formatDescription } from "../utils";
 import { Perk } from "./perk";
 

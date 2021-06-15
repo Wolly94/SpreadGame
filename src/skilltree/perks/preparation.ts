@@ -1,8 +1,8 @@
 import SpreadReplay, { HistoryEntry } from "../../messages/replay/replay";
 import Cell from "../../spreadGame/cell";
 import { unitsToRadius } from "../../spreadGame/common";
+import { defenderFightUtils } from "../../spreadGame/gameProps/defenderFight";
 import { SpreadMap } from "../../spreadGame/map/map";
-import { combineDefenderFightProps } from "../../spreadGame/spreadGameProps";
 import { SpreadGameEvent } from "../events";
 import { formatDescription } from "../utils";
 import { getValue, Perk } from "./perk";
@@ -92,14 +92,14 @@ export const Preparation: Perk<[number, number]> = {
   effects: [
     {
       type: "DefenderFightEffect",
-      getValue: (lvl, defender, spreadGame) => {
+      getValue: (lvl, trigger, spreadGame) => {
         const val = getValue(values, lvl, defaultValue);
         const idleSince = latestMoveTimeStamp(
-          defender,
+          trigger.defender,
           spreadGame.eventHistory
         );
         return {
-          ...combineDefenderFightProps.default,
+          ...defenderFightUtils.default,
           combatAbilityModifier: Math.min(
             (val[0] * (spreadGame.timePassed - idleSince)) / 1000,
             val[1]

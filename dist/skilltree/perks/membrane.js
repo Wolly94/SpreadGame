@@ -75,8 +75,9 @@ exports.Membrane = {
     effects: [
         {
             type: "DefenderFightEffect",
-            getValue: function (lvl, defender, spreadGame, attacker) {
+            getValue: function (lvl, trigger, spreadGame) {
                 var _a;
+                var attacker = trigger.attacker;
                 var val = perk_1.getValue(values, lvl, defaultValue);
                 var activeEvent = attacker === null
                     ? undefined
@@ -85,7 +86,7 @@ exports.Membrane = {
                             !ev.data.finished &&
                             ev.data.before.attacker.id === attacker.id &&
                             ev.data.before.defender.type === "Cell" &&
-                            ev.data.before.defender.val.id === defender.id;
+                            ev.data.before.defender.val.id === trigger.defender.id;
                     })) === null || _a === void 0 ? void 0 : _a.data;
                 var absorbed = activeEvent === undefined ? 0 : alreadyAbsorbed(activeEvent);
                 return {

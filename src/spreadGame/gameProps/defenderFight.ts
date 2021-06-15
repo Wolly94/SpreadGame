@@ -1,7 +1,14 @@
 import Bubble from "../bubble";
 import Cell from "../cell";
 import { SpreadGameImplementation } from "../spreadGame";
+import { AttackerFightProps } from "./attackerFight";
 import { Effect, PropUtils } from "./definitions";
+
+export const isDefenderFightProps = (
+  props: any
+): props is DefenderFightProps => {
+  return props.membraneAbsorption !== undefined;
+};
 
 export interface DefenderFightProps {
   combatAbilityModifier: number;

@@ -1,5 +1,5 @@
 import SpreadReplay from "../../messages/replay/replay";
-import { PerkEffect } from "../effects";
+import { PerkEffect } from "../../spreadGame/gameProps/definitions";
 export interface Perk<TValue> {
     name: string;
     effects: PerkEffect[];

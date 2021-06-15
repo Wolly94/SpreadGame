@@ -19,7 +19,7 @@ export interface DefenderConquerCellEffect
   ) => DefenderConquerCellProps;
 }
 
-export const defenderConquerCellFightUtils: PropUtils<
+export const defenderConquerCellUtils: PropUtils<
   DefenderConquerCellProps,
   DefenderConquerCellTrigger
 > = {
@@ -29,7 +29,7 @@ export const defenderConquerCellFightUtils: PropUtils<
         a.unitsInPercentToRemain * b.unitsInPercentToRemain,
     };
   },
-  default: { unitsInPercentToRemain: 0 },
+  default: { unitsInPercentToRemain: 1 },
   collect: (skilledPerks, trigger, spreadGame) => {
     const combined = skilledPerks
       .flatMap((skilledPerk) => {
@@ -44,8 +44,8 @@ export const defenderConquerCellFightUtils: PropUtils<
           );
       })
       .reduce(
-        defenderConquerCellFightUtils.combine,
-        defenderConquerCellFightUtils.default
+        defenderConquerCellUtils.combine,
+        defenderConquerCellUtils.default
       );
     return combined;
   },

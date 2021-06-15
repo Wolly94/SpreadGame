@@ -1,7 +1,8 @@
 import Bubble, { setUnits } from "../bubble";
 import Cell from "../cell";
 import { distance } from "../entites";
-import { AttackerFightProps, DefenderFightProps } from "../spreadGameProps";
+import { AttackerFightProps } from "../gameProps/attackerFight";
+import { DefenderFightProps } from "../gameProps/defenderFight";
 import basicMechanics from "./basicMechanics";
 import {
   calculationAccuracy,

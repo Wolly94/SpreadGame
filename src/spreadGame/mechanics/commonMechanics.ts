@@ -2,11 +2,11 @@ import Bubble from "../bubble";
 import Cell from "../cell";
 import { radiusToUnits, radiusToUnitsFixPoint } from "../common";
 import { distance } from "../entites";
+import { AttackerFightProps } from "../gameProps/attackerFight";
 import {
-  AttackerFightProps,
   DefenderFightProps,
   isDefenderFightProps,
-} from "../spreadGameProps";
+} from "../gameProps/defenderFight";
 
 export const calculationAccuracy = 0.01;
 export const minOverlap = 2;

@@ -12,7 +12,7 @@ var __assign = (this && this.__assign) || function () {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var common_1 = require("../../spreadGame/common");
-var spreadGameProps_1 = require("../../spreadGame/spreadGameProps");
+var defenderFight_1 = require("../../spreadGame/gameProps/defenderFight");
 var utils_1 = require("../utils");
 var perk_1 = require("./perk");
 var name = "Preparation";
@@ -88,10 +88,10 @@ exports.Preparation = {
     effects: [
         {
             type: "DefenderFightEffect",
-            getValue: function (lvl, defender, spreadGame) {
+            getValue: function (lvl, trigger, spreadGame) {
                 var val = perk_1.getValue(values, lvl, defaultValue);
-                var idleSince = latestMoveTimeStamp(defender, spreadGame.eventHistory);
-                return __assign(__assign({}, spreadGameProps_1.combineDefenderFightProps.default), { combatAbilityModifier: Math.min((val[0] * (spreadGame.timePassed - idleSince)) / 1000, val[1]) });
+                var idleSince = latestMoveTimeStamp(trigger.defender, spreadGame.eventHistory);
+                return __assign(__assign({}, defenderFight_1.defenderFightUtils.default), { combatAbilityModifier: Math.min((val[0] * (spreadGame.timePassed - idleSince)) / 1000, val[1]) });
             },
         },
     ],

@@ -1,4 +1,3 @@
-import { createConfigItem } from "@babel/core";
 import { ClientGameState } from "../messages/inGame/clientGameState";
 import { GameSettings } from "../messages/inGame/gameServerMessages";
 import SpreadReplay, { HistoryEntry, Move } from "../messages/replay/replay";
@@ -10,28 +9,29 @@ import {
   createFightEvent,
   DefeatedBubbleEvent,
   FightEvent,
-  fightEventFinished,
   finishFightEvent,
   latestDistance,
   SpreadGameEvent,
 } from "../skilltree/events";
-import { skillTreeMethods } from "../skilltree/skilltree";
 import Bubble from "./bubble";
 import Cell from "./cell";
 import { distance } from "./entites";
 import { attackerConquerCellFightUtils } from "./gameProps/attackerConquerCell";
 import {
-  AttackerFightTrigger,
+  AttackerFightProps,
   attackerFightUtils,
 } from "./gameProps/attackerFight";
-import { defenderFightUtils } from "./gameProps/defenderFight";
+import { defenderDefendCellUtils } from "./gameProps/defenderDefendCell";
+import {
+  DefenderFightProps,
+  defenderFightUtils,
+} from "./gameProps/defenderFight";
 import { SpreadMap } from "./map/map";
 import basicMechanics from "./mechanics/basicMechanics";
 import bounceMechanics from "./mechanics/bounceMechanics";
 import { SpreadGameMechanics } from "./mechanics/commonMechanics";
 import scrapeOffMechanics from "./mechanics/scrapeOffMechanics";
 import Player, { dataFromPlayer, playerFromData } from "./player";
-import { AttackerFightProps, DefenderFightProps } from "./spreadGameProps";
 
 const getMechanics = (settings: GameSettings): SpreadGameMechanics => {
   if (settings.mechanics === "basic") {
@@ -355,8 +355,10 @@ export class SpreadGameImplementation implements SpreadGame {
             };
           } else {
             /* if (newCell.playerId === cell.playerId) { */
-            const defendCellProps = skillTreeMethods.getDefendCellProps(
-              skills2
+            const defendCellProps = defenderDefendCellUtils.collect(
+              skills2,
+              {},
+              this
             );
             newCell = {
               ...newCell,

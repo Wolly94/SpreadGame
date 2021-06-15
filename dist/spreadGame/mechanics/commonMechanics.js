@@ -2,12 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var common_1 = require("../common");
 var entites_1 = require("../entites");
-var spreadGameProps_1 = require("../spreadGameProps");
+var defenderFight_1 = require("../gameProps/defenderFight");
 exports.calculationAccuracy = 0.01;
 exports.minOverlap = 2;
 // > 0 means attacker won, <= 0 means defender won
 exports.fight = function (att, def, am, bm) {
-    if (spreadGameProps_1.isDefenderFightProps(bm)) {
+    if (defenderFight_1.isDefenderFightProps(bm)) {
         att -= bm.membraneAbsorption;
         if (att <= 0)
             return -def;

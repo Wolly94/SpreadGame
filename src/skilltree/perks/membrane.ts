@@ -1,7 +1,6 @@
 import SpreadReplay, { HistoryEntry } from "../../messages/replay/replay";
 import { unitsToRadius } from "../../spreadGame/common";
 import { SpreadMap } from "../../spreadGame/map/map";
-import { combineDefenderFightProps } from "../../spreadGame/spreadGameProps";
 import { FightEvent } from "../events";
 import { formatDescription } from "../utils";
 import { getValue, Perk } from "./perk";

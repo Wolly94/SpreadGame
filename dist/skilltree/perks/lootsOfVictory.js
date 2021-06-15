@@ -1,9 +1,23 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var common_1 = require("../../spreadGame/common");
+var defenderDefendCell_1 = require("../../spreadGame/gameProps/defenderDefendCell");
 var utils_1 = require("../utils");
+var perk_1 = require("./perk");
 var name = "Loots of Victory";
 var values = [5, 10];
+var defaultValue = 0;
 var simpleMap = {
     width: 500,
     height: 500,
@@ -65,16 +79,10 @@ exports.LootsOfVictory = {
         " population.",
     effects: [
         {
-            type: "DefendCellEffect",
+            type: "DefenderDefendCellEffect",
             getValue: function (lvl) {
-                if (lvl <= 0)
-                    return { additionalUnits: 0 };
-                else {
-                    var val = values[Math.min(lvl, values.length) - 1];
-                    return {
-                        additionalUnits: val,
-                    };
-                }
+                var val = perk_1.getValue(values, lvl, defaultValue);
+                return __assign(__assign({}, defenderDefendCell_1.defenderDefendCellUtils.default), { additionalUnits: val });
             },
         },
     ],

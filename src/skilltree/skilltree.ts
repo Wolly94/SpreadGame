@@ -1,27 +1,5 @@
 import { SkilledPerkData } from "../messages/inGame/clientLobbyMessage";
 import { SkillTreeData } from "../messages/inGame/gameServerMessages";
-import { SpreadGameImplementation } from "../spreadGame";
-import Bubble from "../spreadGame/bubble";
-import Cell from "../spreadGame/cell";
-import {
-  AttackerFightProps,
-  combineAttackerFightProps,
-  combineAttackerConquerCellProps,
-  combineDefendCellProps,
-  combineDefenderFightProps,
-  AttackerConquerCellProps,
-  DefendCellProps,
-  DefenderFightProps,
-  DefenderConquerCellProps,
-  combineDefenderConquerCellProps,
-  PropUtils,
-} from "../spreadGame/spreadGameProps";
-import {
-  GetAttackerConquerCellProps,
-  GetDefendCellProps,
-  GetDefenderFightProps,
-  GetDefenderConquerCellProps,
-} from "./effects";
 import { GeneralPerk } from "./perks/perk";
 import { Attack } from "./skills/attack";
 import { Defense } from "./skills/defense";
@@ -84,34 +62,6 @@ export const skillTreeMethods = {
     return skilledPerks.map((sp) => {
       return { level: sp.level, name: sp.perk.name };
     });
-  },
-  getDefenderConquerCellProps: (
-    skilledPerks: SkilledPerk[]
-  ): DefenderConquerCellProps => {
-    return skilledPerks
-      .flatMap((skilledPerk) => {
-        return skilledPerk.perk.effects
-          .filter(
-            (p): p is GetDefenderConquerCellProps =>
-              p.type === "DefenderConquerCellEffect"
-          )
-          .map((getProps) => getProps.getValue(skilledPerk.level));
-      })
-      .reduce(
-        combineDefenderConquerCellProps.combine,
-        combineDefenderConquerCellProps.default
-      );
-  },
-  getDefendCellProps: (skilledPerks: SkilledPerk[]): DefendCellProps => {
-    return skilledPerks
-      .flatMap((skilledPerk) => {
-        return skilledPerk.perk.effects
-          .filter((p): p is GetDefendCellProps => p.type === "DefendCellEffect")
-          .map(
-            (getProps): DefendCellProps => getProps.getValue(skilledPerk.level)
-          );
-      })
-      .reduce(combineDefendCellProps.combine, combineDefendCellProps.default);
   },
 };
 

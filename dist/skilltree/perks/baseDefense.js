@@ -11,7 +11,7 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var spreadGameProps_1 = require("../../spreadGame/spreadGameProps");
+var defenderFight_1 = require("../../spreadGame/gameProps/defenderFight");
 var utils_1 = require("../utils");
 var perk_1 = require("./perk");
 var name = "BaseDefense";
@@ -55,7 +55,7 @@ exports.BaseDefense = {
             type: "DefenderFightEffect",
             getValue: function (lvl) {
                 var val = perk_1.getValue(values, lvl, defaultValue);
-                return __assign(__assign({}, spreadGameProps_1.combineDefenderFightProps.default), { combatAbilityModifier: val });
+                return __assign(__assign({}, defenderFight_1.defenderFightUtils.default), { combatAbilityModifier: val });
             },
         },
     ],

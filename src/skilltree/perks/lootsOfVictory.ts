@@ -1,11 +1,13 @@
 import SpreadReplay from "../../messages/replay/replay";
 import { unitsToRadius } from "../../spreadGame/common";
+import { defenderDefendCellUtils } from "../../spreadGame/gameProps/defenderDefendCell";
 import { SpreadMap } from "../../spreadGame/map/map";
 import { formatDescription } from "../utils";
-import { Perk } from "./perk";
+import { getValue, Perk } from "./perk";
 
 const name = "Loots of Victory";
 const values: number[] = [5, 10];
+const defaultValue = 0;
 
 const simpleMap: SpreadMap = {
   width: 500,
@@ -71,15 +73,13 @@ export const LootsOfVictory: Perk<number> = {
     " population.",
   effects: [
     {
-      type: "DefendCellEffect",
+      type: "DefenderDefendCellEffect",
       getValue: (lvl) => {
-        if (lvl <= 0) return { additionalUnits: 0 };
-        else {
-          const val = values[Math.min(lvl, values.length) - 1];
-          return {
-            additionalUnits: val,
-          };
-        }
+        const val = getValue(values, lvl, defaultValue);
+        return {
+          ...defenderDefendCellUtils.default,
+          additionalUnits: val,
+        };
       },
     },
   ],

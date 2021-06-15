@@ -12,7 +12,8 @@ var __assign = (this && this.__assign) || function () {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var common_1 = require("../../spreadGame/common");
-var spreadGameProps_1 = require("../../spreadGame/spreadGameProps");
+var attackerFight_1 = require("../../spreadGame/gameProps/attackerFight");
+var defenderFight_1 = require("../../spreadGame/gameProps/defenderFight");
 var utils_1 = require("../utils");
 var perk_1 = require("./perk");
 var name = "BaseSpirit";
@@ -86,29 +87,27 @@ exports.BaseSpirit = {
                 if (trigger.defender !== null && trigger.defender.playerId !== null) {
                     var val = perk_1.getValue(values, lvl, defaultValue);
                     var x = getCellDiff(spreadGame.cells, trigger.defender.playerId, trigger.attacker.playerId);
-                    return {
-                        combatAbilityModifier: val * x,
-                    };
+                    return __assign(__assign({}, attackerFight_1.attackerFightUtils.default), { combatAbilityModifier: val * x });
                 }
                 else {
-                    return spreadGameProps_1.combineAttackerFightProps.default;
+                    return attackerFight_1.attackerFightUtils.default;
                 }
             },
         },
         {
             type: "DefenderFightEffect",
-            getValue: function (lvl, defender, spreadGame, attacker) {
-                if (defender.playerId !== null && attacker !== null) {
+            getValue: function (lvl, trigger, spreadGame) {
+                if (trigger.defender.playerId !== null && trigger.attacker !== null) {
                     var val = perk_1.getValue(values, lvl, defaultValue);
-                    var x = getCellDiff(spreadGame.cells, attacker.playerId, defender.playerId);
-                    return __assign(__assign({}, spreadGameProps_1.combineDefenderFightProps.default), { combatAbilityModifier: val });
+                    var x = getCellDiff(spreadGame.cells, trigger.attacker.playerId, trigger.defender.playerId);
+                    return __assign(__assign({}, defenderFight_1.defenderFightUtils.default), { combatAbilityModifier: val });
                 }
-                else if (defender.playerId !== null /* && attacker === null */) {
+                else if (trigger.defender.playerId !== null /* && attacker === null */) {
                     // TODO change if you want a visual effect in terms of combat ability modifier for the cells
-                    return spreadGameProps_1.combineDefenderFightProps.default;
+                    return defenderFight_1.defenderFightUtils.default;
                 }
                 else {
-                    return spreadGameProps_1.combineDefenderFightProps.default;
+                    return defenderFight_1.defenderFightUtils.default;
                 }
             },
         },

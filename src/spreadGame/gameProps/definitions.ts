@@ -1,5 +1,10 @@
 import { SpreadGameImplementation } from "..";
 import { SkilledPerk } from "../../skilltree/skilltree";
+import { AttackerConquerCellEffect } from "./attackerConquerCell";
+import { AttackerFightEffect } from "./attackerFight";
+import { DefenderConquerCellEffect } from "./defenderConquerCell";
+import { DefenderDefendCellEffect } from "./defenderDefendCell";
+import { DefenderFightEffect } from "./defenderFight";
 
 export type PropUtils<TProps, TTrigger> = {
   combine: (a: TProps, b: TProps) => TProps;
@@ -18,3 +23,10 @@ export interface Effect<TProps, TTrigger> {
     spreadGame: SpreadGameImplementation
   ) => TProps;
 }
+
+export type PerkEffect =
+  | AttackerFightEffect
+  | DefenderFightEffect
+  | AttackerConquerCellEffect
+  | DefenderConquerCellEffect
+  | DefenderDefendCellEffect;

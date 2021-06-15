@@ -1,6 +1,6 @@
 import SpreadReplay from "../../messages/replay/replay";
+import { defenderFightUtils } from "../../spreadGame/gameProps/defenderFight";
 import { SpreadMap } from "../../spreadGame/map/map";
-import { combineDefenderFightProps } from "../../spreadGame/spreadGameProps";
 import { formatDescription } from "../utils";
 import { getValue, Perk } from "./perk";
 
@@ -50,7 +50,7 @@ export const BaseDefense: Perk<number> = {
       getValue: (lvl) => {
         const val = getValue(values, lvl, defaultValue);
         return {
-          ...combineDefenderFightProps.default,
+          ...defenderFightUtils.default,
           combatAbilityModifier: val,
         };
       },

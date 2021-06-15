@@ -15,9 +15,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var events_1 = require("../skilltree/events");
-var skilltree_1 = require("../skilltree/skilltree");
 var entites_1 = require("./entites");
+var attackerConquerCell_1 = require("./gameProps/attackerConquerCell");
 var attackerFight_1 = require("./gameProps/attackerFight");
+var defenderDefendCell_1 = require("./gameProps/defenderDefendCell");
+var defenderFight_1 = require("./gameProps/defenderFight");
 var basicMechanics_1 = __importDefault(require("./mechanics/basicMechanics"));
 var bounceMechanics_1 = __importDefault(require("./mechanics/bounceMechanics"));
 var scrapeOffMechanics_1 = __importDefault(require("./mechanics/scrapeOffMechanics"));
@@ -242,7 +244,7 @@ var SpreadGameImplementation = /** @class */ (function () {
                     _this.mechanics.collidesWithCell(bubble, cell)) {
                     var f1 = attackerFight_1.attackerFightUtils.collect(skills1, { attacker: bubble, defender: cell }, _this);
                     var skills2 = cell.playerId !== null ? _this.getSkilledPerks(cell.playerId) : [];
-                    var f2 = skilltree_1.skillTreeMethods.getDefenderModifier(skills2, cell, _this, bubble);
+                    var f2 = defenderFight_1.defenderFightUtils.collect(skills2, { defender: cell, attacker: bubble }, _this);
                     var _a = _this.mechanics.collideCell(currentBubble, cell, f1, f2), newCurrentBubble = _a[0], newCell = _a[1];
                     fightResults.push([
                         { attacker: currentBubble, defender: { type: "Cell", val: cell } },
@@ -252,12 +254,12 @@ var SpreadGameImplementation = /** @class */ (function () {
                         },
                     ]);
                     if (newCell.playerId !== cell.playerId) {
-                        var conquerProps = skilltree_1.skillTreeMethods.getAttackerConquerCellProps(skills1);
+                        var conquerProps = attackerConquerCell_1.attackerConquerCellFightUtils.collect(skills1, {}, _this);
                         newCell = __assign(__assign({}, newCell), { units: newCell.units + conquerProps.additionalUnits });
                     }
                     else {
                         /* if (newCell.playerId === cell.playerId) { */
-                        var defendCellProps = skilltree_1.skillTreeMethods.getDefendCellProps(skills2);
+                        var defendCellProps = defenderDefendCell_1.defenderDefendCellUtils.collect(skills2, {}, _this);
                         newCell = __assign(__assign({}, newCell), { units: newCell.units + defendCellProps.additionalUnits });
                     }
                     currentBubble = newCurrentBubble;
@@ -329,7 +331,7 @@ var SpreadGameImplementation = /** @class */ (function () {
             timePassedInMs: this.timePassed,
             cells: this.cells.map(function (cell) {
                 var skills = cell.playerId !== null ? _this.getSkilledPerks(cell.playerId) : [];
-                var fightProps = skilltree_1.skillTreeMethods.getDefenderModifier(skills, cell, _this, null);
+                var fightProps = defenderFight_1.defenderFightUtils.collect(skills, { defender: cell, attacker: null }, _this);
                 return {
                     id: cell.id,
                     playerId: cell.playerId,

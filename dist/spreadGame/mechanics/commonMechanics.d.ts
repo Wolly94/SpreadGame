@@ -1,6 +1,7 @@
 import Bubble from "../bubble";
 import Cell from "../cell";
-import { AttackerFightProps, DefenderFightProps } from "../spreadGameProps";
+import { AttackerFightProps } from "../gameProps/attackerFight";
+import { DefenderFightProps } from "../gameProps/defenderFight";
 export declare const calculationAccuracy = 0.01;
 export declare const minOverlap = 2;
 export declare const fight: (att: number, def: number, am: AttackerFightProps, bm: AttackerFightProps | DefenderFightProps) => number;
