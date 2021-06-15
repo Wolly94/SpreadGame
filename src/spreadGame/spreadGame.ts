@@ -19,6 +19,7 @@ import { skillTreeMethods } from "../skilltree/skilltree";
 import Bubble from "./bubble";
 import Cell from "./cell";
 import { distance } from "./entites";
+import { attackerConquerCellFightUtils } from "./gameProps/attackerConquerCell";
 import {
   AttackerFightTrigger,
   attackerFightUtils,
@@ -343,8 +344,10 @@ export class SpreadGameImplementation implements SpreadGame {
           ]);
 
           if (newCell.playerId !== cell.playerId) {
-            const conquerProps = skillTreeMethods.getAttackerConquerCellProps(
-              skills1
+            const conquerProps = attackerConquerCellFightUtils.collect(
+              skills1,
+              {},
+              this
             );
             newCell = {
               ...newCell,

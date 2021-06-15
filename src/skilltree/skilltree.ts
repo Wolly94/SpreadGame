@@ -85,23 +85,6 @@ export const skillTreeMethods = {
       return { level: sp.level, name: sp.perk.name };
     });
   },
-  getAttackerConquerCellProps: (
-    skilledPerks: SkilledPerk[]
-  ): AttackerConquerCellProps => {
-    return skilledPerks
-      .flatMap((skilledPerk) => {
-        return skilledPerk.perk.effects
-          .filter(
-            (p): p is GetAttackerConquerCellProps =>
-              p.type === "AttackerConquerCellEffect"
-          )
-          .map((getProps) => getProps.getValue(skilledPerk.level));
-      })
-      .reduce(
-        combineAttackerConquerCellProps.combine,
-        combineAttackerConquerCellProps.default
-      );
-  },
   getDefenderConquerCellProps: (
     skilledPerks: SkilledPerk[]
   ): DefenderConquerCellProps => {
