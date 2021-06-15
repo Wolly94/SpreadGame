@@ -1,23 +1,27 @@
 import { SpreadGameImplementation } from "..";
 import { Effect, PropUtils } from "./definitions";
 
-export interface GrowthProps {
+export interface DefenderGrowthProps {
   additionalCapacity: number;
   additionalGrowthInPercent: number;
 }
 
-export interface GrowthTrigger {}
+export interface DefenderGrowthTrigger {}
 
-export interface GrowthEffect extends Effect<GrowthProps, GrowthTrigger> {
-  type: "GrowthEffect";
+export interface DefenderGrowthEffect
+  extends Effect<DefenderGrowthProps, DefenderGrowthTrigger> {
+  type: "DefenderGrowthEffect";
   getValue: (
     level: number, // level of perk
-    trigger: GrowthTrigger,
+    trigger: DefenderGrowthTrigger,
     spreadGame: SpreadGameImplementation
-  ) => GrowthProps;
+  ) => DefenderGrowthProps;
 }
 
-export const growthUtils: PropUtils<GrowthProps, GrowthTrigger> = {
+export const growthUtils: PropUtils<
+  DefenderGrowthProps,
+  DefenderGrowthTrigger
+> = {
   combine: (a, b) => {
     return {
       additionalGrowthInPercent:
@@ -30,9 +34,11 @@ export const growthUtils: PropUtils<GrowthProps, GrowthTrigger> = {
     const combined = skilledPerks
       .flatMap((skilledPerk) => {
         return skilledPerk.perk.effects
-          .filter((p): p is GrowthEffect => p.type === "GrowthEffect")
+          .filter(
+            (p): p is DefenderGrowthEffect => p.type === "DefenderGrowthEffect"
+          )
           .map(
-            (getProps): GrowthProps =>
+            (getProps): DefenderGrowthProps =>
               getProps.getValue(skilledPerk.level, trigger, spreadGame)
           );
       })

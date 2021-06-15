@@ -1,20 +1,21 @@
 import SpreadReplay from "../../messages/replay/replay";
 import { SpreadGameImplementation } from "../../spreadGame";
 import { BasePopulation } from "./basePopulation";
+import { FertileGrounds } from "./fertileGrounds";
 import { playersWithoutSkills } from "./testHelper";
 
-test("test base population", () => {
-  const rep: SpreadReplay = BasePopulation.replay;
+test("test fertile grounds", () => {
+  const rep: SpreadReplay = FertileGrounds.replay;
   const game = SpreadGameImplementation.fromReplay(rep);
   game.runReplay(rep, rep.lengthInMs);
   const cstate = game.toClientGameState();
   const cell0 = cstate.cells.find((c) => c.id === 0);
   const cell1 = cstate.cells.find((c) => c.id === 1);
-  expect(cell0?.units).toBeGreaterThan(51);
-  expect(cell1?.units).toBe(50);
+  if (cell1 === undefined) expect(true).toBe(false);
+  else expect(cell0?.units).toBeGreaterThan(cell1.units);
 });
 
-test("test no base population", () => {
+test("test no fertile grounds", () => {
   const rep: SpreadReplay = {
     ...BasePopulation.replay,
     players: playersWithoutSkills(2),
@@ -24,6 +25,6 @@ test("test no base population", () => {
   const cstate = game.toClientGameState();
   const cell0 = cstate.cells.find((c) => c.id === 0);
   const cell1 = cstate.cells.find((c) => c.id === 1);
-  expect(cell0?.units).toBe(50);
-  expect(cell1?.units).toBe(50);
+  if (cell1 === undefined) expect(true).toBe(false);
+  else expect(cell0?.units).toBe(cell1.units);
 });

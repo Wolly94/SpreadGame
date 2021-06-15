@@ -3,7 +3,7 @@ import Cell from "../cell";
 import { radiusToUnits, radiusToUnitsFixPoint } from "../common";
 import { distance } from "../entites";
 import { AttackerFightProps } from "../gameProps/attackerFight";
-import { GrowthProps } from "../gameProps/cellGrowth";
+import { DefenderGrowthProps } from "../gameProps/cellGrowth";
 import {
   DefenderFightProps,
   isDefenderFightProps,
@@ -128,7 +128,7 @@ export interface SpreadGameMechanics {
     f2: DefenderFightProps
   ) => [Bubble | null, Cell];
   move: (bubble: Bubble, ms: number) => Bubble;
-  grow: (cell: Cell, ms: number, growthProps: GrowthProps) => Cell;
+  grow: (cell: Cell, ms: number, growthProps: DefenderGrowthProps) => Cell;
   sendBubble: (
     sender: Cell,
     target: Cell,

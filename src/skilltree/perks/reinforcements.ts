@@ -2,18 +2,18 @@ import SpreadReplay from "../../messages/replay/replay";
 import { growthUtils } from "../../spreadGame/gameProps/cellGrowth";
 import { SpreadMap } from "../../spreadGame/map/map";
 import { formatDescription } from "../utils";
-import { getValue, Perk } from "./perk";
+import { Perk, getValue } from "./perk";
 
-const name = "BasePopulation";
-const values = [20, 40, 60];
+const name = "Reinforcements";
+const values = [6, 12, 18];
 const defaultValue = 0;
 
 const simpleMap: SpreadMap = {
   width: 500,
   height: 500,
   cells: [
-    { id: 0, playerId: 0, position: [100, 100], radius: 50, units: 50 },
-    { id: 1, playerId: 1, position: [400, 100], radius: 50, units: 50 },
+    { id: 0, playerId: 0, position: [100, 100], radius: 50, units: 10 },
+    { id: 1, playerId: 1, position: [400, 100], radius: 50, units: 10 },
   ],
   players: 2,
 };
@@ -29,13 +29,13 @@ const replay: SpreadReplay = {
   moveHistory: [],
 };
 
-export const BasePopulation: Perk<number> = {
+export const FertileGrounds: Perk<number> = {
   name: name,
   values: values,
   description:
-    "Capacity is increased by " +
+    "At the beginning, every friendly cell starts with +" +
     formatDescription(values, (val) => val.toString(), "/") +
-    ".",
+    " population.",
   effects: [
     {
       type: "DefenderGrowthEffect",
@@ -43,7 +43,7 @@ export const BasePopulation: Perk<number> = {
         const val = getValue(values, lvl, defaultValue);
         return {
           ...growthUtils.default,
-          additionalCapacity: val,
+          additionalGrowthInPercent: val,
         };
       },
     },
