@@ -21,6 +21,7 @@ import {
   AttackerFightProps,
   attackerFightUtils,
 } from "./gameProps/attackerFight";
+import { defenderConquerCellUtils } from "./gameProps/defenderConquerCell";
 import { defenderDefendCellUtils } from "./gameProps/defenderDefendCell";
 import {
   DefenderFightProps,
@@ -344,14 +345,21 @@ export class SpreadGameImplementation implements SpreadGame {
           ]);
 
           if (newCell.playerId !== cell.playerId) {
-            const conquerProps = attackerConquerCellFightUtils.collect(
+            const attackerConquerProps = attackerConquerCellFightUtils.collect(
               skills1,
+              {},
+              this
+            );
+            const defenderConquerProps = defenderConquerCellUtils.collect(
+              skills2,
               {},
               this
             );
             newCell = {
               ...newCell,
-              units: newCell.units + conquerProps.additionalUnits,
+              units:
+                newCell.units * defenderConquerProps.unitsInPercentToRemain +
+                attackerConquerProps.additionalUnits,
             };
           } else {
             /* if (newCell.playerId === cell.playerId) { */

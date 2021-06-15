@@ -18,6 +18,7 @@ var events_1 = require("../skilltree/events");
 var entites_1 = require("./entites");
 var attackerConquerCell_1 = require("./gameProps/attackerConquerCell");
 var attackerFight_1 = require("./gameProps/attackerFight");
+var defenderConquerCell_1 = require("./gameProps/defenderConquerCell");
 var defenderDefendCell_1 = require("./gameProps/defenderDefendCell");
 var defenderFight_1 = require("./gameProps/defenderFight");
 var basicMechanics_1 = __importDefault(require("./mechanics/basicMechanics"));
@@ -254,8 +255,10 @@ var SpreadGameImplementation = /** @class */ (function () {
                         },
                     ]);
                     if (newCell.playerId !== cell.playerId) {
-                        var conquerProps = attackerConquerCell_1.attackerConquerCellFightUtils.collect(skills1, {}, _this);
-                        newCell = __assign(__assign({}, newCell), { units: newCell.units + conquerProps.additionalUnits });
+                        var attackerConquerProps = attackerConquerCell_1.attackerConquerCellFightUtils.collect(skills1, {}, _this);
+                        var defenderConquerProps = defenderConquerCell_1.defenderConquerCellUtils.collect(skills2, {}, _this);
+                        newCell = __assign(__assign({}, newCell), { units: newCell.units * defenderConquerProps.unitsInPercentToRemain +
+                                attackerConquerProps.additionalUnits });
                     }
                     else {
                         /* if (newCell.playerId === cell.playerId) { */
