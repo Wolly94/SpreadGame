@@ -2,12 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var common_1 = require("../common");
 var entites_1 = require("../entites");
-var defenderFight_1 = require("../gameProps/defenderFight");
+var fight_1 = require("./events/fight");
 exports.calculationAccuracy = 0.01;
 exports.minOverlap = 2;
 // > 0 means attacker won, <= 0 means defender won
 exports.fight = function (att, def, am, bm) {
-    if (defenderFight_1.isDefenderFightProps(bm)) {
+    if (fight_1.isCellFightProps(bm)) {
         att -= bm.membraneAbsorption;
         if (att <= 0)
             return -def;
@@ -29,7 +29,8 @@ exports.fightBubblePartial = function (att, def, am, bm, dist) {
     else if (unitDiff <= -lowerBound)
         return [null, -unitDiff / bm];
     else {
-        var beta = (unitDiff + bm * maxUnits) / ((2 * dist * bm) / common_1.radiusToUnitsFixPoint);
+        var beta = (unitDiff + bm * maxUnits) /
+            ((2 * dist * bm) / common_1.radiusToUnitsFixPoint);
         var deltaMod = am - bm;
         if (deltaMod === 0) {
             var ra = beta;
@@ -37,7 +38,8 @@ exports.fightBubblePartial = function (att, def, am, bm, dist) {
         }
         else {
             var alpha = deltaMod / (2 * dist * bm);
-            var ra = -1 / (2 * alpha) + Math.sqrt(beta / alpha + 1 / (4 * Math.pow(alpha, 2)));
+            var ra = -1 / (2 * alpha) +
+                Math.sqrt(beta / alpha + 1 / (4 * Math.pow(alpha, 2)));
             return [common_1.radiusToUnits(ra), common_1.radiusToUnits(dist - ra)];
         }
     }
@@ -75,7 +77,10 @@ exports.isBubble = function (val) {
 exports.approaching = function (b, e) {
     var direction = b.direction;
     if (exports.isBubble(e)) {
-        direction = [direction[0] - e.direction[0], direction[1] - e.direction[1]];
+        direction = [
+            direction[0] - e.direction[0],
+            direction[1] - e.direction[1],
+        ];
     }
     var relPosition = [
         b.position[0] - e.position[0],

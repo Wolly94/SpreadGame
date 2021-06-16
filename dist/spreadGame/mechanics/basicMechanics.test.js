@@ -30,7 +30,7 @@ test("collide 50 vs 25 units", function () {
         motherId: 0,
         creationTime: 0,
     });
-    var res = basicMechanics_1.default.collideBubble(b1, b2, { combatAbilityModifier: 1.0 }, { combatAbilityModifier: 1.0 });
+    var res = basicMechanics_1.default.collideBubble(b1, b2, { combatAbilityModifier: 1.0, type: "BubbleFightProps" }, { combatAbilityModifier: 1.0, type: "BubbleFightProps" });
     expect(res[0]).not.toBe(null);
     expect(res[1]).toBe(null);
     if (res[0] === null) {
@@ -65,7 +65,7 @@ test("collide 50 vs 50 units", function () {
         motherId: 0,
         creationTime: 0,
     });
-    var res = basicMechanics_1.default.collideBubble(b1, b2, { combatAbilityModifier: 1.0 }, { combatAbilityModifier: 1.0 });
+    var res = basicMechanics_1.default.collideBubble(b1, b2, { combatAbilityModifier: 1.0, type: "BubbleFightProps" }, { combatAbilityModifier: 1.0, type: "BubbleFightProps" });
     expect(res[0]).toBe(null);
     expect(res[1]).toBe(null);
 });
@@ -94,7 +94,7 @@ test("collide 25 vs 50 units", function () {
         motherId: 0,
         creationTime: 0,
     });
-    var res = basicMechanics_1.default.collideBubble(b1, b2, { combatAbilityModifier: 1.0 }, { combatAbilityModifier: 1.0 });
+    var res = basicMechanics_1.default.collideBubble(b1, b2, { combatAbilityModifier: 1.0, type: "BubbleFightProps" }, { combatAbilityModifier: 1.0, type: "BubbleFightProps" });
     expect(res[0]).toBe(null);
     expect(res[1]).not.toBe(null);
     if (res[1] === null) {

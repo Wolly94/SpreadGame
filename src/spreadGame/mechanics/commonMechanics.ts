@@ -2,136 +2,143 @@ import Bubble from "../bubble";
 import Cell from "../cell";
 import { radiusToUnits, radiusToUnitsFixPoint } from "../common";
 import { distance } from "../entites";
-import { AttackerFightProps } from "../gameProps/attackerFight";
 import { DefenderGrowthProps } from "../gameProps/cellGrowth";
 import {
-  DefenderFightProps,
-  isDefenderFightProps,
-} from "../gameProps/defenderFight";
+    BubbleFightProps,
+    CellFightProps,
+    isCellFightProps,
+} from "./events/fight";
+import { SendUnitsProps } from "./events/sendUnits";
 
 export const calculationAccuracy = 0.01;
 export const minOverlap = 2;
 
 // > 0 means attacker won, <= 0 means defender won
 export const fight = (
-  att: number,
-  def: number,
-  am: AttackerFightProps,
-  bm: AttackerFightProps | DefenderFightProps
+    att: number,
+    def: number,
+    am: BubbleFightProps,
+    bm: BubbleFightProps | CellFightProps
 ): number => {
-  if (isDefenderFightProps(bm)) {
-    att -= bm.membraneAbsorption;
-    if (att <= 0) return -def;
-  }
-  const unitDiff =
-    att * am.combatAbilityModifier - def * bm.combatAbilityModifier;
-  if (unitDiff <= 0) return unitDiff / bm.combatAbilityModifier;
-  else return unitDiff / am.combatAbilityModifier;
+    if (isCellFightProps(bm)) {
+        att -= bm.membraneAbsorption;
+        if (att <= 0) return -def;
+    }
+    const unitDiff =
+        att * am.combatAbilityModifier - def * bm.combatAbilityModifier;
+    if (unitDiff <= 0) return unitDiff / bm.combatAbilityModifier;
+    else return unitDiff / am.combatAbilityModifier;
 };
 
 // returns remaining fighters from both entities
 export const fightBubblePartial = (
-  att: number,
-  def: number,
-  am: number,
-  bm: number,
-  dist: number
+    att: number,
+    def: number,
+    am: number,
+    bm: number,
+    dist: number
 ): [number | null, number | null] => {
-  const maxUnits = radiusToUnits(dist);
-  const upperBound = am * maxUnits;
-  const lowerBound = bm * maxUnits;
-  const unitDiff = att * am - def * bm;
-  if (unitDiff >= upperBound) return [unitDiff / am, null];
-  else if (unitDiff <= -lowerBound) return [null, -unitDiff / bm];
-  else {
-    const beta =
-      (unitDiff + bm * maxUnits) / ((2 * dist * bm) / radiusToUnitsFixPoint);
-    const deltaMod = am - bm;
-    if (deltaMod === 0) {
-      const ra = beta;
-      return [radiusToUnits(ra), radiusToUnits(dist - ra)];
-    } else {
-      const alpha = deltaMod / (2 * dist * bm);
-      const ra =
-        -1 / (2 * alpha) + Math.sqrt(beta / alpha + 1 / (4 * alpha ** 2));
-      return [radiusToUnits(ra), radiusToUnits(dist - ra)];
+    const maxUnits = radiusToUnits(dist);
+    const upperBound = am * maxUnits;
+    const lowerBound = bm * maxUnits;
+    const unitDiff = att * am - def * bm;
+    if (unitDiff >= upperBound) return [unitDiff / am, null];
+    else if (unitDiff <= -lowerBound) return [null, -unitDiff / bm];
+    else {
+        const beta =
+            (unitDiff + bm * maxUnits) /
+            ((2 * dist * bm) / radiusToUnitsFixPoint);
+        const deltaMod = am - bm;
+        if (deltaMod === 0) {
+            const ra = beta;
+            return [radiusToUnits(ra), radiusToUnits(dist - ra)];
+        } else {
+            const alpha = deltaMod / (2 * dist * bm);
+            const ra =
+                -1 / (2 * alpha) +
+                Math.sqrt(beta / alpha + 1 / (4 * alpha ** 2));
+            return [radiusToUnits(ra), radiusToUnits(dist - ra)];
+        }
     }
-  }
 };
 
 // newCellUnits is expected to be the result of 'fight' or 'fightCellPartial'
 export const takeOverCell = (
-  cell: Cell,
-  newCellUnits: number,
-  enemyPlayerId: number
+    cell: Cell,
+    newCellUnits: number,
+    enemyPlayerId: number
 ) => {
-  if (newCellUnits > calculationAccuracy) {
-    cell.units = newCellUnits;
-    cell.playerId = enemyPlayerId;
-  } else {
-    cell.units = -newCellUnits;
-  }
+    if (newCellUnits > calculationAccuracy) {
+        cell.units = newCellUnits;
+        cell.playerId = enemyPlayerId;
+    } else {
+        cell.units = -newCellUnits;
+    }
 };
 
 export const reinforceCell = (cell: Cell, units: number) => {
-  cell.units += units;
+    cell.units += units;
 };
 
 export const overlap = (b: Bubble, e: Bubble | Cell) => {
-  return b.radius + e.radius - distance(b.position, e.position);
+    return b.radius + e.radius - distance(b.position, e.position);
 };
 
 export const centerOverlap = (b: Bubble, e: Bubble | Cell) => {
-  return Math.max(b.radius, e.radius) - distance(b.position, e.position);
+    return Math.max(b.radius, e.radius) - distance(b.position, e.position);
 };
 
 // <= 0 if entities at least touch each other
 export const entityDistance = (b: Bubble, e: Bubble | Cell) => {
-  return Math.max(-overlap(b, e), 0);
+    return Math.max(-overlap(b, e), 0);
 };
 
 // <= 0 if at least the center of one entity is contained in the other entity
 export const centerOverlapDistance = (b: Bubble, e: Bubble | Cell) => {
-  return Math.max(-centerOverlap(b, e), 0);
+    return Math.max(-centerOverlap(b, e), 0);
 };
 
 export const isBubble = (val: any): val is Bubble => {
-  return val.direction !== undefined;
+    return val.direction !== undefined;
 };
 
 export const approaching = (b: Bubble, e: Bubble | Cell) => {
-  let direction: [number, number] = b.direction;
-  if (isBubble(e)) {
-    direction = [direction[0] - e.direction[0], direction[1] - e.direction[1]];
-  }
-  const relPosition: [number, number] = [
-    b.position[0] - e.position[0],
-    b.position[1] - e.position[1],
-  ];
-  const res = direction[0] * relPosition[0] + direction[1] * relPosition[1];
-  return res < 0;
+    let direction: [number, number] = b.direction;
+    if (isBubble(e)) {
+        direction = [
+            direction[0] - e.direction[0],
+            direction[1] - e.direction[1],
+        ];
+    }
+    const relPosition: [number, number] = [
+        b.position[0] - e.position[0],
+        b.position[1] - e.position[1],
+    ];
+    const res = direction[0] * relPosition[0] + direction[1] * relPosition[1];
+    return res < 0;
 };
 
 export interface SpreadGameMechanics {
-  collidesWithBubble: (bubble1: Bubble, bubble2: Bubble) => boolean;
-  collidesWithCell: (bubble: Bubble, cell: Cell) => boolean;
-  collideBubble: (
-    bubble1: Bubble,
-    bubble2: Bubble,
-    f1: AttackerFightProps,
-    f2: AttackerFightProps
-  ) => [Bubble | null, Bubble | null];
-  collideCell: (
-    bubble: Bubble,
-    cell: Cell,
-    f1: AttackerFightProps,
-    f2: DefenderFightProps
-  ) => [Bubble | null, Cell];
-  move: (bubble: Bubble, ms: number) => Bubble;
-  grow: (cell: Cell, ms: number, growthProps: DefenderGrowthProps) => Cell;
-  sendBubble: (
-    sender: Cell,
-    target: Cell,
-    timePassed: number
-  ) => [Cell, Bubble | null];
+    collidesWithBubble: (bubble1: Bubble, bubble2: Bubble) => boolean;
+    collidesWithCell: (bubble: Bubble, cell: Cell) => boolean;
+    collideBubble: (
+        bubble1: Bubble,
+        bubble2: Bubble,
+        f1: BubbleFightProps,
+        f2: BubbleFightProps
+    ) => [Bubble | null, Bubble | null];
+    collideCell: (
+        bubble: Bubble,
+        cell: Cell,
+        f1: BubbleFightProps,
+        f2: CellFightProps
+    ) => [Bubble | null, Cell];
+    move: (bubble: Bubble, ms: number) => Bubble;
+    grow: (cell: Cell, ms: number, growthProps: DefenderGrowthProps) => Cell;
+    sendBubble: (
+        sender: Cell,
+        target: Cell,
+        timePassed: number,
+        sendUnitsProps: SendUnitsProps
+    ) => [Cell, Bubble | null];
 }

@@ -1,6 +1,7 @@
 import { SpreadGameImplementation } from "..";
 import { SkilledPerk } from "../../skilltree/skilltree";
 import { AttackerConquerCellEffect } from "./attackerConquerCell";
+import { AttackerDefendCellEffect } from "./attackerDefendCell";
 import { AttackerFightEffect } from "./attackerFight";
 import { DefenderGrowthEffect } from "./cellGrowth";
 import { DefenderConquerCellEffect } from "./defenderConquerCell";
@@ -16,4 +17,4 @@ export interface Effect<TProps, TTrigger> {
     getValue: (level: number, // level of perk
     trigger: TTrigger, spreadGame: SpreadGameImplementation) => TProps;
 }
-export declare type PerkEffect = AttackerFightEffect | DefenderFightEffect | AttackerConquerCellEffect | DefenderConquerCellEffect | DefenderDefendCellEffect | DefenderGrowthEffect | DefenderStartEffect;
+export declare type PerkEffect = AttackerFightEffect | DefenderFightEffect | AttackerConquerCellEffect | DefenderConquerCellEffect | DefenderDefendCellEffect | AttackerDefendCellEffect | DefenderGrowthEffect | DefenderStartEffect;

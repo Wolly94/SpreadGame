@@ -58,8 +58,10 @@ var basicMechanics = {
     },
     move: function (bubble, ms) {
         var newPosition = [
-            bubble.position[0] + (exports.defaultSpeed * bubble.direction[0] * ms) / 1000.0,
-            bubble.position[1] + (exports.defaultSpeed * bubble.direction[1] * ms) / 1000.0,
+            bubble.position[0] +
+                (exports.defaultSpeed * bubble.direction[0] * ms) / 1000.0,
+            bubble.position[1] +
+                (exports.defaultSpeed * bubble.direction[1] * ms) / 1000.0,
         ];
         return __assign(__assign({}, bubble), { position: newPosition });
     },

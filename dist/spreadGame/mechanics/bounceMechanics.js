@@ -47,7 +47,10 @@ var rotate = function (v, angle) {
     // sin a  cos a
     var co = Math.cos(angle);
     var si = Math.sin(angle);
-    var res = [co * v[0] - si * v[1], si * v[0] + co * v[1]];
+    var res = [
+        co * v[0] - si * v[1],
+        si * v[0] + co * v[1],
+    ];
     return res;
 };
 var adjustedDirection = function (bubblePos, bubbleDir, targetPos) {

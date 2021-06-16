@@ -1,6 +1,7 @@
 import { SpreadGameImplementation } from "..";
 import { SkilledPerk } from "../../skilltree/skilltree";
 import { AttackerConquerCellEffect } from "./attackerConquerCell";
+import { AttackerDefendCellEffect } from "./attackerDefendCell";
 import { AttackerFightEffect } from "./attackerFight";
 import { DefenderGrowthEffect } from "./cellGrowth";
 import { DefenderConquerCellEffect } from "./defenderConquerCell";
@@ -32,5 +33,6 @@ export type PerkEffect =
   | AttackerConquerCellEffect
   | DefenderConquerCellEffect
   | DefenderDefendCellEffect
+  | AttackerDefendCellEffect
   | DefenderGrowthEffect
   | DefenderStartEffect;

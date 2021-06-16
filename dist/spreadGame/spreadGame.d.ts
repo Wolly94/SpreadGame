@@ -6,6 +6,8 @@ import Bubble from "./bubble";
 import Cell from "./cell";
 import { SpreadMap } from "./map/map";
 import { SpreadGameMechanics } from "./mechanics/commonMechanics";
+import { AttachProps, NewSpreadGameEvent, SpreadGameProps, TimedProps } from "./mechanics/events/definitions";
+import { GeneralPerk } from "./perks/perk";
 import Player from "./player";
 export interface SpreadGameState {
     cells: Cell[];
@@ -32,9 +34,13 @@ export declare class SpreadGameImplementation implements SpreadGame {
     mechanics: SpreadGameMechanics;
     timePassed: number;
     eventHistory: HistoryEntry<SpreadGameEvent>[];
+    perks: GeneralPerk[];
+    attachedProps: AttachProps<TimedProps<SpreadGameProps>>[];
     constructor(map: SpreadMap, gameSettings: GameSettings, players: Player[]);
     triggerStart(): void;
     static fromReplay(replay: SpreadReplay): SpreadGameImplementation;
+    attachProps(props: AttachProps<TimedProps<SpreadGameProps>>[]): void;
+    handleEvent(event: NewSpreadGameEvent): SpreadGameProps[];
     runReplay(replay: SpreadReplay, ms: number): void;
     getReplay(): SpreadReplay;
     applyMove(move: Move): void;
@@ -44,7 +50,9 @@ export declare class SpreadGameImplementation implements SpreadGame {
     checkForFinishedFights(): void;
     processFight(before: BeforeFightState, after: AfterFightState): void;
     collideBubblesWithCells(): void;
+    allProps(props: SpreadGameProps[]): SpreadGameProps[];
     sendUnits(playerId: number, senderIds: number[], receiverId: number): false | undefined;
+    getSkilledPerk(perkName: string, playerId: number | null): import("../skilltree/skilltree").SkilledPerk | null;
     toClientGameState(): ClientGameState;
     getSkilledPerks(playerId: number): import("../skilltree/skilltree").SkilledPerk[];
 }

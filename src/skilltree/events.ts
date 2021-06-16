@@ -53,7 +53,7 @@ export interface AfterFightState {
 export interface FightEvent {
   type: "FightEvent";
   before: BeforeFightState;
-  after: AfterFightState;
+  after: AfterFightState; // if !finished, then this holds data of current state
   finished: boolean;
   partialFights: HistoryEntry<PartialFight>[];
 }
