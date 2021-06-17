@@ -59,7 +59,10 @@ import {
     cellFightUtils,
 } from "./mechanics/events/fight";
 import { SendUnitsEvent, sendUnitsUtils } from "./mechanics/events/sendUnits";
-import { VisualizeBubbleProps, visualizeBubbleUtils } from "./mechanics/events/visualizeBubbleProps"
+import {
+    VisualizeBubbleProps,
+    visualizeBubbleUtils,
+} from "./mechanics/events/visualizeBubbleProps";
 import {
     VisualizeCellProps,
     visualizeCellUtils,
@@ -200,29 +203,18 @@ export class SpreadGameImplementation implements SpreadGame {
     // and returns all other props
     handleEvent(event: NewSpreadGameEvent) {
         const props = this.perks.flatMap((perk) => {
-            return perk.triggers
-                .flatMap((tr) => {
-                    if (
-                        tr.type === "ConquerCell" &&
-                        event.type === "ConquerCell"
-                    )
-                        return tr.getValue(event, this);
-                    else if (
-                        tr.type === "SendUnits" &&
-                        event.type === "SendUnits"
-                    )
-                        return tr.getValue(event, this);
-                    else if (
-                        tr.type === "CreateBubble" &&
-                        event.type == "CreateBubble"
-                    ) {
-                        return tr.getValue(event, this);
-                    } else return null;
-                })
-                .filter(
-                    (p): p is AttachProps<TimedProps<SpreadGameProps>> =>
-                        p !== null
-                );
+            return perk.triggers.flatMap((tr) => {
+                if (tr.type === "ConquerCell" && event.type === "ConquerCell")
+                    return tr.getValue(event, this);
+                else if (tr.type === "SendUnits" && event.type === "SendUnits")
+                    return tr.getValue(event, this);
+                else if (
+                    tr.type === "CreateBubble" &&
+                    event.type == "CreateBubble"
+                ) {
+                    return tr.getValue(event, this);
+                } else return [];
+            });
         });
         this.attachProps(props);
         const result = props

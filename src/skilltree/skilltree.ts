@@ -14,7 +14,7 @@ export interface SkilledPerk {
 
 export interface Skill {
     name: string;
-    perks: OldGeneralPerk[];
+    perks: GeneralPerk[];
 }
 
 export interface SkillTree {
@@ -47,8 +47,8 @@ export const skillTreeMethods = {
                 return {
                     name: skd.name,
                     perks: skd.perks
-                        .map((p) => getOldPerkByName(p.name))
-                        .filter((p): p is OldGeneralPerk => p !== null),
+                        .map((p) => getPerkByName(p.name))
+                        .filter((p): p is GeneralPerk => p !== null),
                 };
             }),
         };
@@ -73,20 +73,10 @@ export const fullSkillTree: SkillTree = {
 
 export const defaultSkillTree: SkillTree = fullSkillTree;
 
-export const allOldPerks: OldGeneralPerk[] = fullSkillTree.skills.flatMap(
-    (sk) => sk.perks
-);
-
 export const getSkillByName = (name: string) => {
     const skill = fullSkillTree.skills.find((sk) => sk.name === name);
     if (skill === undefined) return null;
     else return skill;
-};
-
-export const getOldPerkByName = (name: string) => {
-    const perk = allOldPerks.find((p) => p.name === name);
-    if (perk === undefined) return null;
-    else return perk;
 };
 
 export const getPerkByName = (perkName: string) => {
