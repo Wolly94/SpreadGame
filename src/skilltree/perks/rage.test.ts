@@ -1,6 +1,5 @@
-import { SpreadGameImplementation } from "..";
-import { replay } from "../../messages";
 import SpreadReplay from "../../messages/replay/replay";
+import { SpreadGameImplementation } from "../../spreadGame/spreadGame"
 import { RagePerk } from "./rage";
 
 test("test rage", () => {

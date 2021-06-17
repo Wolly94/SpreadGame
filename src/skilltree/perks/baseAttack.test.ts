@@ -1,4 +1,4 @@
-import { SpreadGameImplementation } from "..";
+import { SpreadGameImplementation } from "../../spreadGame/spreadGame"
 import { BaseAttackPerk } from "./baseAttack";
 
 test("test base attack", () => {

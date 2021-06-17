@@ -1,11 +1,11 @@
 import { HistoryEntry } from "../messages/replay/replay";
 import { FightEvent } from "../skilltree/events";
+import { BaseAttackPerk } from "../skilltree/perks/baseAttack";
 import { getPerkByName } from "../skilltree/skilltree";
 import Bubble from "./bubble";
 import Cell from "./cell";
 import { SpreadMap } from "./map/map";
 import { defaultSpeed } from "./mechanics/basicMechanics";
-import { BaseAttackPerk } from "./perks/baseAttack";
 import { SpreadGameImplementation } from "./spreadGame";
 
 const createMapHelper = (cells: Cell[]): SpreadMap => {

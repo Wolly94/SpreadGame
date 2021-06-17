@@ -5,6 +5,7 @@ const type = "VisualizeCellProps";
 export interface VisualizeCellProps {
     type: "VisualizeCellProps";
     combatAbilityModifier: number;
+    rageValue: number;
 }
 
 export const visualizeCellUtils: PropUtils<VisualizeCellProps> = {
@@ -13,9 +14,10 @@ export const visualizeCellUtils: PropUtils<VisualizeCellProps> = {
             type: type,
             combatAbilityModifier:
                 a.combatAbilityModifier + b.combatAbilityModifier,
+            rageValue: a.rageValue + b.rageValue,
         };
     },
-    default: { type: type, combatAbilityModifier: 0 },
+    default: { type: type, combatAbilityModifier: 0, rageValue: 0 },
     collect: (props) => {
         return props
             .filter((prop): prop is VisualizeCellProps => prop.type === type)

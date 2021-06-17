@@ -1,10 +1,10 @@
-import { BaseDefense } from "../perks/baseDefense";
-import { LootsOfVictory } from "../perks/lootsOfVictory";
-import { Membrane } from "../perks/membrane";
-import { Preparation } from "../perks/preparation";
+import { BaseDefense } from "../oldperks/baseDefense";
+import { LootsOfVictory } from "../oldperks/lootsOfVictory";
+import { Membrane } from "../oldperks/membrane";
+import { Preparation } from "../oldperks/preparation";
 import { Skill } from "../skilltree";
 
 export const Defense: Skill = {
   name: "Defense",
-  perks: [BaseDefense, Preparation, LootsOfVictory, Membrane],
+  perks: [/*BaseDefense, Preparation, LootsOfVictory, Membrane*/],
 };

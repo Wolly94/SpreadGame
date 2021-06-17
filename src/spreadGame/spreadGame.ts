@@ -13,25 +13,16 @@ import {
     latestDistance,
     SpreadGameEvent,
 } from "../skilltree/events";
+import {
+    GeneralPerk,
+    allPerks,
+    perkFromBackUp,
+    backupFromPerk,
+} from "../skilltree/perks/perk";
 import Bubble from "./bubble";
 import Cell from "./cell";
 import { distance } from "./entites";
-import { attackerConquerCellFightUtils } from "./gameProps/attackerConquerCell";
-import {
-    AttackerFightProps,
-    attackerFightUtils,
-} from "./gameProps/attackerFight";
 import { growthUtils } from "./gameProps/cellGrowth";
-import { defenderConquerCellUtils } from "./gameProps/defenderConquerCell";
-import { defenderDefendCellUtils } from "./gameProps/defenderDefendCell";
-import {
-    DefenderFightProps,
-    defenderFightUtils,
-} from "./gameProps/defenderFight";
-import {
-    DefenderStartProps,
-    defenderStartUtils,
-} from "./gameProps/defenderStart";
 import { SpreadMap } from "./map/map";
 import basicMechanics from "./mechanics/basicMechanics";
 import bounceMechanics from "./mechanics/bounceMechanics";
@@ -42,12 +33,12 @@ import {
 } from "./mechanics/events/conquerCell";
 import { CreateBubbleEvent } from "./mechanics/events/createBubble";
 import {
-    DefendCellEffect,
     DefendCellEvent,
     defendCellUtils,
 } from "./mechanics/events/defendCell";
 import {
     AttachProps,
+    Entity,
     NewSpreadGameEvent,
     SpreadGameProps,
     TimedProps,
@@ -68,12 +59,6 @@ import {
     visualizeCellUtils,
 } from "./mechanics/events/visualizeCellProps";
 import scrapeOffMechanics from "./mechanics/scrapeOffMechanics";
-import {
-    allPerks,
-    backupFromPerk,
-    GeneralPerk,
-    perkFromBackUp,
-} from "./perks/perk";
 import Player, { dataFromPlayer, playerFromData } from "./player";
 
 const getMechanics = (settings: GameSettings): SpreadGameMechanics => {
@@ -497,8 +482,13 @@ export class SpreadGameImplementation implements SpreadGame {
                             after: { cell: { ...newCell } },
                         };
                         const props = this.handleEvent(conquerEvent);
-                        const allProps = this.allProps(props);
-                        const conquerProps = conquerCellUtils.collect(allProps);
+                        const fromAttachedProps = this.fromAttachedProps({
+                            type: "Cell",
+                            id: cell.id,
+                        });
+                        const conquerProps = conquerCellUtils.collect(
+                            fromAttachedProps.concat(props)
+                        );
                         newCell = {
                             ...newCell,
                             units: newCell.units + conquerProps.additionalUnits,
@@ -511,8 +501,13 @@ export class SpreadGameImplementation implements SpreadGame {
                             after: { cell: { ...newCell } },
                         };
                         const props = this.handleEvent(defendEvent);
-                        const allProps = this.allProps(props);
-                        const conquerProps = defendCellUtils.collect(allProps);
+                        const fromAttachedProps = this.fromAttachedProps({
+                            type: "Cell",
+                            id: newCell.id,
+                        });
+                        const conquerProps = defendCellUtils.collect(
+                            fromAttachedProps.concat(props)
+                        );
                         newCell = {
                             ...newCell,
                             units: newCell.units + conquerProps.additionalUnits,
@@ -534,15 +529,17 @@ export class SpreadGameImplementation implements SpreadGame {
             this.processFight(before, after)
         );
     }
-    allProps(props: SpreadGameProps[]) {
+    fromAttachedProps(entity: Entity) {
         const result = this.attachedProps
             .filter(
                 (prop) =>
-                    prop.props.expirationInMs === "Never" ||
-                    prop.props.expirationInMs >= this.timePassed
+                    (prop.props.expirationInMs === "Never" ||
+                        prop.props.expirationInMs >= this.timePassed) &&
+                    prop.entity?.type === entity.type &&
+                    prop.entity.id === entity.id
             )
             .map((prop) => prop.props.value);
-        return result.concat(props);
+        return result;
     }
     sendUnits(playerId: number, senderIds: number[], receiverId: number) {
         const eventsToAdd: SpreadGameEvent[] = [];
@@ -563,8 +560,15 @@ export class SpreadGameImplementation implements SpreadGame {
                     type: "SendUnits",
                 };
                 const unsavedProps = this.handleEvent(event);
-                const allProps = this.allProps(unsavedProps);
-                const sendUnitsProps = sendUnitsUtils.collect(allProps);
+                const fromAttachedProps = this.fromAttachedProps({
+                    type: "Cell",
+                    id: sender.id,
+                }).concat(
+                    this.fromAttachedProps({ type: "Cell", id: receiverId })
+                );
+                const sendUnitsProps = sendUnitsUtils.collect(
+                    fromAttachedProps.concat(unsavedProps)
+                );
                 const [remCell, bubble] = this.mechanics.sendBubble(
                     sender,
                     targetCell,
@@ -621,7 +625,7 @@ export class SpreadGameImplementation implements SpreadGame {
             timePassedInMs: this.timePassed,
             cells: this.cells.map((cell) => {
                 const cellProps: VisualizeCellProps = visualizeCellUtils.collect(
-                    this.allProps([])
+                    this.fromAttachedProps({ type: "Cell", id: cell.id })
                 );
                 return {
                     id: cell.id,
@@ -630,11 +634,12 @@ export class SpreadGameImplementation implements SpreadGame {
                     position: cell.position,
                     radius: cell.radius,
                     defenderCombatAbilities: cellProps.combatAbilityModifier,
+                    attackerCombatAbilities: cellProps.rageValue
                 };
             }),
             bubbles: this.bubbles.map((bubble) => {
                 const bubbleProps: VisualizeBubbleProps = visualizeBubbleUtils.collect(
-                    this.allProps([])
+                    this.fromAttachedProps({ type: "Bubble", id: bubble.id })
                 );
                 return {
                     id: bubble.id,

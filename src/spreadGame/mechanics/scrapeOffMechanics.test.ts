@@ -1,7 +1,7 @@
 import { SpreadGameImplementation } from "..";
 import SpreadReplay from "../../messages/replay/replay";
-import { BaseAttackPerk } from "../perks/baseAttack";
-import { backupFromPerk, perkFromBackUp } from "../perks/perk";
+import { BaseAttackPerk } from "../../skilltree/perks/baseAttack"
+import { backupFromPerk } from "../../skilltree/perks/perk"
 
 const replay: SpreadReplay = {
     gameSettings: { mechanics: "basic", updateFrequencyInMs: 25 },

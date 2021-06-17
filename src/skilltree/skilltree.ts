@@ -1,7 +1,7 @@
 import { SkilledPerkData } from "../messages/inGame/clientLobbyMessage";
 import { SkillTreeData } from "../messages/inGame/gameServerMessages";
-import { allPerks, GeneralPerk } from "../spreadGame/perks/perk";
-import { OldGeneralPerk } from "./perks/perk";
+import { OldGeneralPerk } from "./oldperks/perk";
+import { GeneralPerk, allPerks } from "./perks/perk"
 import { Attack } from "./skills/attack";
 import { Defense } from "./skills/defense";
 import { Population } from "./skills/population";

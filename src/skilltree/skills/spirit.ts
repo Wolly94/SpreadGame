@@ -1,8 +1,10 @@
-import { BaseSpirit } from "../perks/baseSpirit";
-import { Kamikaze } from "../perks/kamikaze";
+import { BaseSpirit } from "../oldperks/baseSpirit";
+import { Kamikaze } from "../oldperks/kamikaze";
 import { Skill } from "../skilltree";
 
 export const Spirit: Skill = {
-  name: "Spirit",
-  perks: [BaseSpirit, Kamikaze],
+    name: "Spirit",
+    perks: [
+        /*BaseSpirit, Kamikaze*/
+    ],
 };
