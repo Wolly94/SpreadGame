@@ -12,8 +12,8 @@ var __assign = (this && this.__assign) || function () {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var __1 = require("..");
-var baseAttack_1 = require("../perks/baseAttack");
-var perk_1 = require("../perks/perk");
+var baseAttack_1 = require("../../skilltree/perks/baseAttack");
+var perk_1 = require("../../skilltree/perks/perk");
 var replay = {
     gameSettings: { mechanics: "basic", updateFrequencyInMs: 25 },
     lengthInMs: 5000,

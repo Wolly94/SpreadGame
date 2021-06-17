@@ -27,7 +27,7 @@ export interface TimedProps<TProps> {
 }
 export interface Entity {
     type: "Player" | "Bubble" | "Cell";
-    id: "All" | number;
+    id: number | null;
 }
 export declare type ValueEntity = {
     type: "Player";
@@ -46,6 +46,6 @@ export interface AttachProps<TProps> {
     props: TProps;
 }
 export interface Effect<TEvent> {
-    getValue: (trigger: TEvent, spreadGame: SpreadGameImplementation) => AttachProps<TimedProps<SpreadGameProps>>;
+    getValue: (trigger: TEvent, spreadGame: SpreadGameImplementation) => AttachProps<TimedProps<SpreadGameProps>>[];
 }
 export declare type SpreadGameEffect = ConquerCellEffect | SendUnitsEffect | CreateBubbleEffect | DefendCellEffect;

@@ -563,9 +563,7 @@ export class SpreadGameImplementation implements SpreadGame {
                 const fromAttachedProps = this.fromAttachedProps({
                     type: "Cell",
                     id: sender.id,
-                }).concat(
-                    this.fromAttachedProps({ type: "Cell", id: receiverId })
-                );
+                });
                 const sendUnitsProps = sendUnitsUtils.collect(
                     fromAttachedProps.concat(unsavedProps)
                 );
@@ -634,7 +632,7 @@ export class SpreadGameImplementation implements SpreadGame {
                     position: cell.position,
                     radius: cell.radius,
                     defenderCombatAbilities: cellProps.combatAbilityModifier,
-                    attackerCombatAbilities: cellProps.rageValue
+                    attackerCombatAbilities: cellProps.rageValue,
                 };
             }),
             bubbles: this.bubbles.map((bubble) => {

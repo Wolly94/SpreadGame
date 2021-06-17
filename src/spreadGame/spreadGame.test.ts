@@ -1,12 +1,12 @@
-import { HistoryEntry } from "../messages/replay/replay";
-import { FightEvent } from "../skilltree/events";
-import { BaseAttackPerk } from "../skilltree/perks/baseAttack";
-import { getPerkByName } from "../skilltree/skilltree";
-import Bubble from "./bubble";
-import Cell from "./cell";
-import { SpreadMap } from "./map/map";
-import { defaultSpeed } from "./mechanics/basicMechanics";
-import { SpreadGameImplementation } from "./spreadGame";
+import { SpreadGameImplementation } from "."
+import { HistoryEntry } from "../messages/replay/replay"
+import { FightEvent } from "../skilltree/events"
+import { BaseAttackPerk } from "../skilltree/perks/baseAttack"
+import { getPerkByName, SkilledPerk } from "../skilltree/skilltree"
+import Bubble from "./bubble"
+import Cell from "./cell"
+import { SpreadMap } from "./map/map"
+import { defaultSpeed } from "./mechanics/basicMechanics"
 
 const createMapHelper = (cells: Cell[]): SpreadMap => {
     return {
@@ -113,14 +113,13 @@ test("bubble collision", () => {
 });
 
 test("bubble collision with attack modifier", () => {
-    const x = 10;
     const cells: Cell[] = [
         { id: 0, playerId: 0, position: [100, 100], radius: 50, units: 50 },
         { id: 1, playerId: 1, position: [400, 500], radius: 50, units: 50 },
     ];
     const baseAttackPerk = getPerkByName(BaseAttackPerk.name);
     expect(baseAttackPerk).not.toBe(null);
-    const skills =
+    const skills: SkilledPerk[] =
         baseAttackPerk !== null ? [{ level: 1, perk: baseAttackPerk }] : [];
     const gameState = new SpreadGameImplementation(
         createMapHelper(cells),

@@ -6,9 +6,10 @@ exports.visualizeCellUtils = {
         return {
             type: type,
             combatAbilityModifier: a.combatAbilityModifier + b.combatAbilityModifier,
+            rageValue: a.rageValue + b.rageValue,
         };
     },
-    default: { type: type, combatAbilityModifier: 0 },
+    default: { type: type, combatAbilityModifier: 0, rageValue: 0 },
     collect: function (props) {
         return props
             .filter(function (prop) { return prop.type === type; })

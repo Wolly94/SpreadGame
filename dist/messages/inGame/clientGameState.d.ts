@@ -13,6 +13,7 @@ export interface ClientCell {
     playerId: number | null;
     radius: number;
     defenderCombatAbilities: number;
+    attackerCombatAbilities: number;
 }
 export interface ClientGameState {
     timePassedInMs: number;

@@ -11,5 +11,5 @@ var skilltree = __importStar(require("./skilltree"));
 exports.skilltree = skilltree;
 var skills = __importStar(require("./skills/index"));
 exports.skills = skills;
-var perks = __importStar(require("./perks/index"));
+var perks = __importStar(require("./oldperks/index"));
 exports.perks = perks;

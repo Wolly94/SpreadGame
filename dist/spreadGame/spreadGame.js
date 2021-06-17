@@ -15,6 +15,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var events_1 = require("../skilltree/events");
+var perk_1 = require("../skilltree/perks/perk");
 var entites_1 = require("./entites");
 var cellGrowth_1 = require("./gameProps/cellGrowth");
 var basicMechanics_1 = __importDefault(require("./mechanics/basicMechanics"));
@@ -23,9 +24,9 @@ var conquerCell_1 = require("./mechanics/events/conquerCell");
 var defendCell_1 = require("./mechanics/events/defendCell");
 var fight_1 = require("./mechanics/events/fight");
 var sendUnits_1 = require("./mechanics/events/sendUnits");
+var visualizeBubbleProps_1 = require("./mechanics/events/visualizeBubbleProps");
 var visualizeCellProps_1 = require("./mechanics/events/visualizeCellProps");
 var scrapeOffMechanics_1 = __importDefault(require("./mechanics/scrapeOffMechanics"));
-var perk_1 = require("./perks/perk");
 var player_1 = require("./player");
 var getMechanics = function (settings) {
     if (settings.mechanics === "basic") {
@@ -113,23 +114,17 @@ var SpreadGameImplementation = /** @class */ (function () {
     SpreadGameImplementation.prototype.handleEvent = function (event) {
         var _this = this;
         var props = this.perks.flatMap(function (perk) {
-            return perk.triggers
-                .flatMap(function (tr) {
-                if (tr.type === "ConquerCell" &&
-                    event.type === "ConquerCell")
+            return perk.triggers.flatMap(function (tr) {
+                if (tr.type === "ConquerCell" && event.type === "ConquerCell")
                     return tr.getValue(event, _this);
-                else if (tr.type === "SendUnits" &&
-                    event.type === "SendUnits")
+                else if (tr.type === "SendUnits" && event.type === "SendUnits")
                     return tr.getValue(event, _this);
                 else if (tr.type === "CreateBubble" &&
                     event.type == "CreateBubble") {
                     return tr.getValue(event, _this);
                 }
                 else
-                    return null;
-            })
-                .filter(function (p) {
-                return p !== null;
+                    return [];
             });
         });
         this.attachProps(props);
@@ -197,7 +192,6 @@ var SpreadGameImplementation = /** @class */ (function () {
         var fightResults = [];
         var remainingBubbles = [];
         this.bubbles.forEach(function (bubble) {
-            var skills1 = _this.getSkilledPerks(bubble.playerId);
             var currentBubble = bubble;
             remainingBubbles = remainingBubbles.map(function (bubble2) {
                 if (currentBubble !== null &&
@@ -330,7 +324,6 @@ var SpreadGameImplementation = /** @class */ (function () {
         var fightResults = [];
         var remainingBubbles = [];
         this.bubbles.forEach(function (bubble) {
-            var skills1 = _this.getSkilledPerks(bubble.playerId);
             var currentBubble = bubble;
             _this.cells = _this.cells.map(function (cell) {
                 if (currentBubble != null &&
@@ -369,8 +362,11 @@ var SpreadGameImplementation = /** @class */ (function () {
                             after: { cell: __assign({}, newCell) },
                         };
                         var props = _this.handleEvent(conquerEvent);
-                        var allProps = _this.allProps(props);
-                        var conquerProps = conquerCell_1.conquerCellUtils.collect(allProps);
+                        var fromAttachedProps = _this.fromAttachedProps({
+                            type: "Cell",
+                            id: cell.id,
+                        });
+                        var conquerProps = conquerCell_1.conquerCellUtils.collect(fromAttachedProps.concat(props));
                         newCell = __assign(__assign({}, newCell), { units: newCell.units + conquerProps.additionalUnits });
                     }
                     else {
@@ -381,8 +377,11 @@ var SpreadGameImplementation = /** @class */ (function () {
                             after: { cell: __assign({}, newCell) },
                         };
                         var props = _this.handleEvent(defendEvent);
-                        var allProps = _this.allProps(props);
-                        var conquerProps = defendCell_1.defendCellUtils.collect(allProps);
+                        var fromAttachedProps = _this.fromAttachedProps({
+                            type: "Cell",
+                            id: newCell.id,
+                        });
+                        var conquerProps = defendCell_1.defendCellUtils.collect(fromAttachedProps.concat(props));
                         newCell = __assign(__assign({}, newCell), { units: newCell.units + conquerProps.additionalUnits });
                     }
                     currentBubble = newCurrentBubble;
@@ -403,15 +402,18 @@ var SpreadGameImplementation = /** @class */ (function () {
             return _this.processFight(before, after);
         });
     };
-    SpreadGameImplementation.prototype.allProps = function (props) {
+    SpreadGameImplementation.prototype.fromAttachedProps = function (entity) {
         var _this = this;
         var result = this.attachedProps
             .filter(function (prop) {
-            return prop.props.expirationInMs === "Never" ||
-                prop.props.expirationInMs >= _this.timePassed;
+            var _a;
+            return (prop.props.expirationInMs === "Never" ||
+                prop.props.expirationInMs >= _this.timePassed) &&
+                ((_a = prop.entity) === null || _a === void 0 ? void 0 : _a.type) === entity.type &&
+                prop.entity.id === entity.id;
         })
             .map(function (prop) { return prop.props.value; });
-        return result.concat(props);
+        return result;
     };
     SpreadGameImplementation.prototype.sendUnits = function (playerId, senderIds, receiverId) {
         var _this = this;
@@ -433,8 +435,11 @@ var SpreadGameImplementation = /** @class */ (function () {
                     type: "SendUnits",
                 };
                 var unsavedProps = _this.handleEvent(event_1);
-                var allProps = _this.allProps(unsavedProps);
-                var sendUnitsProps = sendUnits_1.sendUnitsUtils.collect(allProps);
+                var fromAttachedProps = _this.fromAttachedProps({
+                    type: "Cell",
+                    id: sender.id,
+                });
+                var sendUnitsProps = sendUnits_1.sendUnitsUtils.collect(fromAttachedProps.concat(unsavedProps));
                 var _a = _this.mechanics.sendBubble(sender, targetCell, _this.timePassed, sendUnitsProps), remCell = _a[0], bubble = _a[1];
                 if (bubble !== null) {
                     var createBubbleEvent = {
@@ -482,7 +487,7 @@ var SpreadGameImplementation = /** @class */ (function () {
         var gs = {
             timePassedInMs: this.timePassed,
             cells: this.cells.map(function (cell) {
-                var cellProps = visualizeCellProps_1.visualizeCellUtils.collect(_this.allProps([]));
+                var cellProps = visualizeCellProps_1.visualizeCellUtils.collect(_this.fromAttachedProps({ type: "Cell", id: cell.id }));
                 return {
                     id: cell.id,
                     playerId: cell.playerId,
@@ -490,10 +495,11 @@ var SpreadGameImplementation = /** @class */ (function () {
                     position: cell.position,
                     radius: cell.radius,
                     defenderCombatAbilities: cellProps.combatAbilityModifier,
+                    attackerCombatAbilities: cellProps.rageValue,
                 };
             }),
             bubbles: this.bubbles.map(function (bubble) {
-                var bubbleProps = visualizeCellProps_1.visualizeCellUtils.collect(_this.allProps([]));
+                var bubbleProps = visualizeBubbleProps_1.visualizeBubbleUtils.collect(_this.fromAttachedProps({ type: "Bubble", id: bubble.id }));
                 return {
                     id: bubble.id,
                     playerId: bubble.playerId,

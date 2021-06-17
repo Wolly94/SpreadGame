@@ -18,7 +18,6 @@ import {
 } from "../../messages/inGame/gameServerMessages";
 import {
   defaultSkillTree,
-  getOldPerkByName,
   SkilledPerk,
   SkillTree,
   skillTreeMethods,

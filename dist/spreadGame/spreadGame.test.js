@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var baseAttack_1 = require("../skilltree/perks/baseAttack");
 var skilltree_1 = require("../skilltree/skilltree");
 var basicMechanics_1 = require("./mechanics/basicMechanics");
-var baseAttack_1 = require("./perks/baseAttack");
 var spreadGame_1 = require("./spreadGame");
 var createMapHelper = function (cells) {
     return {

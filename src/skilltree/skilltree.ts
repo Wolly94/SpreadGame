@@ -1,6 +1,5 @@
 import { SkilledPerkData } from "../messages/inGame/clientLobbyMessage";
 import { SkillTreeData } from "../messages/inGame/gameServerMessages";
-import { OldGeneralPerk } from "./oldperks/perk";
 import { GeneralPerk, allPerks } from "./perks/perk"
 import { Attack } from "./skills/attack";
 import { Defense } from "./skills/defense";

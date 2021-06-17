@@ -2,12 +2,12 @@ import { ClientGameState } from "../messages/inGame/clientGameState";
 import { GameSettings } from "../messages/inGame/gameServerMessages";
 import SpreadReplay, { HistoryEntry, Move } from "../messages/replay/replay";
 import { AfterFightState, BeforeFightState, SpreadGameEvent } from "../skilltree/events";
+import { GeneralPerk } from "../skilltree/perks/perk";
 import Bubble from "./bubble";
 import Cell from "./cell";
 import { SpreadMap } from "./map/map";
 import { SpreadGameMechanics } from "./mechanics/commonMechanics";
-import { AttachProps, NewSpreadGameEvent, SpreadGameProps, TimedProps } from "./mechanics/events/definitions";
-import { GeneralPerk } from "./perks/perk";
+import { AttachProps, Entity, NewSpreadGameEvent, SpreadGameProps, TimedProps } from "./mechanics/events/definitions";
 import Player from "./player";
 export interface SpreadGameState {
     cells: Cell[];
@@ -50,7 +50,7 @@ export declare class SpreadGameImplementation implements SpreadGame {
     checkForFinishedFights(): void;
     processFight(before: BeforeFightState, after: AfterFightState): void;
     collideBubblesWithCells(): void;
-    allProps(props: SpreadGameProps[]): SpreadGameProps[];
+    fromAttachedProps(entity: Entity): SpreadGameProps[];
     sendUnits(playerId: number, senderIds: number[], receiverId: number): false | undefined;
     getSkilledPerk(perkName: string, playerId: number | null): import("../skilltree/skilltree").SkilledPerk | null;
     toClientGameState(): ClientGameState;

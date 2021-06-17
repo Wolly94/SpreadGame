@@ -1,0 +1,20 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var spreadGame_1 = require("../../spreadGame");
+var baseSpirit_1 = require("./baseSpirit");
+test("test base spirit", function () {
+    var rep = baseSpirit_1.BaseSpirit.replay;
+    var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);
+    game.runReplay(rep, 1500);
+    var clientState = game.toClientGameState();
+    var cell0 = clientState.cells.find(function (c) { return c.id === 0; });
+    var cell1 = clientState.cells.find(function (c) { return c.id === 1; });
+    expect(cell0 === null || cell0 === void 0 ? void 0 : cell0.playerId).toBe(0);
+    expect(cell1 === null || cell1 === void 0 ? void 0 : cell1.playerId).toBe(1);
+    game.runReplay(rep, 3500);
+    clientState = game.toClientGameState();
+    cell0 = clientState.cells.find(function (c) { return c.id === 0; });
+    cell1 = clientState.cells.find(function (c) { return c.id === 1; });
+    expect(cell1 === null || cell1 === void 0 ? void 0 : cell1.playerId).toBe(0);
+    expect(cell0 === null || cell0 === void 0 ? void 0 : cell0.playerId).toBe(0);
+});
