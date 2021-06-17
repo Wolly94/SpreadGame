@@ -48,7 +48,6 @@ import {
 } from "./mechanics/events/defendCell";
 import {
     AttachProps,
-    Entity,
     NewSpreadGameEvent,
     SpreadGameProps,
     TimedProps,
@@ -60,8 +59,18 @@ import {
     cellFightUtils,
 } from "./mechanics/events/fight";
 import { SendUnitsEvent, sendUnitsUtils } from "./mechanics/events/sendUnits";
+import { VisualizeBubbleProps, visualizeBubbleUtils } from "./mechanics/events/visualizeBubbleProps"
+import {
+    VisualizeCellProps,
+    visualizeCellUtils,
+} from "./mechanics/events/visualizeCellProps";
 import scrapeOffMechanics from "./mechanics/scrapeOffMechanics";
-import { allPerks, GeneralPerk } from "./perks/perk";
+import {
+    allPerks,
+    backupFromPerk,
+    GeneralPerk,
+    perkFromBackUp,
+} from "./perks/perk";
 import Player, { dataFromPlayer, playerFromData } from "./player";
 
 const getMechanics = (settings: GameSettings): SpreadGameMechanics => {
@@ -108,7 +117,12 @@ export class SpreadGameImplementation implements SpreadGame {
     perks: GeneralPerk[];
     attachedProps: AttachProps<TimedProps<SpreadGameProps>>[];
 
-    constructor(map: SpreadMap, gameSettings: GameSettings, players: Player[]) {
+    constructor(
+        map: SpreadMap,
+        gameSettings: GameSettings,
+        players: Player[],
+        perks?: GeneralPerk[]
+    ) {
         //const players = getPlayerIds(map);
         this.gameSettings = gameSettings;
         this.mechanics = getMechanics(gameSettings);
@@ -128,7 +142,7 @@ export class SpreadGameImplementation implements SpreadGame {
         this.timePassed = 0;
         this.pastMoves = [];
         this.eventHistory = [];
-        this.perks = allPerks;
+        this.perks = perks === undefined ? allPerks : perks;
         this.attachedProps = [];
         this.triggerStart();
     }
@@ -139,23 +153,28 @@ export class SpreadGameImplementation implements SpreadGame {
                 cell.playerId !== null
                     ? this.getSkilledPerks(cell.playerId)
                     : [];
-            const defStartProps: DefenderStartProps = defenderStartUtils.collect(
+            /*             const defStartProps: DefenderStartProps = defenderStartUtils.collect(
                 perks,
                 {},
                 this
-            );
-            return {
+            ); */
+            /*             return {
                 ...cell,
                 units: cell.units + defStartProps.additionalUnits,
-            };
+            }; */
+            return cell;
         });
     }
 
     static fromReplay(replay: SpreadReplay) {
+        const perks = replay.perks
+            .map(perkFromBackUp)
+            .filter((p): p is GeneralPerk => p !== null);
         const spreadGame = new SpreadGameImplementation(
             replay.map,
             replay.gameSettings,
-            replay.players.map(playerFromData)
+            replay.players.map(playerFromData),
+            perks
         );
         return spreadGame;
     }
@@ -163,7 +182,12 @@ export class SpreadGameImplementation implements SpreadGame {
     attachProps(props: AttachProps<TimedProps<SpreadGameProps>>[]) {
         props.forEach((prop) => {
             const existingIndex = this.attachedProps.findIndex(
-                (ap) => ap.perkName === prop.perkName
+                (ap) =>
+                    ap.perkName === prop.perkName &&
+                    ap.props.value.type === prop.props.value.type &&
+                    ap.triggerType === prop.triggerType &&
+                    ap.entity?.type === prop.entity?.type &&
+                    ap.entity?.id === prop.entity?.id
             );
             if (existingIndex >= 0) this.attachedProps[existingIndex] = prop;
             else if (prop.entity !== null) {
@@ -188,7 +212,12 @@ export class SpreadGameImplementation implements SpreadGame {
                         event.type === "SendUnits"
                     )
                         return tr.getValue(event, this);
-                    else return null;
+                    else if (
+                        tr.type === "CreateBubble" &&
+                        event.type == "CreateBubble"
+                    ) {
+                        return tr.getValue(event, this);
+                    } else return null;
                 })
                 .filter(
                     (p): p is AttachProps<TimedProps<SpreadGameProps>> =>
@@ -226,6 +255,7 @@ export class SpreadGameImplementation implements SpreadGame {
             moveHistory: this.pastMoves,
             players: this.players.map((pl) => dataFromPlayer(pl)),
             lengthInMs: this.timePassed,
+            perks: this.perks.map((p) => backupFromPerk(p)),
         };
         return rep;
     }
@@ -253,11 +283,7 @@ export class SpreadGameImplementation implements SpreadGame {
             this.mechanics.move(bubble, ms)
         );
         this.cells = this.cells.map((cell) => {
-            const perks =
-                cell.playerId !== null
-                    ? this.getSkilledPerks(cell.playerId)
-                    : [];
-            const growthProps = growthUtils.collect(perks, {}, this);
+            const growthProps = growthUtils.default;
             return this.mechanics.grow(cell, ms, growthProps);
         });
         this.collideBubblesWithCells();
@@ -270,7 +296,6 @@ export class SpreadGameImplementation implements SpreadGame {
         const fightResults: [BeforeFightState, AfterFightState][] = [];
         var remainingBubbles: (Bubble | null)[] = [];
         this.bubbles.forEach((bubble) => {
-            const skills1 = this.getSkilledPerks(bubble.playerId);
             var currentBubble: Bubble | null = bubble;
             remainingBubbles = remainingBubbles.map((bubble2) => {
                 if (
@@ -427,8 +452,6 @@ export class SpreadGameImplementation implements SpreadGame {
         const fightResults: [BeforeFightState, AfterFightState][] = [];
         var remainingBubbles: Bubble[] = [];
         this.bubbles.forEach((bubble) => {
-            const skills1 = this.getSkilledPerks(bubble.playerId);
-
             var currentBubble: Bubble | null = bubble;
             this.cells = this.cells.map((cell) => {
                 if (
@@ -605,14 +628,8 @@ export class SpreadGameImplementation implements SpreadGame {
         const gs: ClientGameState = {
             timePassedInMs: this.timePassed,
             cells: this.cells.map((cell) => {
-                const skills =
-                    cell.playerId !== null
-                        ? this.getSkilledPerks(cell.playerId)
-                        : [];
-                const fightProps: DefenderFightProps = defenderFightUtils.collect(
-                    skills,
-                    { defender: cell, attacker: null },
-                    this
+                const cellProps: VisualizeCellProps = visualizeCellUtils.collect(
+                    this.allProps([])
                 );
                 return {
                     id: cell.id,
@@ -620,16 +637,12 @@ export class SpreadGameImplementation implements SpreadGame {
                     units: cell.units,
                     position: cell.position,
                     radius: cell.radius,
-
-                    defenderCombatAbilities: fightProps.combatAbilityModifier,
+                    defenderCombatAbilities: cellProps.combatAbilityModifier,
                 };
             }),
             bubbles: this.bubbles.map((bubble) => {
-                const skills = this.getSkilledPerks(bubble.playerId);
-                const fightProps: AttackerFightProps = attackerFightUtils.collect(
-                    skills,
-                    { attacker: bubble, defender: null },
-                    this
+                const bubbleProps: VisualizeBubbleProps = visualizeBubbleUtils.collect(
+                    this.allProps([])
                 );
                 return {
                     id: bubble.id,
@@ -638,7 +651,7 @@ export class SpreadGameImplementation implements SpreadGame {
                     position: bubble.position,
                     radius: bubble.radius,
 
-                    attackCombatAbilities: fightProps.combatAbilityModifier,
+                    attackCombatAbilities: bubbleProps.combatAbilityModifier,
                 };
             }),
         };

@@ -20,14 +20,15 @@ export const fight = (
     am: BubbleFightProps,
     bm: BubbleFightProps | CellFightProps
 ): number => {
+    const factorA = 1 + am.combatAbilityModifier / 100;
+    const factorB = 1 + bm.combatAbilityModifier / 100;
     if (isCellFightProps(bm)) {
         att -= bm.membraneAbsorption;
         if (att <= 0) return -def;
     }
-    const unitDiff =
-        att * am.combatAbilityModifier - def * bm.combatAbilityModifier;
-    if (unitDiff <= 0) return unitDiff / bm.combatAbilityModifier;
-    else return unitDiff / am.combatAbilityModifier;
+    const unitDiff = att * factorA - def * factorB;
+    if (unitDiff <= 0) return unitDiff / factorB;
+    else return unitDiff / factorA;
 };
 
 // returns remaining fighters from both entities

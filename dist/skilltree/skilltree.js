@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var perk_1 = require("../spreadGame/perks/perk");
 var attack_1 = require("./skills/attack");
 var defense_1 = require("./skills/defense");
 var population_1 = require("./skills/population");
@@ -26,7 +27,7 @@ exports.skillTreeMethods = {
                 return {
                     name: skd.name,
                     perks: skd.perks
-                        .map(function (p) { return exports.getPerkByName(p.name); })
+                        .map(function (p) { return exports.getOldPerkByName(p.name); })
                         .filter(function (p) { return p !== null; }),
                 };
             }),
@@ -49,7 +50,7 @@ exports.fullSkillTree = {
     skills: [attack_1.Attack, defense_1.Defense, spirit_1.Spirit, population_1.Population],
 };
 exports.defaultSkillTree = exports.fullSkillTree;
-exports.allPerks = exports.fullSkillTree.skills.flatMap(function (sk) { return sk.perks; });
+exports.allOldPerks = exports.fullSkillTree.skills.flatMap(function (sk) { return sk.perks; });
 exports.getSkillByName = function (name) {
     var skill = exports.fullSkillTree.skills.find(function (sk) { return sk.name === name; });
     if (skill === undefined)
@@ -57,8 +58,15 @@ exports.getSkillByName = function (name) {
     else
         return skill;
 };
-exports.getPerkByName = function (name) {
-    var perk = exports.allPerks.find(function (p) { return p.name === name; });
+exports.getOldPerkByName = function (name) {
+    var perk = exports.allOldPerks.find(function (p) { return p.name === name; });
+    if (perk === undefined)
+        return null;
+    else
+        return perk;
+};
+exports.getPerkByName = function (perkName) {
+    var perk = perk_1.allPerks.find(function (p) { return p.name === perkName; });
     if (perk === undefined)
         return null;
     else

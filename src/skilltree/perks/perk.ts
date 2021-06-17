@@ -18,4 +18,4 @@ export const getValue = <T>(values: T[], level: number, defaultValue: T): T => {
     }
 };
 
-export type GeneralPerk = Perk<number | [number, number]>;
+export type OldGeneralPerk = Perk<number | [number, number]>;

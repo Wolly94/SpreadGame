@@ -12,6 +12,8 @@ var __assign = (this && this.__assign) || function () {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var __1 = require("..");
+var baseAttack_1 = require("../perks/baseAttack");
+var perk_1 = require("../perks/perk");
 var replay = {
     gameSettings: { mechanics: "basic", updateFrequencyInMs: 25 },
     lengthInMs: 5000,
@@ -28,6 +30,7 @@ var replay = {
         { id: 0, skills: [{ level: 2, name: "BaseAttack" }] },
         { id: 1, skills: [] },
     ],
+    perks: [perk_1.backupFromPerk(baseAttack_1.BaseAttackPerk.createFromValues())],
     moveHistory: [
         {
             timestamp: 0,

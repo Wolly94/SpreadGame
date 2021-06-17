@@ -76,20 +76,20 @@ test("fight with modifiers", () => {
         const fneutral = fight(
             att,
             def,
-            { combatAbilityModifier: 1, type: "BubbleFightProps" },
-            { combatAbilityModifier: 1, type: "BubbleFightProps" }
+            { combatAbilityModifier: 0, type: "BubbleFightProps" },
+            { combatAbilityModifier: 0, type: "BubbleFightProps" }
         );
         const fPlusAttack = fight(
             att,
             def,
-            { combatAbilityModifier: am, type: "BubbleFightProps" },
-            { combatAbilityModifier: 1, type: "BubbleFightProps" }
+            { combatAbilityModifier: (am-1)*100, type: "BubbleFightProps" },
+            { combatAbilityModifier: 0, type: "BubbleFightProps" }
         );
         const fPlusDefense = fight(
             att,
             def,
-            { combatAbilityModifier: 1, type: "BubbleFightProps" },
-            { combatAbilityModifier: dm, type: "BubbleFightProps" }
+            { combatAbilityModifier: 0, type: "BubbleFightProps" },
+            { combatAbilityModifier: (dm-1)*100, type: "BubbleFightProps" }
         );
         expect(fneutral).toBeCloseTo(rNeutral[index]);
         expect(fPlusAttack).toBeCloseTo(rPlusAttack[index]);

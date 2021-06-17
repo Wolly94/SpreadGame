@@ -11,7 +11,6 @@ export interface Perk<TValue> {
     values: TValue[];
     defaultValue: TValue;
     description: (level: number) => string;
-    replay: SpreadReplay;
 }
 
 export const getPerkLevel = (
@@ -48,8 +47,52 @@ export const getPerkValue = <TValue>(
     return val;
 };
 
-export type CreatePerk<TValue> = (values?: TValue[]) => Perk<TValue>;
+export interface CreatePerk<TValue> {
+    createFromValues: (values?: TValue[]) => Perk<TValue>;
+    name: string;
+    replay: SpreadReplay;
+}
 
-export type GeneralPerk = Perk<number> | Perk<[number, number]>;
+export type PerkData = number | [number, number];
 
-export const allPerks: GeneralPerk[] = [BaseAttackPerk(), RagePerk()];
+export type GeneralPerk = Perk<PerkData>;
+
+export const allPerks: GeneralPerk[] = [
+    BaseAttackPerk.createFromValues(),
+    RagePerk.createFromValues(),
+];
+
+export interface BackUpPerk {
+    name: string;
+    data:
+        | { type: "number"; val: number[] }
+        | { type: "number_number"; val: [number, number][] };
+}
+
+export const backupFromPerk = (perk: GeneralPerk): BackUpPerk => {
+    const v1 = perk.values[0];
+    const values: any = perk.values;
+    return {
+        name: perk.name,
+        data:
+            typeof v1 === "number"
+                ? { type: "number", val: values }
+                : { type: "number_number", val: values },
+    };
+};
+
+export const numberPerkCreators = [BaseAttackPerk];
+export const listPerkCreators = [RagePerk];
+
+export const perkFromBackUp = (data: BackUpPerk): GeneralPerk | null => {
+    const d = data.data;
+    if (d.type === "number") {
+        const perk = numberPerkCreators.find((p) => p.name === data.name);
+        if (perk === undefined) return null;
+        else return perk.createFromValues(d.val);
+    } else {
+        const perk = listPerkCreators.find((p) => p.name === data.name);
+        if (perk === undefined) return null;
+        else return perk.createFromValues(d.val);
+    }
+};

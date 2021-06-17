@@ -7,16 +7,18 @@ exports.calculationAccuracy = 0.01;
 exports.minOverlap = 2;
 // > 0 means attacker won, <= 0 means defender won
 exports.fight = function (att, def, am, bm) {
+    var factorA = 1 + am.combatAbilityModifier / 100;
+    var factorB = 1 + bm.combatAbilityModifier / 100;
     if (fight_1.isCellFightProps(bm)) {
         att -= bm.membraneAbsorption;
         if (att <= 0)
             return -def;
     }
-    var unitDiff = att * am.combatAbilityModifier - def * bm.combatAbilityModifier;
+    var unitDiff = att * factorA - def * factorB;
     if (unitDiff <= 0)
-        return unitDiff / bm.combatAbilityModifier;
+        return unitDiff / factorB;
     else
-        return unitDiff / am.combatAbilityModifier;
+        return unitDiff / factorA;
 };
 // returns remaining fighters from both entities
 exports.fightBubblePartial = function (att, def, am, bm, dist) {

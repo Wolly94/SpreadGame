@@ -1,13 +1,14 @@
 import { SkilledPerkData } from "../messages/inGame/clientLobbyMessage";
 import { SkillTreeData } from "../messages/inGame/gameServerMessages";
-import { GeneralPerk } from "./perks/perk";
+import { GeneralPerk } from "../spreadGame/perks/perk";
+import { OldGeneralPerk } from "./perks/perk";
 export interface SkilledPerk {
     perk: GeneralPerk;
     level: number;
 }
 export interface Skill {
     name: string;
-    perks: GeneralPerk[];
+    perks: OldGeneralPerk[];
 }
 export interface SkillTree {
     skills: Skill[];
@@ -21,6 +22,7 @@ export declare const skillTreeMethods: {
 };
 export declare const fullSkillTree: SkillTree;
 export declare const defaultSkillTree: SkillTree;
-export declare const allPerks: GeneralPerk[];
+export declare const allOldPerks: OldGeneralPerk[];
 export declare const getSkillByName: (name: string) => Skill | null;
-export declare const getPerkByName: (name: string) => GeneralPerk | null;
+export declare const getOldPerkByName: (name: string) => OldGeneralPerk | null;
+export declare const getPerkByName: (perkName: string) => GeneralPerk | null;

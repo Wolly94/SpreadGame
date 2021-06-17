@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var baseAttack_1 = require("../skilltree/perks/baseAttack");
+var skilltree_1 = require("../skilltree/skilltree");
 var basicMechanics_1 = require("./mechanics/basicMechanics");
+var baseAttack_1 = require("./perks/baseAttack");
 var spreadGame_1 = require("./spreadGame");
 var createMapHelper = function (cells) {
     return {
@@ -65,9 +66,10 @@ test("bubble collision", function () {
     var sendUnitsEvent = gameState.eventHistory.find(function (ev) { return ev.data.type === "SendBubbleEvent"; });
     var fightEvent = (_a = gameState.eventHistory.find(function (ev) { return ev.data.type === "FightEvent"; })) === null || _a === void 0 ? void 0 : _a.data;
     var defeatBubbleEvent = gameState.eventHistory.find(function (ev) { return ev.data.type === "DefeatedBubble"; });
-    expect(gameState.eventHistory.filter(function (ev) { return ev.data.type === "SendBubbleEvent"; })
-        .length).toBe(2);
-    expect(gameState.eventHistory.filter(function (ev) { return ev.data.type === "FightEvent"; }).length).toBe(1);
+    var fightEvents = gameState.eventHistory.filter(function (ev) { return ev.data.type === "FightEvent"; });
+    expect(gameState.eventHistory.filter(function (ev) { return ev.data.type === "SendBubbleEvent"; }).length).toBe(2);
+    expect(gameState.eventHistory.filter(function (ev) { return ev.data.type === "FightEvent"; })
+        .length).toBe(1);
     expect(gameState.eventHistory.filter(function (ev) { return ev.data.type === "DefeatedBubble"; })
         .length).toBe(2);
     expect(gameState.eventHistory.length).toBe(5);
@@ -78,13 +80,16 @@ test("bubble collision with attack modifier", function () {
         { id: 0, playerId: 0, position: [100, 100], radius: 50, units: 50 },
         { id: 1, playerId: 1, position: [400, 500], radius: 50, units: 50 },
     ];
+    var baseAttackPerk = skilltree_1.getPerkByName(baseAttack_1.BaseAttackPerk.name);
+    expect(baseAttackPerk).not.toBe(null);
+    var skills = baseAttackPerk !== null ? [{ level: 1, perk: baseAttackPerk }] : [];
     var gameState = new spreadGame_1.SpreadGameImplementation(createMapHelper(cells), {
         updateFrequencyInMs: 50,
         mechanics: "basic",
     }, [
         {
             id: 0,
-            skills: [{ level: 1, perk: baseAttack_1.BaseAttack }],
+            skills: skills,
         },
         { id: 1, skills: [] },
     ]);

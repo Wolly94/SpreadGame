@@ -16,16 +16,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var events_1 = require("../skilltree/events");
 var entites_1 = require("./entites");
-var attackerFight_1 = require("./gameProps/attackerFight");
 var cellGrowth_1 = require("./gameProps/cellGrowth");
-var defenderFight_1 = require("./gameProps/defenderFight");
-var defenderStart_1 = require("./gameProps/defenderStart");
 var basicMechanics_1 = __importDefault(require("./mechanics/basicMechanics"));
 var bounceMechanics_1 = __importDefault(require("./mechanics/bounceMechanics"));
 var conquerCell_1 = require("./mechanics/events/conquerCell");
 var defendCell_1 = require("./mechanics/events/defendCell");
 var fight_1 = require("./mechanics/events/fight");
 var sendUnits_1 = require("./mechanics/events/sendUnits");
+var visualizeCellProps_1 = require("./mechanics/events/visualizeCellProps");
 var scrapeOffMechanics_1 = __importDefault(require("./mechanics/scrapeOffMechanics"));
 var perk_1 = require("./perks/perk");
 var player_1 = require("./player");
@@ -43,7 +41,7 @@ var getMechanics = function (settings) {
         throw Error("unregistered mechanics");
 };
 var SpreadGameImplementation = /** @class */ (function () {
-    function SpreadGameImplementation(map, gameSettings, players) {
+    function SpreadGameImplementation(map, gameSettings, players, perks) {
         //const players = getPlayerIds(map);
         this.gameSettings = gameSettings;
         this.mechanics = getMechanics(gameSettings);
@@ -63,7 +61,7 @@ var SpreadGameImplementation = /** @class */ (function () {
         this.timePassed = 0;
         this.pastMoves = [];
         this.eventHistory = [];
-        this.perks = perk_1.allPerks;
+        this.perks = perks === undefined ? perk_1.allPerks : perks;
         this.attachedProps = [];
         this.triggerStart();
     }
@@ -73,18 +71,36 @@ var SpreadGameImplementation = /** @class */ (function () {
             var perks = cell.playerId !== null
                 ? _this.getSkilledPerks(cell.playerId)
                 : [];
-            var defStartProps = defenderStart_1.defenderStartUtils.collect(perks, {}, _this);
-            return __assign(__assign({}, cell), { units: cell.units + defStartProps.additionalUnits });
+            /*             const defStartProps: DefenderStartProps = defenderStartUtils.collect(
+                perks,
+                {},
+                this
+            ); */
+            /*             return {
+                ...cell,
+                units: cell.units + defStartProps.additionalUnits,
+            }; */
+            return cell;
         });
     };
     SpreadGameImplementation.fromReplay = function (replay) {
-        var spreadGame = new SpreadGameImplementation(replay.map, replay.gameSettings, replay.players.map(player_1.playerFromData));
+        var perks = replay.perks
+            .map(perk_1.perkFromBackUp)
+            .filter(function (p) { return p !== null; });
+        var spreadGame = new SpreadGameImplementation(replay.map, replay.gameSettings, replay.players.map(player_1.playerFromData), perks);
         return spreadGame;
     };
     SpreadGameImplementation.prototype.attachProps = function (props) {
         var _this = this;
         props.forEach(function (prop) {
-            var existingIndex = _this.attachedProps.findIndex(function (ap) { return ap.perkName === prop.perkName; });
+            var existingIndex = _this.attachedProps.findIndex(function (ap) {
+                var _a, _b, _c, _d;
+                return ap.perkName === prop.perkName &&
+                    ap.props.value.type === prop.props.value.type &&
+                    ap.triggerType === prop.triggerType &&
+                    ((_a = ap.entity) === null || _a === void 0 ? void 0 : _a.type) === ((_b = prop.entity) === null || _b === void 0 ? void 0 : _b.type) &&
+                    ((_c = ap.entity) === null || _c === void 0 ? void 0 : _c.id) === ((_d = prop.entity) === null || _d === void 0 ? void 0 : _d.id);
+            });
             if (existingIndex >= 0)
                 _this.attachedProps[existingIndex] = prop;
             else if (prop.entity !== null) {
@@ -105,6 +121,10 @@ var SpreadGameImplementation = /** @class */ (function () {
                 else if (tr.type === "SendUnits" &&
                     event.type === "SendUnits")
                     return tr.getValue(event, _this);
+                else if (tr.type === "CreateBubble" &&
+                    event.type == "CreateBubble") {
+                    return tr.getValue(event, _this);
+                }
                 else
                     return null;
             })
@@ -141,6 +161,7 @@ var SpreadGameImplementation = /** @class */ (function () {
             moveHistory: this.pastMoves,
             players: this.players.map(function (pl) { return player_1.dataFromPlayer(pl); }),
             lengthInMs: this.timePassed,
+            perks: this.perks.map(function (p) { return perk_1.backupFromPerk(p); }),
         };
         return rep;
     };
@@ -163,10 +184,7 @@ var SpreadGameImplementation = /** @class */ (function () {
             return _this.mechanics.move(bubble, ms);
         });
         this.cells = this.cells.map(function (cell) {
-            var perks = cell.playerId !== null
-                ? _this.getSkilledPerks(cell.playerId)
-                : [];
-            var growthProps = cellGrowth_1.growthUtils.collect(perks, {}, _this);
+            var growthProps = cellGrowth_1.growthUtils.default;
             return _this.mechanics.grow(cell, ms, growthProps);
         });
         this.collideBubblesWithCells();
@@ -464,29 +482,25 @@ var SpreadGameImplementation = /** @class */ (function () {
         var gs = {
             timePassedInMs: this.timePassed,
             cells: this.cells.map(function (cell) {
-                var skills = cell.playerId !== null
-                    ? _this.getSkilledPerks(cell.playerId)
-                    : [];
-                var fightProps = defenderFight_1.defenderFightUtils.collect(skills, { defender: cell, attacker: null }, _this);
+                var cellProps = visualizeCellProps_1.visualizeCellUtils.collect(_this.allProps([]));
                 return {
                     id: cell.id,
                     playerId: cell.playerId,
                     units: cell.units,
                     position: cell.position,
                     radius: cell.radius,
-                    defenderCombatAbilities: fightProps.combatAbilityModifier,
+                    defenderCombatAbilities: cellProps.combatAbilityModifier,
                 };
             }),
             bubbles: this.bubbles.map(function (bubble) {
-                var skills = _this.getSkilledPerks(bubble.playerId);
-                var fightProps = attackerFight_1.attackerFightUtils.collect(skills, { attacker: bubble, defender: null }, _this);
+                var bubbleProps = visualizeCellProps_1.visualizeCellUtils.collect(_this.allProps([]));
                 return {
                     id: bubble.id,
                     playerId: bubble.playerId,
                     units: bubble.units,
                     position: bubble.position,
                     radius: bubble.radius,
-                    attackCombatAbilities: fightProps.combatAbilityModifier,
+                    attackCombatAbilities: bubbleProps.combatAbilityModifier,
                 };
             }),
         };

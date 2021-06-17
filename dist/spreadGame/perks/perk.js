@@ -22,4 +22,36 @@ exports.getPerkValue = function (game, perkName, playerId, values, defaultValue)
     var val = exports.getPerkValueHelper(lvl, values, defaultValue);
     return val;
 };
-exports.allPerks = [baseAttack_1.BaseAttackPerk(), rage_1.RagePerk()];
+exports.allPerks = [
+    baseAttack_1.BaseAttackPerk.createFromValues(),
+    rage_1.RagePerk.createFromValues(),
+];
+exports.backupFromPerk = function (perk) {
+    var v1 = perk.values[0];
+    var values = perk.values;
+    return {
+        name: perk.name,
+        data: typeof v1 === "number"
+            ? { type: "number", val: values }
+            : { type: "number_number", val: values },
+    };
+};
+exports.numberPerkCreators = [baseAttack_1.BaseAttackPerk];
+exports.listPerkCreators = [rage_1.RagePerk];
+exports.perkFromBackUp = function (data) {
+    var d = data.data;
+    if (d.type === "number") {
+        var perk = exports.numberPerkCreators.find(function (p) { return p.name === data.name; });
+        if (perk === undefined)
+            return null;
+        else
+            return perk.createFromValues(d.val);
+    }
+    else {
+        var perk = exports.listPerkCreators.find(function (p) { return p.name === data.name; });
+        if (perk === undefined)
+            return null;
+        else
+            return perk.createFromValues(d.val);
+    }
+};

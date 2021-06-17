@@ -1,89 +1,96 @@
 import { SkilledPerkData } from "../messages/inGame/clientLobbyMessage";
 import { SkillTreeData } from "../messages/inGame/gameServerMessages";
-import { GeneralPerk } from "./perks/perk";
+import { allPerks, GeneralPerk } from "../spreadGame/perks/perk";
+import { OldGeneralPerk } from "./perks/perk";
 import { Attack } from "./skills/attack";
 import { Defense } from "./skills/defense";
 import { Population } from "./skills/population";
 import { Spirit } from "./skills/spirit";
 
 export interface SkilledPerk {
-  perk: GeneralPerk;
-  level: number;
+    perk: GeneralPerk;
+    level: number;
 }
 
 export interface Skill {
-  name: string;
-  perks: GeneralPerk[];
+    name: string;
+    perks: OldGeneralPerk[];
 }
 
 export interface SkillTree {
-  skills: Skill[];
+    skills: Skill[];
 }
 
 export const validSkillTree = (
-  skillTree: SkillTree,
-  skilledPerks: SkilledPerk[]
+    skillTree: SkillTree,
+    skilledPerks: SkilledPerk[]
 ) => {
-  return true;
+    return true;
 };
 
 export const skillTreeMethods = {
-  toData: (skillTree: SkillTree): SkillTreeData => {
-    return {
-      skills: skillTree.skills.map((sk) => {
+    toData: (skillTree: SkillTree): SkillTreeData => {
         return {
-          name: sk.name,
-          perks: sk.perks.map((p) => {
-            return { name: p.name };
-          }),
+            skills: skillTree.skills.map((sk) => {
+                return {
+                    name: sk.name,
+                    perks: sk.perks.map((p) => {
+                        return { name: p.name };
+                    }),
+                };
+            }),
         };
-      }),
-    };
-  },
-  fromData: (skillTreeData: SkillTreeData): SkillTree => {
-    return {
-      skills: skillTreeData.skills.map((skd) => {
+    },
+    fromData: (skillTreeData: SkillTreeData): SkillTree => {
         return {
-          name: skd.name,
-          perks: skd.perks
-            .map((p) => getPerkByName(p.name))
-            .filter((p): p is GeneralPerk => p !== null),
+            skills: skillTreeData.skills.map((skd) => {
+                return {
+                    name: skd.name,
+                    perks: skd.perks
+                        .map((p) => getOldPerkByName(p.name))
+                        .filter((p): p is OldGeneralPerk => p !== null),
+                };
+            }),
         };
-      }),
-    };
-  },
-  toSkilledPerks: (skilledPerkData: SkilledPerkData[]): SkilledPerk[] => {
-    return skilledPerkData
-      .map((spd) => {
-        return { level: spd.level, perk: getPerkByName(spd.name) };
-      })
-      .filter((v): v is SkilledPerk => v.perk !== null);
-  },
-  toSkilledPerkData: (skilledPerks: SkilledPerk[]): SkilledPerkData[] => {
-    return skilledPerks.map((sp) => {
-      return { level: sp.level, name: sp.perk.name };
-    });
-  },
+    },
+    toSkilledPerks: (skilledPerkData: SkilledPerkData[]): SkilledPerk[] => {
+        return skilledPerkData
+            .map((spd) => {
+                return { level: spd.level, perk: getPerkByName(spd.name) };
+            })
+            .filter((v): v is SkilledPerk => v.perk !== null);
+    },
+    toSkilledPerkData: (skilledPerks: SkilledPerk[]): SkilledPerkData[] => {
+        return skilledPerks.map((sp) => {
+            return { level: sp.level, name: sp.perk.name };
+        });
+    },
 };
 
 export const fullSkillTree: SkillTree = {
-  skills: [Attack, Defense, Spirit, Population],
+    skills: [Attack, Defense, Spirit, Population],
 };
 
 export const defaultSkillTree: SkillTree = fullSkillTree;
 
-export const allPerks: GeneralPerk[] = fullSkillTree.skills.flatMap(
-  (sk) => sk.perks
+export const allOldPerks: OldGeneralPerk[] = fullSkillTree.skills.flatMap(
+    (sk) => sk.perks
 );
 
 export const getSkillByName = (name: string) => {
-  const skill = fullSkillTree.skills.find((sk) => sk.name === name);
-  if (skill === undefined) return null;
-  else return skill;
+    const skill = fullSkillTree.skills.find((sk) => sk.name === name);
+    if (skill === undefined) return null;
+    else return skill;
 };
 
-export const getPerkByName = (name: string) => {
-  const perk = allPerks.find((p) => p.name === name);
-  if (perk === undefined) return null;
-  else return perk;
+export const getOldPerkByName = (name: string) => {
+    const perk = allOldPerks.find((p) => p.name === name);
+    if (perk === undefined) return null;
+    else return perk;
+};
+
+export const getPerkByName = (perkName: string) => {
+    const perk = allPerks.find((p) => p.name === perkName);
+    if (perk === undefined) return null;
+    else return perk;
 };

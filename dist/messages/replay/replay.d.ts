@@ -1,4 +1,5 @@
 import { SpreadMap } from "../../spreadGame/map/map";
+import { BackUpPerk } from "../../spreadGame/perks/perk";
 import { PlayerData } from "../../spreadGame/player";
 import { GameSettings } from "../inGame/gameServerMessages";
 export interface SendUnitsMove {
@@ -18,6 +19,7 @@ interface SpreadReplay {
     map: SpreadMap;
     gameSettings: GameSettings;
     moveHistory: HistoryEntry<Move>[];
+    perks: BackUpPerk[];
     players: PlayerData[];
     lengthInMs: number;
 }
