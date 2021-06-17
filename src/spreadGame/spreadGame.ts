@@ -54,6 +54,7 @@ import {
     startGameCellUtils,
     StartGameEvent,
 } from "./mechanics/events/startGame";
+import { TimeStepEvent } from "./mechanics/events/timeStep";
 import {
     VisualizeBubbleProps,
     visualizeBubbleUtils,
@@ -198,6 +199,11 @@ export class SpreadGameImplementation implements SpreadGame {
                 if (tr.type === "StartGame" && event.type === "StartGame") {
                     return tr.getValue(event, this);
                 } else if (
+                    tr.type === "TimeStep" &&
+                    event.type === "TimeStep"
+                ) {
+                    return tr.getValue(event, this);
+                } else if (
                     tr.type === "ConquerCell" &&
                     event.type === "ConquerCell"
                 )
@@ -267,6 +273,11 @@ export class SpreadGameImplementation implements SpreadGame {
     }
 
     step(ms: number) {
+        const stepEvent: TimeStepEvent = {
+            type: "TimeStep",
+            ms: ms,
+        };
+        this.handleEvent(stepEvent);
         this.bubbles = this.bubbles.map((bubble) =>
             this.mechanics.move(bubble, ms)
         );
