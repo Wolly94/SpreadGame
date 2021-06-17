@@ -1,6 +1,5 @@
-import Bubble from "../../bubble";
 import Cell from "../../cell";
-import { AttachProps, Effect, PropUtils, SpreadGameProps } from "./definitions";
+import { Effect, PropUtils } from "./definitions";
 
 const type = "SendUnits";
 

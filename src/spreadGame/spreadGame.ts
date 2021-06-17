@@ -51,6 +51,10 @@ import {
 } from "./mechanics/events/fight";
 import { SendUnitsEvent, sendUnitsUtils } from "./mechanics/events/sendUnits";
 import {
+    startGameCellUtils,
+    StartGameEvent,
+} from "./mechanics/events/startGame";
+import {
     VisualizeBubbleProps,
     visualizeBubbleUtils,
 } from "./mechanics/events/visualizeBubbleProps";
@@ -132,25 +136,27 @@ export class SpreadGameImplementation implements SpreadGame {
         this.eventHistory = [];
         this.perks = perks === undefined ? allPerks : perks;
         this.attachedProps = [];
+
         this.triggerStart();
     }
 
     triggerStart() {
+        const startEvent: StartGameEvent = {
+            type: "StartGame",
+        };
+        const props = this.handleEvent(startEvent);
         this.cells = this.cells.map((cell) => {
-            const perks =
-                cell.playerId !== null
-                    ? this.getSkilledPerks(cell.playerId)
-                    : [];
-            /*             const defStartProps: DefenderStartProps = defenderStartUtils.collect(
-                perks,
-                {},
-                this
-            ); */
-            /*             return {
+            const attProps = this.fromAttachedProps({
+                type: "Cell",
+                id: cell.id,
+            });
+            const startCellProps = startGameCellUtils.collect(
+                attProps.concat(props)
+            );
+            return {
                 ...cell,
-                units: cell.units + defStartProps.additionalUnits,
-            }; */
-            return cell;
+                units: cell.units + startCellProps.additionalUnits,
+            };
         });
     }
 
@@ -189,7 +195,12 @@ export class SpreadGameImplementation implements SpreadGame {
     handleEvent(event: NewSpreadGameEvent) {
         const props = this.perks.flatMap((perk) => {
             return perk.triggers.flatMap((tr) => {
-                if (tr.type === "ConquerCell" && event.type === "ConquerCell")
+                if (tr.type === "StartGame" && event.type === "StartGame") {
+                    return tr.getValue(event, this);
+                } else if (
+                    tr.type === "ConquerCell" &&
+                    event.type === "ConquerCell"
+                )
                     return tr.getValue(event, this);
                 else if (tr.type === "SendUnits" && event.type === "SendUnits")
                     return tr.getValue(event, this);

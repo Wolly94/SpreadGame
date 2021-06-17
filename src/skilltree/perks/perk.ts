@@ -2,6 +2,7 @@ import SpreadReplay from "../../messages/replay/replay";
 import { SpreadGameImplementation } from "../../spreadGame";
 import { SpreadGameEffect } from "../../spreadGame/mechanics/events/definitions";
 import { BaseAttackPerk } from "./baseAttack";
+import { BaseDefensePerk } from "./baseDefense";
 import { BerserkPerk } from "./berserk";
 import { RagePerk } from "./rage";
 import { SlaveryPerk } from "./slavery";
@@ -83,9 +84,10 @@ export const allPerks: GeneralPerk[] = [
     RagePerk.createFromValues(),
     BerserkPerk.createFromValues(),
     SlaveryPerk.createFromValues(),
+    BaseDefensePerk.createFromValues(),
 ];
 
-export const numberPerkCreators = [BaseAttackPerk, SlaveryPerk];
+export const numberPerkCreators = [BaseAttackPerk, SlaveryPerk, BaseDefensePerk];
 export const listPerkCreators = [RagePerk, BerserkPerk];
 
 export const perkFromBackUp = (data: BackUpPerk): GeneralPerk | null => {

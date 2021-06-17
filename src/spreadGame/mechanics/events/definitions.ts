@@ -16,6 +16,7 @@ import {
 } from "./defendCell";
 import { BubbleFightProps, CellFightProps } from "./fight";
 import { SendUnitsEffect, SendUnitsEvent, SendUnitsProps } from "./sendUnits";
+import { StartGameCellProps, StartGameEffect, StartGameEvent } from "./startGame";
 import { VisualizeBubbleProps } from "./visualizeBubbleProps";
 import { VisualizeCellProps } from "./visualizeCellProps";
 
@@ -25,11 +26,6 @@ export type PropUtils<TProps> = {
     default: TProps;
 };
 
-export interface StartGameEvent {
-    type: "StartGameEvent";
-    map: SpreadMap;
-}
-
 export type NewSpreadGameEvent =
     | StartGameEvent
     | CreateBubbleEvent
@@ -38,6 +34,7 @@ export type NewSpreadGameEvent =
     | DefendCellEvent;
 
 export type SpreadGameProps =
+    | StartGameCellProps
     | ConquerCellProps
     | SendUnitsProps
     | BubbleFightProps
@@ -76,6 +73,7 @@ export interface Effect<TEvent> {
 }
 
 export type SpreadGameEffect =
+    | StartGameEffect
     | ConquerCellEffect
     | SendUnitsEffect
     | CreateBubbleEffect
