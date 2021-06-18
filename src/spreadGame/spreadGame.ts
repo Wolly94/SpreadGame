@@ -208,6 +208,11 @@ export class SpreadGameImplementation implements SpreadGame {
                     event.type === "ConquerCell"
                 )
                     return tr.getValue(event, this);
+                else if (
+                    tr.type === "DefendCell" &&
+                    event.type === "DefendCell"
+                )
+                    return tr.getValue(event, this);
                 else if (tr.type === "SendUnits" && event.type === "SendUnits")
                     return tr.getValue(event, this);
                 else if (
@@ -527,12 +532,12 @@ export class SpreadGameImplementation implements SpreadGame {
                             type: "Cell",
                             id: newCell.id,
                         });
-                        const conquerProps = defendCellUtils.collect(
+                        const defendProps = defendCellUtils.collect(
                             fromAttachedProps.concat(props)
                         );
                         newCell = {
                             ...newCell,
-                            units: newCell.units + conquerProps.additionalUnits,
+                            units: newCell.units + defendProps.additionalUnits,
                         };
                     }
                     currentBubble = newCurrentBubble;

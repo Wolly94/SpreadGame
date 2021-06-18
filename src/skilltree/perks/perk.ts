@@ -4,17 +4,18 @@ import { SpreadGameEffect } from "../../spreadGame/mechanics/events/definitions"
 import { BaseAttackPerk } from "./baseAttack";
 import { BaseDefensePerk } from "./baseDefense";
 import { BerserkPerk } from "./berserk";
+import { LootsOfVictoryPerk } from "./lootsOfVictory";
 import { PreparationPerk } from "./preparation";
 import { RagePerk } from "./rage";
 import { SlaveryPerk } from "./slavery";
 
 export interface Perk<TValue> {
-    displayName: string;
     name: string;
-    triggers: SpreadGameEffect[];
+    displayName: string;
     values: TValue[];
     defaultValue: TValue;
     description: (level: number) => string;
+    triggers: SpreadGameEffect[];
 }
 
 export const getPerkLevel = (
@@ -87,12 +88,14 @@ export const allPerks: GeneralPerk[] = [
     SlaveryPerk.createFromValues(),
     BaseDefensePerk.createFromValues(),
     PreparationPerk.createFromValues(),
+    LootsOfVictoryPerk.createFromValues(),
 ];
 
 export const numberPerkCreators = [
     BaseAttackPerk,
     SlaveryPerk,
     BaseDefensePerk,
+    LootsOfVictoryPerk,
 ];
 export const listPerkCreators = [RagePerk, BerserkPerk, PreparationPerk];
 
