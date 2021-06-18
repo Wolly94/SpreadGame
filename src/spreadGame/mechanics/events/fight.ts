@@ -1,6 +1,5 @@
-import Bubble from "../../bubble";
-import Cell from "../../cell";
-import { PropUtils } from "./definitions";
+import { BeforeFightState } from "../../../skilltree/events"
+import { Effect, PropUtils } from "./definitions";
 
 const bubbleType = "BubbleFightProps";
 const cellType = "CellFightProps";
@@ -66,3 +65,12 @@ export const cellFightUtils: PropUtils<CellFightProps> = {
 export const isCellFightProps = (props: any): props is CellFightProps => {
     return props.membraneAbsorption !== undefined;
 };
+
+export interface BeforeFightEvent {
+    type: "BeforeFightEvent";
+    before: BeforeFightState;
+}
+
+export interface BeforeFightEffect extends Effect<BeforeFightEvent> {
+    type: BeforeFightEvent["type"];
+}

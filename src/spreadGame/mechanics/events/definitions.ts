@@ -14,7 +14,12 @@ import {
     DefendCellEvent,
     DefendCellProps,
 } from "./defendCell";
-import { BubbleFightProps, CellFightProps } from "./fight";
+import {
+    BeforeFightEffect,
+    BeforeFightEvent,
+    BubbleFightProps,
+    CellFightProps,
+} from "./fight";
 import { SendUnitsEffect, SendUnitsEvent, SendUnitsProps } from "./sendUnits";
 import {
     StartGameCellProps,
@@ -37,7 +42,8 @@ export type NewSpreadGameEvent =
     | CreateBubbleEvent
     | SendUnitsEvent
     | ConquerCellEvent
-    | DefendCellEvent;
+    | DefendCellEvent
+    | BeforeFightEvent;
 
 export type SpreadGameProps =
     | StartGameCellProps
@@ -84,7 +90,8 @@ export type SpreadGameEffect =
     | ConquerCellEffect
     | SendUnitsEffect
     | CreateBubbleEffect
-    | DefendCellEffect;
+    | DefendCellEffect
+    | BeforeFightEffect;
 
 /*
 
