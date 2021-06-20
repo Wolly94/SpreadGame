@@ -24,7 +24,7 @@ export const KamikazePerk: CreatePerk<number> = {
             description: (lvl) =>
                 "When a cell is lost only " +
                 formatDescription(values, (val) => val.toString() + "%", "/") +
-                +" of the conquering army remains.",
+                " of the conquering army remains.",
             triggers: [
                 {
                     type: "ConquerCell",
