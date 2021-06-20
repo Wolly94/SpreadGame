@@ -7,9 +7,15 @@ exports.visualizeCellUtils = {
             type: type,
             combatAbilityModifier: a.combatAbilityModifier + b.combatAbilityModifier,
             rageValue: a.rageValue + b.rageValue,
+            membraneAbsorption: a.membraneAbsorption + b.membraneAbsorption,
         };
     },
-    default: { type: type, combatAbilityModifier: 0, rageValue: 0 },
+    default: {
+        type: type,
+        combatAbilityModifier: 0,
+        rageValue: 0,
+        membraneAbsorption: 0,
+    },
     collect: function (props) {
         return props
             .filter(function (prop) { return prop.type === type; })

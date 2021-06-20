@@ -14,7 +14,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var spreadGame_1 = require("../../spreadGame");
 var lootsOfVictory_1 = require("./lootsOfVictory");
 test("test lootsOfVictory", function () {
-    var rep = lootsOfVictory_1.LootsOfVictory.replay;
+    var rep = lootsOfVictory_1.LootsOfVictoryPerk.replay;
     var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);
     game.runReplay(rep, 5000);
     var cstate = game.toClientGameState();
@@ -22,7 +22,7 @@ test("test lootsOfVictory", function () {
     expect(cell === null || cell === void 0 ? void 0 : cell.playerId).toBe(0);
 });
 test("test no lootsOfVictory", function () {
-    var rep = __assign(__assign({}, lootsOfVictory_1.LootsOfVictory.replay), { players: [
+    var rep = __assign(__assign({}, lootsOfVictory_1.LootsOfVictoryPerk.replay), { players: [
             { id: 0, skills: [] },
             { id: 1, skills: [] },
         ] });

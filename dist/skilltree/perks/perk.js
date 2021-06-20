@@ -1,7 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var baseAttack_1 = require("./baseAttack");
+var baseDefense_1 = require("./baseDefense");
+var basePopulation_1 = require("./basePopulation");
 var berserk_1 = require("./berserk");
+var fertileGrounds_1 = require("./fertileGrounds");
+var lootsOfVictory_1 = require("./lootsOfVictory");
+var membrane_1 = require("./membrane");
+var preparation_1 = require("./preparation");
 var rage_1 = require("./rage");
 var slavery_1 = require("./slavery");
 exports.getPerkLevel = function (game, perkName, playerId) {
@@ -35,13 +41,30 @@ exports.backupFromPerk = function (perk) {
     };
 };
 exports.allPerks = [
+    //Attack
     baseAttack_1.BaseAttackPerk.createFromValues(),
     rage_1.RagePerk.createFromValues(),
     berserk_1.BerserkPerk.createFromValues(),
     slavery_1.SlaveryPerk.createFromValues(),
+    //Defense
+    baseDefense_1.BaseDefensePerk.createFromValues(),
+    preparation_1.PreparationPerk.createFromValues(),
+    lootsOfVictory_1.LootsOfVictoryPerk.createFromValues(),
+    membrane_1.MembranePerk.createFromValues(),
+    //Population
+    basePopulation_1.BasePopulationPerk.createFromValues(),
+    fertileGrounds_1.FertileGroundsPerk.createFromValues(),
 ];
-exports.numberPerkCreators = [baseAttack_1.BaseAttackPerk, slavery_1.SlaveryPerk];
-exports.listPerkCreators = [rage_1.RagePerk, berserk_1.BerserkPerk];
+exports.numberPerkCreators = [
+    baseAttack_1.BaseAttackPerk,
+    slavery_1.SlaveryPerk,
+    baseDefense_1.BaseDefensePerk,
+    lootsOfVictory_1.LootsOfVictoryPerk,
+    membrane_1.MembranePerk,
+    basePopulation_1.BasePopulationPerk,
+    fertileGrounds_1.FertileGroundsPerk,
+];
+exports.listPerkCreators = [rage_1.RagePerk, berserk_1.BerserkPerk, preparation_1.PreparationPerk];
 exports.perkFromBackUp = function (data) {
     var d = data.data;
     if (d.type === "number") {

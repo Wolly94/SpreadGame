@@ -13,9 +13,9 @@ var __assign = (this && this.__assign) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var spreadGame_1 = require("../../spreadGame");
 var basePopulation_1 = require("./basePopulation");
-var testHelper_1 = require("./testHelper");
+var testHelper_1 = require("../oldperks/testHelper");
 test("test base population", function () {
-    var rep = basePopulation_1.BasePopulation.replay;
+    var rep = basePopulation_1.BasePopulationPerk.replay;
     var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);
     game.runReplay(rep, rep.lengthInMs);
     var cstate = game.toClientGameState();
@@ -23,9 +23,13 @@ test("test base population", function () {
     var cell1 = cstate.cells.find(function (c) { return c.id === 1; });
     expect(cell0 === null || cell0 === void 0 ? void 0 : cell0.units).toBeGreaterThan(51);
     expect(cell1 === null || cell1 === void 0 ? void 0 : cell1.units).toBe(50);
+    game.run(100000, 25);
+    cstate = game.toClientGameState();
+    cell0 = cstate.cells.find(function (c) { return c.id === 0; });
+    expect(cell0 === null || cell0 === void 0 ? void 0 : cell0.units).toBe(80);
 });
 test("test no base population", function () {
-    var rep = __assign(__assign({}, basePopulation_1.BasePopulation.replay), { players: testHelper_1.playersWithoutSkills(2) });
+    var rep = __assign(__assign({}, basePopulation_1.BasePopulationPerk.replay), { players: testHelper_1.playersWithoutSkills(2) });
     var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);
     game.runReplay(rep, rep.lengthInMs);
     var cstate = game.toClientGameState();

@@ -2,8 +2,6 @@ import Bubble, { createBubble, setUnits } from "../bubble";
 import Cell from "../cell";
 import { radiusToUnits } from "../common";
 import { distance } from "../entites";
-import { AttackerFightProps } from "../gameProps/attackerFight";
-import { DefenderFightProps } from "../gameProps/defenderFight";
 import basicMechanics from "./basicMechanics";
 import {
     calculationAccuracy,
@@ -15,6 +13,7 @@ import {
     SpreadGameMechanics,
     takeOverCell,
 } from "./commonMechanics";
+import { BubbleFightProps } from "./events/fight";
 
 export const cellFighters = (bubbleUnits: number, bubbleSpace: number) => {
     const fighters = bubbleUnits - radiusToUnits(bubbleSpace);
@@ -31,8 +30,8 @@ const scrapeOffMechanics: SpreadGameMechanics = {
     collideBubble: (
         bubble1: Bubble,
         bubble2: Bubble,
-        f1: AttackerFightProps,
-        f2: AttackerFightProps
+        f1: BubbleFightProps,
+        f2: BubbleFightProps
     ) => {
         if (!scrapeOffMechanics.collidesWithBubble(bubble1, bubble2))
             return [{ ...bubble1 }, { ...bubble2 }];

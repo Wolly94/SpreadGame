@@ -1,2 +1,2 @@
-import { Perk } from "./perk";
-export declare const BaseDefense: Perk<number>;
+import { CreatePerk } from "./perk";
+export declare const BaseDefensePerk: CreatePerk<number>;

@@ -2,12 +2,12 @@ import SpreadReplay from "../../messages/replay/replay";
 import { SpreadGameImplementation } from "../../spreadGame";
 import { SpreadGameEffect } from "../../spreadGame/mechanics/events/definitions";
 export interface Perk<TValue> {
-    displayName: string;
     name: string;
-    triggers: SpreadGameEffect[];
+    displayName: string;
     values: TValue[];
     defaultValue: TValue;
     description: (level: number) => string;
+    triggers: SpreadGameEffect[];
 }
 export declare const getPerkLevel: (game: SpreadGameImplementation, perkName: string, playerId: number | null) => number;
 export declare const getPerkValueHelper: <TValue>(level: number, values: TValue[], defaultValue: TValue) => TValue;

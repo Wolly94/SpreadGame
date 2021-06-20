@@ -1,2 +1,2 @@
-import { Perk } from "./perk";
-export declare const FertileGrounds: Perk<number>;
+import { CreatePerk } from "./perk";
+export declare const FertileGroundsPerk: CreatePerk<number>;

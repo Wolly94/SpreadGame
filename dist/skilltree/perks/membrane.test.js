@@ -12,18 +12,52 @@ var __assign = (this && this.__assign) || function () {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var spreadGame_1 = require("../../spreadGame");
+var common_1 = require("../../spreadGame/common");
 var membrane_1 = require("./membrane");
 test("test membrane", function () {
-    var rep = __assign(__assign({}, membrane_1.Membrane.replay), { gameSettings: { mechanics: "scrapeoff", updateFrequencyInMs: 25 } });
+    var rep = __assign(__assign({}, membrane_1.MembranePerk.replay), { gameSettings: { mechanics: "scrapeoff", updateFrequencyInMs: 25 } });
     var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);
     game.runReplay(rep, rep.lengthInMs);
     var cstate = game.toClientGameState();
     var cell = cstate.cells.find(function (c) { return c.id === 0; });
     expect(cell === null || cell === void 0 ? void 0 : cell.playerId).toBe(0);
+    expect(cell === null || cell === void 0 ? void 0 : cell.membraneValue).toBeGreaterThan(5);
     expect(cell === null || cell === void 0 ? void 0 : cell.units).toBeLessThan(25);
 });
+test("membrane visual", function () {
+    var rep = __assign(__assign({}, membrane_1.MembranePerk.replay), { map: __assign(__assign({}, membrane_1.MembranePerk.replay.map), { cells: [
+                {
+                    id: 0,
+                    playerId: 0,
+                    position: [100, 100],
+                    radius: common_1.unitsToRadius(50),
+                    units: 100,
+                },
+                {
+                    id: 1,
+                    playerId: 1,
+                    position: [400, 100],
+                    radius: common_1.unitsToRadius(40),
+                    units: 40,
+                },
+            ] }), moveHistory: [
+            {
+                timestamp: 0,
+                data: {
+                    type: "sendunitsmove",
+                    data: { senderIds: [0], receiverId: 1, playerId: 0 },
+                },
+            },
+        ] });
+    var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);
+    game.runReplay(rep, rep.lengthInMs);
+    var cstate = game.toClientGameState();
+    var cell1 = cstate.cells.find(function (c) { return c.id === 1; });
+    expect(cell1 === null || cell1 === void 0 ? void 0 : cell1.playerId).toBe(0);
+    expect(cell1 === null || cell1 === void 0 ? void 0 : cell1.membraneValue).toBeGreaterThan(5);
+});
 test("test no membrane", function () {
-    var rep = __assign(__assign({}, membrane_1.Membrane.replay), { players: [
+    var rep = __assign(__assign({}, membrane_1.MembranePerk.replay), { players: [
             { id: 0, skills: [] },
             { id: 1, skills: [] },
         ] });

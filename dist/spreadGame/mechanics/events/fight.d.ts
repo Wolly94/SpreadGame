@@ -1,4 +1,5 @@
-import { PropUtils } from "./definitions";
+import { BeforeFightState } from "../../../skilltree/events";
+import { Effect, PropUtils } from "./definitions";
 export interface BubbleFightProps {
     type: "BubbleFightProps";
     combatAbilityModifier: number;
@@ -11,3 +12,10 @@ export interface CellFightProps {
 }
 export declare const cellFightUtils: PropUtils<CellFightProps>;
 export declare const isCellFightProps: (props: any) => props is CellFightProps;
+export interface BeforeFightEvent {
+    type: "BeforeFightEvent";
+    before: BeforeFightState;
+}
+export interface BeforeFightEffect extends Effect<BeforeFightEvent> {
+    type: BeforeFightEvent["type"];
+}

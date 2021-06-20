@@ -1,19 +1,13 @@
-import Bubble, { setUnits } from "../bubble";
-import Cell from "../cell";
-import { distance } from "../entites";
-import { AttackerFightProps } from "../gameProps/attackerFight";
-import { DefenderFightProps } from "../gameProps/defenderFight";
-import basicMechanics from "./basicMechanics";
+import Bubble, { setUnits } from "../bubble"
+import Cell from "../cell"
+import { distance } from "../entites"
+import basicMechanics from "./basicMechanics"
 import {
-    calculationAccuracy,
-    fight,
-    minOverlap,
-    overlap,
-    reinforceCell,
+    fight, reinforceCell,
     SpreadGameMechanics,
-    takeOverCell,
-} from "./commonMechanics";
-import scrapeOffMechanics from "./scrapeOffMechanics";
+    takeOverCell
+} from "./commonMechanics"
+import scrapeOffMechanics from "./scrapeOffMechanics"
 
 const minUnitsOnBounce = 1;
 

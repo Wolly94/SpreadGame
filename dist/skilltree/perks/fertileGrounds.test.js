@@ -12,11 +12,9 @@ var __assign = (this && this.__assign) || function () {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var spreadGame_1 = require("../../spreadGame");
-var basePopulation_1 = require("./basePopulation");
 var fertileGrounds_1 = require("./fertileGrounds");
-var testHelper_1 = require("./testHelper");
 test("test fertile grounds", function () {
-    var rep = fertileGrounds_1.FertileGrounds.replay;
+    var rep = fertileGrounds_1.FertileGroundsPerk.replay;
     var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);
     game.runReplay(rep, rep.lengthInMs);
     var cstate = game.toClientGameState();
@@ -28,7 +26,7 @@ test("test fertile grounds", function () {
         expect(cell0 === null || cell0 === void 0 ? void 0 : cell0.units).toBeGreaterThan(cell1.units);
 });
 test("test no fertile grounds", function () {
-    var rep = __assign(__assign({}, basePopulation_1.BasePopulation.replay), { players: testHelper_1.playersWithoutSkills(2) });
+    var rep = __assign(__assign({}, fertileGrounds_1.FertileGroundsPerk.replay), { perks: [] });
     var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);
     game.runReplay(rep, rep.lengthInMs);
     var cstate = game.toClientGameState();

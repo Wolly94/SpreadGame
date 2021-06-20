@@ -1,5 +1,5 @@
+import { BackUpPerk } from "../../skilltree/perks/perk";
 import { SpreadMap } from "../../spreadGame/map/map";
-import { BackUpPerk } from "../../spreadGame/perks/perk";
 import { PlayerData } from "../../spreadGame/player";
 import { GameSettings } from "../inGame/gameServerMessages";
 export interface SendUnitsMove {

@@ -5,6 +5,7 @@ import { BaseAttackPerk } from "./baseAttack";
 import { BaseDefensePerk } from "./baseDefense";
 import { BasePopulationPerk } from "./basePopulation";
 import { BerserkPerk } from "./berserk";
+import { FertileGroundsPerk } from "./fertileGrounds"
 import { LootsOfVictoryPerk } from "./lootsOfVictory";
 import { MembranePerk } from "./membrane";
 import { PreparationPerk } from "./preparation";
@@ -98,6 +99,7 @@ export const allPerks: GeneralPerk[] = [
 
     //Population
     BasePopulationPerk.createFromValues(),
+    FertileGroundsPerk.createFromValues(),
 ];
 
 export const numberPerkCreators = [
@@ -107,6 +109,7 @@ export const numberPerkCreators = [
     LootsOfVictoryPerk,
     MembranePerk,
     BasePopulationPerk,
+    FertileGroundsPerk,
 ];
 export const listPerkCreators = [RagePerk, BerserkPerk, PreparationPerk];
 

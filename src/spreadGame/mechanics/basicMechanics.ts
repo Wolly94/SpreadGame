@@ -1,9 +1,6 @@
 import Bubble, { createBubble, getNewBubbleIndex, setUnits } from "../bubble";
 import Cell from "../cell";
-import { radiusToGrowth, radiusToUnits, unitsToRadius } from "../common";
-import { AttackerFightProps } from "../gameProps/attackerFight";
-import { DefenderGrowthProps } from "../gameProps/cellGrowth";
-import { DefenderFightProps } from "../gameProps/defenderFight";
+import { radiusToGrowth, radiusToUnits } from "../common";
 import {
     calculationAccuracy,
     centerOverlap,
@@ -12,6 +9,7 @@ import {
     SpreadGameMechanics,
     takeOverCell,
 } from "./commonMechanics";
+import { GrowthProps } from "./events/growth";
 
 export const defaultSpeed = 90;
 
@@ -62,7 +60,7 @@ const basicMechanics: SpreadGameMechanics = {
         ];
         return { ...bubble, position: newPosition };
     },
-    grow(cell: Cell, ms: number, growthProps: DefenderGrowthProps) {
+    grow(cell: Cell, ms: number, growthProps: GrowthProps) {
         if (cell.playerId === null) return { ...cell };
         const saturatedUnitCount =
             radiusToUnits(cell.radius) + growthProps.additionalCapacity;

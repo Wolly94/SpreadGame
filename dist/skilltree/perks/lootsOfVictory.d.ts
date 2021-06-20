@@ -1,2 +1,2 @@
-import { Perk } from "./perk";
-export declare const LootsOfVictory: Perk<number>;
+import { CreatePerk } from "./perk";
+export declare const LootsOfVictoryPerk: CreatePerk<number>;

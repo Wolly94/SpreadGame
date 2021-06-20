@@ -14,6 +14,7 @@ export interface ClientCell {
     radius: number;
     defenderCombatAbilities: number;
     attackerCombatAbilities: number;
+    membraneValue: number;
 }
 export interface ClientGameState {
     timePassedInMs: number;

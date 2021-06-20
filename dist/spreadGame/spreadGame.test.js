@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var _1 = require(".");
 var baseAttack_1 = require("../skilltree/perks/baseAttack");
 var skilltree_1 = require("../skilltree/skilltree");
 var basicMechanics_1 = require("./mechanics/basicMechanics");
-var spreadGame_1 = require("./spreadGame");
 var createMapHelper = function (cells) {
     return {
         height: 1000,
@@ -23,7 +23,7 @@ test("cell collision", function () {
         { id: 0, playerId: 0, position: [100, 100], radius: 50, units: 50 },
         { id: 1, playerId: 1, position: [400, 500], radius: 50, units: 50 },
     ];
-    var gameState = new spreadGame_1.SpreadGameImplementation(createMapHelper(cells), {
+    var gameState = new _1.SpreadGameImplementation(createMapHelper(cells), {
         mechanics: "basic",
         updateFrequencyInMs: 50,
     }, [
@@ -48,7 +48,7 @@ test("bubble collision", function () {
         { id: 0, playerId: 0, position: [100, 100], radius: 50, units: 50 },
         { id: 1, playerId: 1, position: [400, 500], radius: 50, units: 50 },
     ];
-    var gameState = new spreadGame_1.SpreadGameImplementation(createMapHelper(cells), {
+    var gameState = new _1.SpreadGameImplementation(createMapHelper(cells), {
         mechanics: "basic",
         updateFrequencyInMs: 50,
     }, [
@@ -75,7 +75,6 @@ test("bubble collision", function () {
     expect(gameState.eventHistory.length).toBe(5);
 });
 test("bubble collision with attack modifier", function () {
-    var x = 10;
     var cells = [
         { id: 0, playerId: 0, position: [100, 100], radius: 50, units: 50 },
         { id: 1, playerId: 1, position: [400, 500], radius: 50, units: 50 },
@@ -83,7 +82,7 @@ test("bubble collision with attack modifier", function () {
     var baseAttackPerk = skilltree_1.getPerkByName(baseAttack_1.BaseAttackPerk.name);
     expect(baseAttackPerk).not.toBe(null);
     var skills = baseAttackPerk !== null ? [{ level: 1, perk: baseAttackPerk }] : [];
-    var gameState = new spreadGame_1.SpreadGameImplementation(createMapHelper(cells), {
+    var gameState = new _1.SpreadGameImplementation(createMapHelper(cells), {
         updateFrequencyInMs: 50,
         mechanics: "basic",
     }, [

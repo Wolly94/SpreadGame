@@ -1,2 +1,2 @@
-import * as perk from "./perk";
-export { perk };
+import { allPerks } from "./perk";
+export { allPerks };
