@@ -29,7 +29,7 @@ exports.KamikazePerk = {
             description: function (lvl) {
                 return "When a cell is lost only " +
                     utils_1.formatDescription(values, function (val) { return val.toString() + "%"; }, "/") +
-                    +" of the conquering army remains.";
+                    " of the conquering army remains.";
             },
             triggers: [
                 {
