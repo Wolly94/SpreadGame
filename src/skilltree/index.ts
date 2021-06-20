@@ -1,5 +1,4 @@
 import * as skilltree from "./skilltree";
-import * as skills from "./skills/index";
 import {
     getPerkReplay,
     BackUpPerk,
