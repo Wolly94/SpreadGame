@@ -1,10 +1,10 @@
 import SpreadReplay from "../../messages/replay/replay";
 import { SpreadGameImplementation } from "../../spreadGame";
-import { Reinforcements } from "./reinforcements";
-import { playersWithoutSkills } from "./testHelper";
+import { ReinforcementsPerk } from "./reinforcements";
+import { playersWithoutSkills } from "../oldperks/testHelper";
 
 test("test reinforcements", () => {
-  const rep: SpreadReplay = Reinforcements.replay;
+  const rep: SpreadReplay = ReinforcementsPerk.replay;
   const game = SpreadGameImplementation.fromReplay(rep);
   const cstate = game.toClientGameState();
   const cell0 = cstate.cells.find((c) => c.id === 0);
@@ -15,7 +15,7 @@ test("test reinforcements", () => {
 
 test("test no reinforcements", () => {
   const rep: SpreadReplay = {
-    ...Reinforcements.replay,
+    ...ReinforcementsPerk.replay,
     players: playersWithoutSkills(2),
   };
   const game = SpreadGameImplementation.fromReplay(rep);

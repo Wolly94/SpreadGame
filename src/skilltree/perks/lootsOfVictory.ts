@@ -1,17 +1,14 @@
-import SpreadReplay from "../../messages/replay/replay";
-import { unitsToRadius } from "../../spreadGame/common";
-import { defenderDefendCellUtils } from "../../spreadGame/gameProps/defenderDefendCell";
-import { SpreadMap } from "../../spreadGame/map/map";
+import { unitsToRadius } from "../../spreadGame/common"
 import {
     DefendCellProps,
-    defendCellUtils,
-} from "../../spreadGame/mechanics/events/defendCell";
+    defendCellUtils
+} from "../../spreadGame/mechanics/events/defendCell"
 import {
     AttachProps,
-    TimedProps,
-} from "../../spreadGame/mechanics/events/definitions";
-import { formatDescription } from "../utils";
-import { CreatePerk, getPerkValue } from "./perk";
+    TimedProps
+} from "../../spreadGame/mechanics/events/definitions"
+import { formatDescription } from "../utils"
+import { CreatePerk, getPerkValue } from "./perk"
 
 const name = "Loots of Victory";
 const defaultValues: number[] = [5, 10];

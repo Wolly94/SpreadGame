@@ -5,11 +5,12 @@ import { BaseAttackPerk } from "./baseAttack";
 import { BaseDefensePerk } from "./baseDefense";
 import { BasePopulationPerk } from "./basePopulation";
 import { BerserkPerk } from "./berserk";
-import { FertileGroundsPerk } from "./fertileGrounds"
+import { FertileGroundsPerk } from "./fertileGrounds";
 import { LootsOfVictoryPerk } from "./lootsOfVictory";
 import { MembranePerk } from "./membrane";
 import { PreparationPerk } from "./preparation";
 import { RagePerk } from "./rage";
+import { ReinforcementsPerk } from "./reinforcements";
 import { SlaveryPerk } from "./slavery";
 
 export interface Perk<TValue> {
@@ -100,6 +101,7 @@ export const allPerks: GeneralPerk[] = [
     //Population
     BasePopulationPerk.createFromValues(),
     FertileGroundsPerk.createFromValues(),
+    ReinforcementsPerk.createFromValues(),
 ];
 
 export const numberPerkCreators = [
@@ -110,6 +112,7 @@ export const numberPerkCreators = [
     MembranePerk,
     BasePopulationPerk,
     FertileGroundsPerk,
+    ReinforcementsPerk,
 ];
 export const listPerkCreators = [RagePerk, BerserkPerk, PreparationPerk];
 

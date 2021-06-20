@@ -1,24 +1,21 @@
-import SpreadReplay, { HistoryEntry } from "../../messages/replay/replay";
-import Cell from "../../spreadGame/cell";
-import { unitsToRadius } from "../../spreadGame/common";
-import { defenderFightUtils } from "../../spreadGame/gameProps/defenderFight";
-import { SpreadMap } from "../../spreadGame/map/map";
+import { HistoryEntry } from "../../messages/replay/replay"
+import Cell from "../../spreadGame/cell"
+import { unitsToRadius } from "../../spreadGame/common"
 import {
     AttachProps,
-    TimedProps,
-} from "../../spreadGame/mechanics/events/definitions";
+    TimedProps
+} from "../../spreadGame/mechanics/events/definitions"
 import {
-    BubbleFightProps,
     CellFightProps,
-    cellFightUtils,
-} from "../../spreadGame/mechanics/events/fight";
+    cellFightUtils
+} from "../../spreadGame/mechanics/events/fight"
 import {
     VisualizeCellProps,
-    visualizeCellUtils,
-} from "../../spreadGame/mechanics/events/visualizeCellProps";
-import { SpreadGameEvent } from "../events";
-import { formatDescription } from "../utils";
-import { CreatePerk, getPerkValue } from "./perk";
+    visualizeCellUtils
+} from "../../spreadGame/mechanics/events/visualizeCellProps"
+import { SpreadGameEvent } from "../events"
+import { formatDescription } from "../utils"
+import { CreatePerk, getPerkValue } from "./perk"
 
 const name = "Preparation";
 const defaultValues: [number, number][] = [
