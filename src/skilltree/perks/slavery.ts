@@ -1,4 +1,7 @@
-import { ConquerCellProps } from "../../spreadGame/mechanics/events/conquerCell";
+import {
+    ConquerCellProps,
+    conquerCellUtils,
+} from "../../spreadGame/mechanics/events/conquerCell";
 import {
     AttachProps,
     TimedProps,
@@ -44,7 +47,7 @@ export const SlaveryPerk: CreatePerk<number> = {
                                 props: {
                                     expirationInMs: "Never",
                                     value: {
-                                        type: "ConquerCell",
+                                        ...conquerCellUtils.default,
                                         additionalUnits: val,
                                     },
                                 },
