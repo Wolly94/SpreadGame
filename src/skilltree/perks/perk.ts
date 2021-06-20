@@ -67,6 +67,7 @@ export interface CreatePerk<TValue> {
 export type PerkData = number | [number, number];
 
 export type GeneralPerk = Perk<PerkData>;
+export type GeneralCreatePerk = CreatePerk<PerkData>;
 
 export interface BackUpPerk {
     name: string;
@@ -123,6 +124,18 @@ export const numberPerkCreators = [
     KamikazePerk,
 ];
 export const listPerkCreators = [RagePerk, BerserkPerk, PreparationPerk];
+
+export const getPerkReplay = (perk: GeneralPerk): SpreadReplay | null => {
+    var ex:
+        | CreatePerk<number>
+        | CreatePerk<[number, number]>
+        | undefined = numberPerkCreators.find((pk) => pk.name === perk.name);
+    if (ex === undefined) {
+        ex = listPerkCreators.find((pk) => pk.name);
+    }
+    if (ex !== undefined) return ex.replay;
+    else return null;
+};
 
 export const perkFromBackUp = (data: BackUpPerk): GeneralPerk | null => {
     const d = data.data;

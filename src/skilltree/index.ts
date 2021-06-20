@@ -1,5 +1,5 @@
 import * as skilltree from "./skilltree";
 import * as skills from "./skills/index";
-import * as perks from "./perks/index";
+import { getPerkReplay } from "./perks/perk";
 
-export { skilltree, skills, perks };
+export { skilltree, getPerkReplay };
