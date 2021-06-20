@@ -41,7 +41,6 @@ export const ReinforcementsPerk: CreatePerk<number> = {
                                 values,
                                 defaultValue
                             );
-                            if (val === defaultValue) return [];
                             const res2 = game.cells
                                 .filter((cell) => cell.playerId === pl.id)
                                 .map(

@@ -58,7 +58,6 @@ export const BasePopulationPerk: CreatePerk<number> = {
                             values,
                             defaultValue
                         );
-                        if (val === defaultValue) return [];
 
                         return [getReturnValue(cell.id, val)];
                     },

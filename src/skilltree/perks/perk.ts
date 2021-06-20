@@ -4,6 +4,7 @@ import { SpreadGameEffect } from "../../spreadGame/mechanics/events/definitions"
 import { BaseAttackPerk } from "./baseAttack";
 import { BaseDefensePerk } from "./baseDefense";
 import { BasePopulationPerk } from "./basePopulation";
+import { BaseSpiritPerk } from "./baseSpirit"
 import { BerserkPerk } from "./berserk";
 import { FertileGroundsPerk } from "./fertileGrounds";
 import { LootsOfVictoryPerk } from "./lootsOfVictory";
@@ -102,6 +103,9 @@ export const allPerks: GeneralPerk[] = [
     BasePopulationPerk.createFromValues(),
     FertileGroundsPerk.createFromValues(),
     ReinforcementsPerk.createFromValues(),
+
+    //Spirit
+    BaseSpiritPerk.createFromValues(),
 ];
 
 export const numberPerkCreators = [
@@ -113,6 +117,7 @@ export const numberPerkCreators = [
     BasePopulationPerk,
     FertileGroundsPerk,
     ReinforcementsPerk,
+    BaseSpiritPerk,
 ];
 export const listPerkCreators = [RagePerk, BerserkPerk, PreparationPerk];
 

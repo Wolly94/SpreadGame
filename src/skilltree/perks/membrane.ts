@@ -124,7 +124,6 @@ export const MembranePerk: CreatePerk<number> = {
                                 values,
                                 defaultValue
                             );
-                            if (val === defaultValue) return [];
 
                             const props: VisualizeCellProps = {
                                 ...visualizeCellUtils.default,
@@ -153,7 +152,6 @@ export const MembranePerk: CreatePerk<number> = {
                             values,
                             defaultValue
                         );
-                        if (val === defaultValue) return [];
 
                         const props: VisualizeCellProps = {
                             ...visualizeCellUtils.default,
