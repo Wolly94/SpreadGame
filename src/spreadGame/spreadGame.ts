@@ -1,6 +1,6 @@
-import { ClientGameState } from "../messages/inGame/clientGameState";
-import { GameSettings } from "../messages/inGame/gameServerMessages";
-import SpreadReplay, { HistoryEntry, Move } from "../messages/replay/replay";
+import { ClientGameState } from "../messages/inGame/clientGameState"
+import { GameSettings } from "../messages/inGame/gameServerMessages"
+import SpreadReplay, { HistoryEntry, Move } from "../messages/replay/replay"
 import {
     AfterFightState,
     BeforeFightState,
@@ -11,61 +11,58 @@ import {
     FightEvent,
     finishFightEvent,
     latestDistance,
-    SpreadGameEvent,
-} from "../skilltree/events";
+    SpreadGameEvent
+} from "../skilltree/events"
 import {
-    GeneralPerk,
-    allPerks,
-    perkFromBackUp,
-    backupFromPerk,
-} from "../skilltree/perks/perk";
-import Bubble from "./bubble";
-import Cell from "./cell";
-import { distance } from "./entites";
-import { growthUtils } from "./gameProps/cellGrowth";
-import { SpreadMap } from "./map/map";
-import basicMechanics from "./mechanics/basicMechanics";
-import bounceMechanics from "./mechanics/bounceMechanics";
-import { SpreadGameMechanics } from "./mechanics/commonMechanics";
+    allPerks, backupFromPerk, GeneralPerk, perkFromBackUp
+} from "../skilltree/perks/perk"
+import Bubble from "./bubble"
+import Cell from "./cell"
+import { distance } from "./entites"
+import { SpreadMap } from "./map/map"
+import basicMechanics from "./mechanics/basicMechanics"
+import bounceMechanics from "./mechanics/bounceMechanics"
+import { SpreadGameMechanics } from "./mechanics/commonMechanics"
 import {
     ConquerCellEvent,
-    conquerCellUtils,
-} from "./mechanics/events/conquerCell";
-import { CreateBubbleEvent } from "./mechanics/events/createBubble";
+    conquerCellUtils
+} from "./mechanics/events/conquerCell"
+import { CreateBubbleEvent } from "./mechanics/events/createBubble"
 import {
     DefendCellEvent,
-    defendCellUtils,
-} from "./mechanics/events/defendCell";
+    defendCellUtils
+} from "./mechanics/events/defendCell"
 import {
     AttachProps,
     Entity,
     NewSpreadGameEvent,
     SpreadGameProps,
-    TimedProps,
-} from "./mechanics/events/definitions";
+    TimedProps
+} from "./mechanics/events/definitions"
 import {
     BeforeFightEvent,
     BubbleFightProps,
     bubbleFightUtils,
     CellFightProps,
-    cellFightUtils,
-} from "./mechanics/events/fight";
-import { SendUnitsEvent, sendUnitsUtils } from "./mechanics/events/sendUnits";
+    cellFightUtils
+} from "./mechanics/events/fight"
+import { GrowthEvent, growthUtils } from "./mechanics/events/growth"
+import { SendUnitsEvent, sendUnitsUtils } from "./mechanics/events/sendUnits"
 import {
     startGameCellUtils,
-    StartGameEvent,
-} from "./mechanics/events/startGame";
-import { TimeStepEvent } from "./mechanics/events/timeStep";
+    StartGameEvent
+} from "./mechanics/events/startGame"
+import { TimeStepEvent } from "./mechanics/events/timeStep"
 import {
     VisualizeBubbleProps,
-    visualizeBubbleUtils,
-} from "./mechanics/events/visualizeBubbleProps";
+    visualizeBubbleUtils
+} from "./mechanics/events/visualizeBubbleProps"
 import {
     VisualizeCellProps,
-    visualizeCellUtils,
-} from "./mechanics/events/visualizeCellProps";
-import scrapeOffMechanics from "./mechanics/scrapeOffMechanics";
-import Player, { dataFromPlayer, playerFromData } from "./player";
+    visualizeCellUtils
+} from "./mechanics/events/visualizeCellProps"
+import scrapeOffMechanics from "./mechanics/scrapeOffMechanics"
+import Player, { dataFromPlayer, playerFromData } from "./player"
 
 const getMechanics = (settings: GameSettings): SpreadGameMechanics => {
     if (settings.mechanics === "basic") {
@@ -204,6 +201,8 @@ export class SpreadGameImplementation implements SpreadGame {
                     event.type === "TimeStep"
                 ) {
                     return tr.getValue(event, this);
+                } else if (tr.type === "Growth" && event.type === "Growth") {
+                    return tr.getValue(event, this);
                 } else if (
                     tr.type === "ConquerCell" &&
                     event.type === "ConquerCell"
@@ -293,7 +292,16 @@ export class SpreadGameImplementation implements SpreadGame {
             this.mechanics.move(bubble, ms)
         );
         this.cells = this.cells.map((cell) => {
-            const growthProps = growthUtils.default;
+            const growthEvent: GrowthEvent = {
+                type: "Growth",
+                cell: cell,
+            };
+            const props = this.handleEvent(growthEvent);
+            const growthProps = growthUtils.collect(
+                this.fromAttachedProps({ type: "Cell", id: cell.id }).concat(
+                    props
+                )
+            );
             return this.mechanics.grow(cell, ms, growthProps);
         });
         this.collideBubblesWithCells();
@@ -665,7 +673,7 @@ export class SpreadGameImplementation implements SpreadGame {
                     radius: cell.radius,
                     defenderCombatAbilities: cellProps.combatAbilityModifier,
                     attackerCombatAbilities: cellProps.rageValue,
-                    membraneValue: cellProps.membraneAbsorption
+                    membraneValue: cellProps.membraneAbsorption,
                 };
             }),
             bubbles: this.bubbles.map((bubble) => {

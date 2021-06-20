@@ -1,10 +1,10 @@
 import SpreadReplay from "../../messages/replay/replay";
 import { SpreadGameImplementation } from "../../spreadGame";
-import { BasePopulation } from "./basePopulation";
-import { playersWithoutSkills } from "./testHelper";
+import { BasePopulationPerk } from "./basePopulation";
+import { playersWithoutSkills } from "../oldperks/testHelper";
 
 test("test base population", () => {
-  const rep: SpreadReplay = BasePopulation.replay;
+  const rep: SpreadReplay = BasePopulationPerk.replay;
   const game = SpreadGameImplementation.fromReplay(rep);
   game.runReplay(rep, rep.lengthInMs);
   const cstate = game.toClientGameState();
@@ -16,7 +16,7 @@ test("test base population", () => {
 
 test("test no base population", () => {
   const rep: SpreadReplay = {
-    ...BasePopulation.replay,
+    ...BasePopulationPerk.replay,
     players: playersWithoutSkills(2),
   };
   const game = SpreadGameImplementation.fromReplay(rep);

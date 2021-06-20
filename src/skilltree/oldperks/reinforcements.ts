@@ -1,5 +1,5 @@
 import SpreadReplay from "../../messages/replay/replay";
-import { growthUtils } from "../../spreadGame/gameProps/cellGrowth";
+import { growthUtilsOld } from "../../spreadGame/gameProps/cellGrowth";
 import { defenderStartUtils } from "../../spreadGame/gameProps/defenderStart";
 import { SpreadMap } from "../../spreadGame/map/map";
 import { formatDescription } from "../utils";

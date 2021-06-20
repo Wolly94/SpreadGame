@@ -3,6 +3,7 @@ import { SpreadGameImplementation } from "../../spreadGame";
 import { SpreadGameEffect } from "../../spreadGame/mechanics/events/definitions";
 import { BaseAttackPerk } from "./baseAttack";
 import { BaseDefensePerk } from "./baseDefense";
+import { BasePopulationPerk } from "./basePopulation";
 import { BerserkPerk } from "./berserk";
 import { LootsOfVictoryPerk } from "./lootsOfVictory";
 import { MembranePerk } from "./membrane";
@@ -83,15 +84,20 @@ export const backupFromPerk = (perk: GeneralPerk): BackUpPerk => {
 };
 
 export const allPerks: GeneralPerk[] = [
+    //Attack
     BaseAttackPerk.createFromValues(),
     RagePerk.createFromValues(),
     BerserkPerk.createFromValues(),
     SlaveryPerk.createFromValues(),
 
+    //Defense
     BaseDefensePerk.createFromValues(),
     PreparationPerk.createFromValues(),
     LootsOfVictoryPerk.createFromValues(),
     MembranePerk.createFromValues(),
+
+    //Population
+    BasePopulationPerk.createFromValues(),
 ];
 
 export const numberPerkCreators = [
@@ -100,6 +106,7 @@ export const numberPerkCreators = [
     BaseDefensePerk,
     LootsOfVictoryPerk,
     MembranePerk,
+    BasePopulationPerk,
 ];
 export const listPerkCreators = [RagePerk, BerserkPerk, PreparationPerk];
 

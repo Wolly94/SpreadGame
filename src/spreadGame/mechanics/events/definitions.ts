@@ -20,6 +20,7 @@ import {
     BubbleFightProps,
     CellFightProps,
 } from "./fight";
+import { GrowthEffect, GrowthEvent, GrowthProps } from "./growth";
 import { SendUnitsEffect, SendUnitsEvent, SendUnitsProps } from "./sendUnits";
 import {
     StartGameCellProps,
@@ -43,7 +44,8 @@ export type NewSpreadGameEvent =
     | SendUnitsEvent
     | ConquerCellEvent
     | DefendCellEvent
-    | BeforeFightEvent;
+    | BeforeFightEvent
+    | GrowthEvent;
 
 export type SpreadGameProps =
     | StartGameCellProps
@@ -53,7 +55,8 @@ export type SpreadGameProps =
     | CellFightProps
     | DefendCellProps
     | VisualizeCellProps
-    | VisualizeBubbleProps;
+    | VisualizeBubbleProps
+    | GrowthProps;
 
 export interface TimedProps<TProps> {
     expirationInMs: "Never" | number;
@@ -91,7 +94,8 @@ export type SpreadGameEffect =
     | SendUnitsEffect
     | CreateBubbleEffect
     | DefendCellEffect
-    | BeforeFightEffect;
+    | BeforeFightEffect
+    | GrowthEffect;
 
 /*
 

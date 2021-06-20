@@ -1,5 +1,5 @@
 import SpreadReplay from "../../messages/replay/replay";
-import { growthUtils } from "../../spreadGame/gameProps/cellGrowth";
+import { growthUtilsOld } from "../../spreadGame/gameProps/cellGrowth";
 import { SpreadMap } from "../../spreadGame/map/map";
 import { formatDescription } from "../utils";
 import { Perk, getValue } from "./perk";
@@ -42,7 +42,7 @@ export const FertileGrounds: Perk<number> = {
       getValue: (lvl, trigger, spreadGame) => {
         const val = getValue(values, lvl, defaultValue);
         return {
-          ...growthUtils.default,
+          ...growthUtilsOld.default,
           additionalGrowthInPercent: val,
         };
       },

@@ -1,9 +1,10 @@
-import { BasePopulation } from "../oldperks/basePopulation";
-import { FertileGrounds } from "../oldperks/fertileGrounds";
-import { Reinforcements } from "../oldperks/reinforcements";
+import { BasePopulationPerk } from "../perks/basePopulation"
 import { Skill } from "../skilltree";
 
 export const Population: Skill = {
-  name: "Population",
-  perks: [/*BasePopulation, FertileGrounds, Reinforcements*/],
+    name: "Population",
+    perks: [
+        BasePopulationPerk.createFromValues(),
+        /*FertileGrounds, Reinforcements*/
+    ],
 };
