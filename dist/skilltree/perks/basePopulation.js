@@ -50,8 +50,6 @@ exports.BasePopulationPerk = {
                     getValue: function (trigger, game) {
                         var cell = trigger.before.cell;
                         var val = perk_1.getPerkValue(game, name, cell.playerId, values, defaultValue);
-                        if (val === defaultValue)
-                            return [];
                         return [getReturnValue(cell.id, val)];
                     },
                 },

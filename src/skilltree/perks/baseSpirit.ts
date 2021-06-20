@@ -1,11 +1,8 @@
-import SpreadReplay from "../../messages/replay/replay";
 import { SpreadGameImplementation } from "../../spreadGame";
 import Cell from "../../spreadGame/cell";
 import { unitsToRadius } from "../../spreadGame/common";
-import { SpreadMap } from "../../spreadGame/map/map";
 import {
     AttachProps,
-    Entity,
     TimedProps,
 } from "../../spreadGame/mechanics/events/definitions";
 import {
@@ -22,7 +19,6 @@ import {
     VisualizeCellProps,
     visualizeCellUtils,
 } from "../../spreadGame/mechanics/events/visualizeCellProps";
-import { getValue } from "../oldperks/perk";
 import { formatDescription } from "../utils";
 import { CreatePerk, getPerkValue } from "./perk";
 

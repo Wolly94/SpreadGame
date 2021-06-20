@@ -6,9 +6,10 @@ exports.conquerCellUtils = {
         return {
             type: type,
             additionalUnits: a.additionalUnits + b.additionalUnits,
+            unitsInPercentToRemain: a.unitsInPercentToRemain * b.unitsInPercentToRemain,
         };
     },
-    default: { type: type, additionalUnits: 0 },
+    default: { type: type, additionalUnits: 0, unitsInPercentToRemain: 1 },
     collect: function (props) {
         return props
             .filter(function (prop) { return prop.type === type; })

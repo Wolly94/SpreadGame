@@ -93,8 +93,6 @@ exports.MembranePerk = {
                     getValue: function (trigger, game) {
                         var res = game.players.flatMap(function (pl) {
                             var val = perk_1.getPerkValue(game, name, pl.id, values, defaultValue);
-                            if (val === defaultValue)
-                                return [];
                             var props = __assign(__assign({}, visualizeCellProps_1.visualizeCellUtils.default), { membraneAbsorption: val });
                             return game.cells.flatMap(function (c) {
                                 if (c.playerId === pl.id)
@@ -111,8 +109,6 @@ exports.MembranePerk = {
                     getValue: function (trigger, game) {
                         var playerId = trigger.after.cell.playerId;
                         var val = perk_1.getPerkValue(game, name, playerId, values, defaultValue);
-                        if (val === defaultValue)
-                            return [];
                         var props = __assign(__assign({}, visualizeCellProps_1.visualizeCellUtils.default), { membraneAbsorption: val });
                         return [
                             attachPropTemplate(trigger.after.cell.id, props),

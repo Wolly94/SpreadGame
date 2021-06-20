@@ -11,45 +11,85 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var defenderStart_1 = require("../../spreadGame/gameProps/defenderStart");
+var startGame_1 = require("../../spreadGame/mechanics/events/startGame");
 var utils_1 = require("../utils");
 var perk_1 = require("./perk");
 var name = "Reinforcements";
-var values = [9, 15];
+var defaultValues = [9, 15];
 var defaultValue = 0;
-var simpleMap = {
-    width: 500,
-    height: 500,
-    cells: [
-        { id: 0, playerId: 0, position: [100, 100], radius: 50, units: 10 },
-        { id: 1, playerId: 1, position: [400, 400], radius: 50, units: 10 },
-    ],
-    players: 2,
-};
-var replay = {
-    gameSettings: { mechanics: "basic", updateFrequencyInMs: 25 },
-    lengthInMs: 5000,
-    map: simpleMap,
-    players: [
-        { id: 0, skills: [{ name: name, level: 2 }] },
-        { id: 1, skills: [] },
-    ],
-    moveHistory: [],
-};
-exports.Reinforcements = {
+exports.ReinforcementsPerk = {
     name: name,
-    values: values,
-    description: "At the beginning, every friendly cell starts with +" +
-        utils_1.formatDescription(values, function (val) { return val.toString(); }, "/") +
-        " population.",
-    effects: [
-        {
-            type: "DefenderStartEffect",
-            getValue: function (lvl, trigger, spreadGame) {
-                var val = perk_1.getValue(values, lvl, defaultValue);
-                return __assign(__assign({}, defenderStart_1.defenderStartUtils.default), { additionalUnits: val });
+    createFromValues: function (values) {
+        if (values === void 0) { values = defaultValues; }
+        return {
+            name: name,
+            displayName: name,
+            defaultValue: defaultValue,
+            values: defaultValues,
+            description: function (lvl) {
+                return "At the beginning, every friendly cell starts with +" +
+                    utils_1.formatDescription(values, function (val) { return val.toString(); }, "/") +
+                    " population.";
             },
+            triggers: [
+                {
+                    type: "StartGame",
+                    getValue: function (trigger, game) {
+                        var res = game.players.flatMap(function (pl) {
+                            var val = perk_1.getPerkValue(game, name, pl.id, values, defaultValue);
+                            var res2 = game.cells
+                                .filter(function (cell) { return cell.playerId === pl.id; })
+                                .map(function (cell) {
+                                return {
+                                    entity: {
+                                        type: "Cell",
+                                        id: cell.id,
+                                    },
+                                    perkName: name,
+                                    triggerType: "StartGame",
+                                    props: {
+                                        expirationInMs: "Never",
+                                        value: __assign(__assign({}, startGame_1.startGameCellUtils.default), { additionalUnits: val }),
+                                    },
+                                };
+                            });
+                            return res2;
+                        });
+                        return res;
+                    },
+                },
+            ],
+        };
+    },
+    replay: {
+        gameSettings: { mechanics: "basic", updateFrequencyInMs: 25 },
+        lengthInMs: 5000,
+        map: {
+            width: 500,
+            height: 500,
+            cells: [
+                {
+                    id: 0,
+                    playerId: 0,
+                    position: [100, 100],
+                    radius: 50,
+                    units: 10,
+                },
+                {
+                    id: 1,
+                    playerId: 1,
+                    position: [400, 400],
+                    radius: 50,
+                    units: 10,
+                },
+            ],
+            players: 2,
         },
-    ],
-    replay: replay,
+        players: [
+            { id: 0, skills: [{ name: name, level: 3 }] },
+            { id: 1, skills: [] },
+        ],
+        perks: [{ name: name, data: { type: "number", val: [10, 20, 30] } }],
+        moveHistory: [],
+    },
 };

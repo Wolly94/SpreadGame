@@ -13,7 +13,7 @@ var __assign = (this && this.__assign) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var spreadGame_1 = require("../../spreadGame");
 var basePopulation_1 = require("./basePopulation");
-var testHelper_1 = require("../oldperks/testHelper");
+var testHelper_1 = require("./testHelper");
 test("test base population", function () {
     var rep = basePopulation_1.BasePopulationPerk.replay;
     var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);

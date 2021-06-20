@@ -39,7 +39,7 @@ export declare class SpreadGameImplementation implements SpreadGame {
     constructor(map: SpreadMap, gameSettings: GameSettings, players: Player[], perks?: GeneralPerk[]);
     triggerStart(): void;
     static fromReplay(replay: SpreadReplay): SpreadGameImplementation;
-    attachProps(props: AttachProps<TimedProps<SpreadGameProps>>[]): void;
+    attachProps(props: AttachProps<TimedProps<SpreadGameProps>>[]): SpreadGameProps[];
     handleEvent(event: NewSpreadGameEvent): SpreadGameProps[];
     runReplay(replay: SpreadReplay, ms: number): void;
     getReplay(): SpreadReplay;

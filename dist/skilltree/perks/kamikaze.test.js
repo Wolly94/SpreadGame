@@ -13,9 +13,8 @@ var __assign = (this && this.__assign) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var spreadGame_1 = require("../../spreadGame");
 var kamikaze_1 = require("./kamikaze");
-var testHelper_1 = require("./testHelper");
 test("test kamikaze", function () {
-    var rep = kamikaze_1.Kamikaze.replay;
+    var rep = kamikaze_1.KamikazePerk.replay;
     var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);
     var cstate = game.toClientGameState();
     var cell0 = cstate.cells.find(function (c) { return c.id === 0; });
@@ -27,7 +26,7 @@ test("test kamikaze", function () {
     expect(cell0 === null || cell0 === void 0 ? void 0 : cell0.units).toBeLessThan(30);
 });
 test("test no kamikaze", function () {
-    var rep = __assign(__assign({}, kamikaze_1.Kamikaze.replay), { players: testHelper_1.playersWithoutSkills(2) });
+    var rep = __assign(__assign({}, kamikaze_1.KamikazePerk.replay), { perks: [] });
     var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);
     var cstate = game.toClientGameState();
     var cell0 = cstate.cells.find(function (c) { return c.id === 0; });

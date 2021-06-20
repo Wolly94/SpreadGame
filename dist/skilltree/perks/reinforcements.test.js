@@ -15,7 +15,7 @@ var spreadGame_1 = require("../../spreadGame");
 var reinforcements_1 = require("./reinforcements");
 var testHelper_1 = require("./testHelper");
 test("test reinforcements", function () {
-    var rep = reinforcements_1.Reinforcements.replay;
+    var rep = reinforcements_1.ReinforcementsPerk.replay;
     var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);
     var cstate = game.toClientGameState();
     var cell0 = cstate.cells.find(function (c) { return c.id === 0; });
@@ -26,7 +26,7 @@ test("test reinforcements", function () {
         expect(cell0 === null || cell0 === void 0 ? void 0 : cell0.units).toBeGreaterThan(cell1.units);
 });
 test("test no reinforcements", function () {
-    var rep = __assign(__assign({}, reinforcements_1.Reinforcements.replay), { players: testHelper_1.playersWithoutSkills(2) });
+    var rep = __assign(__assign({}, reinforcements_1.ReinforcementsPerk.replay), { players: testHelper_1.playersWithoutSkills(2) });
     var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);
     var cstate = game.toClientGameState();
     var cell0 = cstate.cells.find(function (c) { return c.id === 0; });

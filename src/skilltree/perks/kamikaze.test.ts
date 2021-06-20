@@ -1,6 +1,6 @@
 import { SpreadGameImplementation } from "../../spreadGame";
 import { KamikazePerk } from "./kamikaze";
-import { playersWithoutSkills } from "../oldperks/testHelper";
+import { playersWithoutSkills } from "./testHelper";
 
 test("test kamikaze", () => {
     const rep = KamikazePerk.replay;

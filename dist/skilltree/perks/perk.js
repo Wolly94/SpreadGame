@@ -3,12 +3,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var baseAttack_1 = require("./baseAttack");
 var baseDefense_1 = require("./baseDefense");
 var basePopulation_1 = require("./basePopulation");
+var baseSpirit_1 = require("./baseSpirit");
 var berserk_1 = require("./berserk");
 var fertileGrounds_1 = require("./fertileGrounds");
+var kamikaze_1 = require("./kamikaze");
 var lootsOfVictory_1 = require("./lootsOfVictory");
 var membrane_1 = require("./membrane");
 var preparation_1 = require("./preparation");
 var rage_1 = require("./rage");
+var reinforcements_1 = require("./reinforcements");
 var slavery_1 = require("./slavery");
 exports.getPerkLevel = function (game, perkName, playerId) {
     var skPerk = game.getSkilledPerk(perkName, playerId);
@@ -54,6 +57,10 @@ exports.allPerks = [
     //Population
     basePopulation_1.BasePopulationPerk.createFromValues(),
     fertileGrounds_1.FertileGroundsPerk.createFromValues(),
+    reinforcements_1.ReinforcementsPerk.createFromValues(),
+    //Spirit
+    baseSpirit_1.BaseSpiritPerk.createFromValues(),
+    kamikaze_1.KamikazePerk.createFromValues(),
 ];
 exports.numberPerkCreators = [
     baseAttack_1.BaseAttackPerk,
@@ -63,6 +70,9 @@ exports.numberPerkCreators = [
     membrane_1.MembranePerk,
     basePopulation_1.BasePopulationPerk,
     fertileGrounds_1.FertileGroundsPerk,
+    reinforcements_1.ReinforcementsPerk,
+    baseSpirit_1.BaseSpiritPerk,
+    kamikaze_1.KamikazePerk,
 ];
 exports.listPerkCreators = [rage_1.RagePerk, berserk_1.BerserkPerk, preparation_1.PreparationPerk];
 exports.perkFromBackUp = function (data) {

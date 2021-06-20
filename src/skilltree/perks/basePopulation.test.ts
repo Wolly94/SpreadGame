@@ -1,7 +1,7 @@
 import SpreadReplay from "../../messages/replay/replay";
 import { SpreadGameImplementation } from "../../spreadGame";
 import { BasePopulationPerk } from "./basePopulation";
-import { playersWithoutSkills } from "../oldperks/testHelper";
+import { playersWithoutSkills } from "./testHelper";
 
 test("test base population", () => {
     const rep: SpreadReplay = BasePopulationPerk.replay;

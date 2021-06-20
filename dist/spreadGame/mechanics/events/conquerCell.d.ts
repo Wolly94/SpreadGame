@@ -12,6 +12,7 @@ export interface ConquerCellEvent {
 export interface ConquerCellProps {
     type: ConquerCellEvent["type"];
     additionalUnits: number;
+    unitsInPercentToRemain: number;
 }
 export interface ConquerCellEffect extends Effect<ConquerCellEvent> {
     type: ConquerCellEvent["type"];
