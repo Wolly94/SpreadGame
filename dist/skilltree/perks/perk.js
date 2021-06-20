@@ -75,6 +75,16 @@ exports.numberPerkCreators = [
     kamikaze_1.KamikazePerk,
 ];
 exports.listPerkCreators = [rage_1.RagePerk, berserk_1.BerserkPerk, preparation_1.PreparationPerk];
+exports.getPerkReplay = function (perk) {
+    var ex = exports.numberPerkCreators.find(function (pk) { return pk.name === perk.name; });
+    if (ex === undefined) {
+        ex = exports.listPerkCreators.find(function (pk) { return pk.name; });
+    }
+    if (ex !== undefined)
+        return ex.replay;
+    else
+        return null;
+};
 exports.perkFromBackUp = function (data) {
     var d = data.data;
     if (d.type === "number") {

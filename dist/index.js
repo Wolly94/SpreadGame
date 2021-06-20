@@ -15,3 +15,5 @@ var aiStuff = __importStar(require("./ai/index"));
 exports.aiStuff = aiStuff;
 var comm = __importStar(require("./communication/index"));
 exports.comm = comm;
+var skilltree = __importStar(require("./skilltree/index"));
+exports.skilltree = skilltree;

@@ -19,6 +19,7 @@ export interface CreatePerk<TValue> {
 }
 export declare type PerkData = number | [number, number];
 export declare type GeneralPerk = Perk<PerkData>;
+export declare type GeneralCreatePerk = CreatePerk<PerkData>;
 export interface BackUpPerk {
     name: string;
     data: {
@@ -33,4 +34,5 @@ export declare const backupFromPerk: (perk: GeneralPerk) => BackUpPerk;
 export declare const allPerks: GeneralPerk[];
 export declare const numberPerkCreators: CreatePerk<number>[];
 export declare const listPerkCreators: CreatePerk<[number, number]>[];
+export declare const getPerkReplay: (perk: GeneralPerk) => SpreadReplay | null;
 export declare const perkFromBackUp: (data: BackUpPerk) => GeneralPerk | null;
