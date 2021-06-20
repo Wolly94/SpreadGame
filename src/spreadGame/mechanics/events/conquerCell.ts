@@ -12,6 +12,7 @@ export interface ConquerCellEvent {
 export interface ConquerCellProps {
     type: ConquerCellEvent["type"];
     additionalUnits: number;
+    unitsInPercentToRemain: number;
 }
 
 export interface ConquerCellEffect extends Effect<ConquerCellEvent> {
@@ -23,9 +24,10 @@ export const conquerCellUtils: PropUtils<ConquerCellProps> = {
         return {
             type: type,
             additionalUnits: a.additionalUnits + b.additionalUnits,
+            unitsInPercentToRemain: a.unitsInPercentToRemain*b.unitsInPercentToRemain,
         };
     },
-    default: { type: type, additionalUnits: 0 },
+    default: { type: type, additionalUnits: 0, unitsInPercentToRemain: 1 },
     collect: (props) => {
         return props
             .filter((prop): prop is ConquerCellProps => prop.type === type)

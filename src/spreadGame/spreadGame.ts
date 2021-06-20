@@ -268,7 +268,7 @@ export class SpreadGameImplementation implements SpreadGame {
             if (index < 0) throw new Error("Cell not found");
             this.cells[index] = {
                 ...this.cells[index],
-                units: this.cells[index].units + conquerProps.additionalUnits,
+                units: this.cells[index].units*conquerProps.unitsInPercentToRemain + conquerProps.additionalUnits,
             };
         }
         return remProps;
