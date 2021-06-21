@@ -98,7 +98,9 @@ export const BaseDefensePerk: CreatePerk<number> = {
                                 defaultValue
                             );
                             return game.cells.flatMap((c) => {
-                                return attachProps(val, c.id);
+                                if (c.playerId === p.id)
+                                    return attachProps(val, c.id);
+                                else return [];
                             });
                         });
                     },

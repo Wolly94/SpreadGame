@@ -53,8 +53,8 @@ export const MembranePerk: CreatePerk<number> = {
             values: values,
             description: (lvl) =>
                 "The first " +
-                formatDescription(values, (val) => val.toString() + "%", "/") +
-                " of every attacking enemy bubble die to the membrane before doing damage.",
+                formatDescription(values, (val) => val.toString(), "/") +
+                " units of every attacking enemy bubble die to the membrane before doing damage.",
             triggers: [
                 {
                     type: "BeforeFightEvent",

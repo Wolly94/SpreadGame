@@ -49,8 +49,8 @@ exports.MembranePerk = {
             values: values,
             description: function (lvl) {
                 return "The first " +
-                    utils_1.formatDescription(values, function (val) { return val.toString() + "%"; }, "/") +
-                    " of every attacking enemy bubble die to the membrane before doing damage.";
+                    utils_1.formatDescription(values, function (val) { return val.toString(); }, "/") +
+                    " units of every attacking enemy bubble die to the membrane before doing damage.";
             },
             triggers: [
                 {

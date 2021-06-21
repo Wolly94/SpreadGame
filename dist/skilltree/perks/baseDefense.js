@@ -63,7 +63,10 @@ exports.BaseDefensePerk = {
                         return game.players.flatMap(function (p) {
                             var val = perk_1.getPerkValue(game, name, p.id, values, defaultValue);
                             return game.cells.flatMap(function (c) {
-                                return attachProps(val, c.id);
+                                if (c.playerId === p.id)
+                                    return attachProps(val, c.id);
+                                else
+                                    return [];
                             });
                         });
                     },
