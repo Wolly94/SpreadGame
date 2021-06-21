@@ -86,7 +86,7 @@ var SpreadGameImplementation = /** @class */ (function () {
     };
     SpreadGameImplementation.fromReplay = function (replay) {
         var perks = replay.perks
-            .map(perk_1.perkFromBackUp)
+            .map(function (data) { return perk_1.perkFromBackUp(data); })
             .filter(function (p) { return p !== null; });
         var spreadGame = new SpreadGameImplementation(replay.map, replay.gameSettings, replay.players.map(player_1.playerFromData), perks);
         return spreadGame;

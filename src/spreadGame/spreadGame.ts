@@ -170,7 +170,7 @@ export class SpreadGameImplementation implements SpreadGame {
 
     static fromReplay(replay: SpreadReplay) {
         const perks = replay.perks
-            .map(perkFromBackUp)
+            .map((data) => perkFromBackUp(data))
             .filter((p): p is GeneralPerk => p !== null);
         const spreadGame = new SpreadGameImplementation(
             replay.map,

@@ -89,7 +89,7 @@ export const BaseDefensePerk: CreatePerk<number> = {
                     ): AttachProps<
                         TimedProps<CellFightProps | VisualizeCellProps>
                     >[] => {
-                        return game.players.flatMap((p) => {
+                        const res = game.players.flatMap((p) => {
                             const val = getPerkValue(
                                 game,
                                 name,
@@ -97,12 +97,11 @@ export const BaseDefensePerk: CreatePerk<number> = {
                                 values,
                                 defaultValue
                             );
-                            return game.cells.flatMap((c) => {
-                                if (c.playerId === p.id)
-                                    return attachProps(val, c.id);
-                                else return [];
-                            });
+                            return game.cells
+                                .filter((c) => c.playerId === p.id)
+                                .flatMap((c) => attachProps(val, c.id));
                         });
+                        return res;
                     },
                 },
             ],

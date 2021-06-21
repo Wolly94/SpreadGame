@@ -60,15 +60,13 @@ exports.BaseDefensePerk = {
                 {
                     type: "StartGame",
                     getValue: function (trigger, game) {
-                        return game.players.flatMap(function (p) {
+                        var res = game.players.flatMap(function (p) {
                             var val = perk_1.getPerkValue(game, name, p.id, values, defaultValue);
-                            return game.cells.flatMap(function (c) {
-                                if (c.playerId === p.id)
-                                    return attachProps(val, c.id);
-                                else
-                                    return [];
-                            });
+                            return game.cells
+                                .filter(function (c) { return c.playerId === p.id; })
+                                .flatMap(function (c) { return attachProps(val, c.id); });
                         });
+                        return res;
                     },
                 },
             ],
