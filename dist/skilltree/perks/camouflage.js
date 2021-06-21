@@ -111,7 +111,12 @@ exports.CamouflagePerk = {
                                 return [];
                             var props = getVisualProps(playerId, game.players)[0];
                             return game.cells.flatMap(function (cell) {
-                                return [getResultVisualProps(cell.id, props)];
+                                if (cell.playerId === playerId)
+                                    return [
+                                        getResultVisualProps(cell.id, props),
+                                    ];
+                                else
+                                    return [];
                             });
                         });
                     },

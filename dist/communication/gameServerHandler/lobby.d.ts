@@ -1,5 +1,5 @@
 import { ClientLobbyMessage, SkilledPerkData } from "../../messages/inGame/clientLobbyMessage";
-import { GameSettings, GameServerMessage, LobbyStateMessage, ServerLobbyMessage, SetPlayerIdMessage } from "../../messages/inGame/gameServerMessages";
+import { GameServerMessage, GameSettings, LobbyStateMessage, ServerLobbyMessage, SetPlayerIdMessage } from "../../messages/inGame/gameServerMessages";
 import { SkillTree } from "../../skilltree/skilltree";
 import { SpreadMap } from "../../spreadGame/map/map";
 import { AiPlayer, PlayerData, RegisteredToken, SeatedPlayer } from "./common";
