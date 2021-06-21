@@ -136,7 +136,7 @@ exports.CamouflagePerk = {
                     playerId: 0,
                     position: [100, 100],
                     radius: 50,
-                    units: 50,
+                    units: 10,
                 },
                 {
                     id: 1,
@@ -153,7 +153,7 @@ exports.CamouflagePerk = {
                 timestamp: 0,
                 data: {
                     type: "sendunitsmove",
-                    data: { playerId: 0, senderIds: [0], receiverId: 1 },
+                    data: { playerId: 1, senderIds: [1], receiverId: 0 },
                 },
             },
         ],
@@ -167,8 +167,8 @@ exports.CamouflagePerk = {
             },
         ],
         players: [
-            { id: 0, skills: [{ name: name, level: 1 }] },
-            { id: 1, skills: [] },
+            { id: 0, skills: [] },
+            { id: 1, skills: [{ name: name, level: 1 }] },
         ],
     },
 };
