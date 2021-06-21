@@ -176,7 +176,11 @@ export const CamouflagePerk: CreatePerk<number> = {
                                 game.players
                             );
                             return game.cells.flatMap((cell) => {
-                                return [getResultVisualProps(cell.id, props)];
+                                if (cell.playerId === playerId)
+                                    return [
+                                        getResultVisualProps(cell.id, props),
+                                    ];
+                                else return [];
                             });
                         });
                     },

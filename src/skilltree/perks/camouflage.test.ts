@@ -7,9 +7,11 @@ test("camouflage", () => {
     game.runReplay(rep, 1000);
     const cstate1 = game.toClientGameState(1);
     const cell11 = cstate1.cells.find((c) => c.id === 0);
+    const cell12 = cstate1.cells.find((c) => c.id === 1);
     const bubble1 = cstate1.bubbles.find((c) => c.id === 1);
     expect(bubble1?.data).toBe(null);
     expect(cell11?.data).toBe(null);
+    expect(cell12?.data).not.toBe(null);
 });
 
 test("no camouflage", () => {
