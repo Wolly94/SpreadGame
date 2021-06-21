@@ -56,6 +56,7 @@ import {
     startGameCellUtils,
     StartGameEvent,
 } from "./mechanics/events/startGame";
+import { stolenPerksUtils } from "./mechanics/events/stolenPerk";
 import { TimeStepEvent } from "./mechanics/events/timeStep";
 import {
     VisualizeBubbleProps,
@@ -729,9 +730,12 @@ export class SpreadGameImplementation implements SpreadGame {
         };
         return gs;
     }
-    getSkilledPerks(playerId: number) {
+    getSkilledPerks(playerId: number | null) {
         const pl = this.players.find((pl) => pl.id === playerId);
         if (pl === undefined) return [];
-        else return pl.skills;
+        const stolenPerks = stolenPerksUtils.collect(
+            this.fromAttachedProps({ type: "Player", id: pl.id })
+        );
+        return pl.skills.concat(stolenPerks.skilledPerks);
     }
 }

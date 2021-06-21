@@ -15,6 +15,7 @@ import { PreparationPerk } from "./preparation";
 import { RagePerk } from "./rage";
 import { ReinforcementsPerk } from "./reinforcements";
 import { SlaveryPerk } from "./slavery";
+import { SpyPerk } from "./spy";
 
 export interface Perk<TValue> {
     name: string;
@@ -113,6 +114,7 @@ export const allPerks: GeneralPerk[] = [
 
     //Agility
     BaseAgilityPerk.createFromValues(),
+    SpyPerk.createFromValues(),
 ];
 
 export const numberPerkCreators = [
@@ -127,6 +129,7 @@ export const numberPerkCreators = [
     BaseSpiritPerk,
     KamikazePerk,
     BaseAgilityPerk,
+    SpyPerk,
 ];
 export const listPerkCreators = [RagePerk, BerserkPerk, PreparationPerk];
 

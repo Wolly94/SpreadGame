@@ -10,6 +10,7 @@ import { GrowthEffect, GrowthEvent, GrowthProps } from "./growth";
 import { MoveEffect, MoveEvent, MoveProps } from "./move";
 import { SendUnitsEffect, SendUnitsEvent, SendUnitsProps } from "./sendUnits";
 import { StartGameCellProps, StartGameEffect, StartGameEvent } from "./startGame";
+import { StolenPerksProps } from "./stolenPerk";
 import { TimeStepEffect, TimeStepEvent } from "./timeStep";
 import { VisualizeBubbleProps } from "./visualizeBubbleProps";
 import { VisualizeCellProps } from "./visualizeCellProps";
@@ -19,7 +20,7 @@ export declare type PropUtils<TProps> = {
     default: TProps;
 };
 export declare type NewSpreadGameEvent = TimeStepEvent | StartGameEvent | CreateBubbleEvent | SendUnitsEvent | ConquerCellEvent | DefendCellEvent | BeforeFightEvent | GrowthEvent | MoveEvent;
-export declare type SpreadGameProps = StartGameCellProps | ConquerCellProps | SendUnitsProps | BubbleFightProps | CellFightProps | DefendCellProps | VisualizeCellProps | VisualizeBubbleProps | GrowthProps | MoveProps;
+export declare type SpreadGameProps = StartGameCellProps | ConquerCellProps | SendUnitsProps | BubbleFightProps | CellFightProps | DefendCellProps | VisualizeCellProps | VisualizeBubbleProps | GrowthProps | MoveProps | StolenPerksProps;
 export interface TimedProps<TProps> {
     expirationInMs: "Never" | number;
     value: TProps;

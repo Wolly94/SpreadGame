@@ -14,6 +14,7 @@ var preparation_1 = require("./preparation");
 var rage_1 = require("./rage");
 var reinforcements_1 = require("./reinforcements");
 var slavery_1 = require("./slavery");
+var spy_1 = require("./spy");
 exports.getPerkLevel = function (game, perkName, playerId) {
     var skPerk = game.getSkilledPerk(perkName, playerId);
     if (skPerk !== null)
@@ -64,6 +65,7 @@ exports.allPerks = [
     kamikaze_1.KamikazePerk.createFromValues(),
     //Agility
     baseAgility_1.BaseAgilityPerk.createFromValues(),
+    spy_1.SpyPerk.createFromValues(),
 ];
 exports.numberPerkCreators = [
     baseAttack_1.BaseAttackPerk,
@@ -77,6 +79,7 @@ exports.numberPerkCreators = [
     baseSpirit_1.BaseSpiritPerk,
     kamikaze_1.KamikazePerk,
     baseAgility_1.BaseAgilityPerk,
+    spy_1.SpyPerk,
 ];
 exports.listPerkCreators = [rage_1.RagePerk, berserk_1.BerserkPerk, preparation_1.PreparationPerk];
 exports.getPerkReplay = function (perk) {

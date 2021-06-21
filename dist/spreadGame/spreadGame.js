@@ -26,6 +26,7 @@ var growth_1 = require("./mechanics/events/growth");
 var move_1 = require("./mechanics/events/move");
 var sendUnits_1 = require("./mechanics/events/sendUnits");
 var startGame_1 = require("./mechanics/events/startGame");
+var stolenPerk_1 = require("./mechanics/events/stolenPerk");
 var visualizeBubbleProps_1 = require("./mechanics/events/visualizeBubbleProps");
 var visualizeCellProps_1 = require("./mechanics/events/visualizeCellProps");
 var scrapeOffMechanics_1 = __importDefault(require("./mechanics/scrapeOffMechanics"));
@@ -570,8 +571,8 @@ var SpreadGameImplementation = /** @class */ (function () {
         var pl = this.players.find(function (pl) { return pl.id === playerId; });
         if (pl === undefined)
             return [];
-        else
-            return pl.skills;
+        var stolenPerks = stolenPerk_1.stolenPerksUtils.collect(this.fromAttachedProps({ type: "Player", id: pl.id }));
+        return pl.skills.concat(stolenPerks.skilledPerks);
     };
     return SpreadGameImplementation;
 }());

@@ -54,5 +54,5 @@ export declare class SpreadGameImplementation implements SpreadGame {
     sendUnits(playerId: number, senderIds: number[], receiverId: number): false | undefined;
     getSkilledPerk(perkName: string, playerId: number | null): import("../skilltree/skilltree").SkilledPerk | null;
     toClientGameState(): ClientGameState;
-    getSkilledPerks(playerId: number): import("../skilltree/skilltree").SkilledPerk[];
+    getSkilledPerks(playerId: number | null): import("../skilltree/skilltree").SkilledPerk[];
 }

@@ -28,6 +28,7 @@ import {
     StartGameEffect,
     StartGameEvent,
 } from "./startGame";
+import { StolenPerksProps } from "./stolenPerk";
 import { TimeStepEffect, TimeStepEvent } from "./timeStep";
 import { VisualizeBubbleProps } from "./visualizeBubbleProps";
 import { VisualizeCellProps } from "./visualizeCellProps";
@@ -59,7 +60,8 @@ export type SpreadGameProps =
     | VisualizeCellProps
     | VisualizeBubbleProps
     | GrowthProps
-    | MoveProps;
+    | MoveProps
+    | StolenPerksProps;
 
 export interface TimedProps<TProps> {
     expirationInMs: "Never" | number;
