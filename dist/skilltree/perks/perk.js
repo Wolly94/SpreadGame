@@ -88,7 +88,7 @@ exports.listPerkCreators = [rage_1.RagePerk, berserk_1.BerserkPerk, preparation_
 exports.getPerkReplay = function (perk) {
     var ex = exports.numberPerkCreators.find(function (pk) { return pk.name === perk.name; });
     if (ex === undefined) {
-        ex = exports.listPerkCreators.find(function (pk) { return pk.name; });
+        ex = exports.listPerkCreators.find(function (pk) { return pk.name === perk.name; });
     }
     if (ex !== undefined)
         return ex.replay;

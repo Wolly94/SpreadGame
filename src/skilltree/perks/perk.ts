@@ -142,7 +142,7 @@ export const getPerkReplay = (perk: GeneralPerk): SpreadReplay | null => {
         | CreatePerk<[number, number]>
         | undefined = numberPerkCreators.find((pk) => pk.name === perk.name);
     if (ex === undefined) {
-        ex = listPerkCreators.find((pk) => pk.name);
+        ex = listPerkCreators.find((pk) => pk.name === perk.name);
     }
     if (ex !== undefined) return ex.replay;
     else return null;
