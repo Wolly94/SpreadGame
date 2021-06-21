@@ -15,6 +15,7 @@ var spreadGame_1 = require("../../spreadGame");
 var reinforcements_1 = require("./reinforcements");
 var testHelper_1 = require("./testHelper");
 test("test reinforcements", function () {
+    var _a;
     var rep = reinforcements_1.ReinforcementsPerk.replay;
     var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);
     var cstate = game.toClientGameState();
@@ -23,9 +24,10 @@ test("test reinforcements", function () {
     if (cell1 === undefined)
         expect(true).toBe(false);
     else
-        expect(cell0 === null || cell0 === void 0 ? void 0 : cell0.units).toBeGreaterThan(cell1.units);
+        expect((_a = cell0 === null || cell0 === void 0 ? void 0 : cell0.data) === null || _a === void 0 ? void 0 : _a.units).toBeGreaterThan(cell1.data !== null ? cell1.data.units : 10000000);
 });
 test("test no reinforcements", function () {
+    var _a;
     var rep = __assign(__assign({}, reinforcements_1.ReinforcementsPerk.replay), { players: testHelper_1.playersWithoutSkills(2) });
     var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);
     var cstate = game.toClientGameState();
@@ -34,5 +36,5 @@ test("test no reinforcements", function () {
     if (cell1 === undefined)
         expect(true).toBe(false);
     else
-        expect(cell0 === null || cell0 === void 0 ? void 0 : cell0.units).toBe(cell1.units);
+        expect((_a = cell0 === null || cell0 === void 0 ? void 0 : cell0.data) === null || _a === void 0 ? void 0 : _a.units).toBe(cell1.data !== null ? cell1.data.units : -10000);
 });

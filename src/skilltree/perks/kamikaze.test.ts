@@ -12,7 +12,7 @@ test("test kamikaze", () => {
     cstate = game.toClientGameState();
     cell0 = cstate.cells.find((c) => c.id === 0);
     expect(cell0?.playerId).toBe(1);
-    expect(cell0?.units).toBeLessThan(30);
+    expect(cell0?.data?.units).toBeLessThan(30);
 });
 
 test("test no kamikaze", () => {
@@ -28,5 +28,5 @@ test("test no kamikaze", () => {
     cstate = game.toClientGameState();
     cell0 = cstate.cells.find((c) => c.id === 0);
     expect(cell0?.playerId).toBe(1);
-    expect(cell0?.units).toBe(50);
+    expect(cell0?.data?.units).toBe(50);
 });

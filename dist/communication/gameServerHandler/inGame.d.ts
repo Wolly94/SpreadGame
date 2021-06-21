@@ -40,8 +40,8 @@ declare class InGameImplementation implements InGame {
     stop(): void;
     onConnect(token: string, playerData: PlayerData): [boolean, GameServerMessage | null, LobbyStateMessage | null];
     onReceiveMessage(token: string, message: ClientInGameMessage | GetReplayMessage): SendReplayMessage | null;
-    startGame(updateCallback: (msg: GameStateMessage) => void): void;
+    startGame(updateCallback: (msg: GameStateMessage, playerId: number | null) => void): void;
     applyAiMoves(): void;
-    getGameStateMessage(): GameStateMessage;
+    getGameStateMessage(playerId: number | null): GameStateMessage;
 }
 export default InGameImplementation;

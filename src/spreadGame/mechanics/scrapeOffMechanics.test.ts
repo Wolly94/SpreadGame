@@ -1,7 +1,7 @@
 import { SpreadGameImplementation } from "..";
 import SpreadReplay from "../../messages/replay/replay";
-import { BaseAttackPerk } from "../../skilltree/perks/baseAttack"
-import { backupFromPerk } from "../../skilltree/perks/perk"
+import { BaseAttackPerk } from "../../skilltree/perks/baseAttack";
+import { backupFromPerk } from "../../skilltree/perks/perk";
 
 const replay: SpreadReplay = {
     gameSettings: { mechanics: "basic", updateFrequencyInMs: 25 },
@@ -45,8 +45,8 @@ test("scrape off vs basic", () => {
     const cstate2 = game2.toClientGameState();
     const cell21 = cstate1.cells.find((c) => c.id === 1);
     const cell22 = cstate2.cells.find((c) => c.id === 1);
-    expect(cell21?.units).toBeCloseTo(
-        cell22 === undefined ? -1 : cell22.units,
+    expect(cell21?.data?.units).toBeCloseTo(
+        cell22 === undefined || cell22.data === null ? -1 : cell22.data.units,
         5
     );
 });

@@ -18,7 +18,9 @@ test("test rage", function () {
     var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);
     game.runReplay(rep, 3000);
     var clientState = game.toClientGameState();
-    var ragedBubbles = clientState.bubbles.filter(function (bubble) { return bubble.attackCombatAbilities > 0; });
+    var ragedBubbles = clientState.bubbles.filter(function (bubble) {
+        return bubble.data !== null && bubble.data.attackCombatAbilities > 0;
+    });
     expect(ragedBubbles.length).toBe(1);
     game.runReplay(rep, 2000);
     clientState = game.toClientGameState();
@@ -29,7 +31,9 @@ test("test rage", function () {
     game.run(1000, rep.gameSettings.updateFrequencyInMs);
     clientState = game.toClientGameState();
     expect(clientState.bubbles.length).toBe(1);
-    ragedBubbles = clientState.bubbles.filter(function (bubble) { return bubble.attackCombatAbilities > 0; });
+    ragedBubbles = clientState.bubbles.filter(function (bubble) {
+        return bubble.data !== null && bubble.data.attackCombatAbilities > 0;
+    });
     expect(ragedBubbles.length).toBe(0);
 });
 test("test no rage", function () {
@@ -37,6 +41,8 @@ test("test no rage", function () {
     var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);
     game.runReplay(rep, 3000);
     var clientState = game.toClientGameState();
-    var ragedBubbles = clientState.bubbles.filter(function (bubble) { return bubble.attackCombatAbilities > 1; });
+    var ragedBubbles = clientState.bubbles.filter(function (bubble) {
+        return bubble.data !== null && bubble.data.attackCombatAbilities > 1;
+    });
     expect(ragedBubbles.length).toBe(0);
 });

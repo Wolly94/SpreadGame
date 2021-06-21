@@ -42,6 +42,7 @@ var replay = {
     ],
 };
 test("scrape off vs basic", function () {
+    var _a;
     var rep1 = replay;
     var rep2 = __assign(__assign({}, replay), { gameSettings: __assign(__assign({}, replay.gameSettings), { mechanics: "scrapeoff" }) });
     var game1 = __1.SpreadGameImplementation.fromReplay(rep1);
@@ -52,5 +53,5 @@ test("scrape off vs basic", function () {
     var cstate2 = game2.toClientGameState();
     var cell21 = cstate1.cells.find(function (c) { return c.id === 1; });
     var cell22 = cstate2.cells.find(function (c) { return c.id === 1; });
-    expect(cell21 === null || cell21 === void 0 ? void 0 : cell21.units).toBeCloseTo(cell22 === undefined ? -1 : cell22.units, 5);
+    expect((_a = cell21 === null || cell21 === void 0 ? void 0 : cell21.data) === null || _a === void 0 ? void 0 : _a.units).toBeCloseTo(cell22 === undefined || cell22.data === null ? -1 : cell22.data.units, 5);
 });

@@ -7,22 +7,24 @@ test("test rage", () => {
     game.runReplay(rep, 2000);
     var clientState = game.toClientGameState();
     let ragedBubbles = clientState.bubbles.filter(
-        (bubble) => bubble.attackCombatAbilities > 0
+        (bubble) =>
+            bubble.data !== null && bubble.data.attackCombatAbilities > 0
     );
     let ragedCell = clientState.cells.find(
-        (c) => c.attackerCombatAbilities > 0
+        (c) => c.data !== null && c.data.attackerCombatAbilities > 0
     );
-    expect(ragedCell?.attackerCombatAbilities).toBe(30);
+    expect(ragedCell?.data?.attackerCombatAbilities).toBe(30);
     expect(ragedBubbles.length).toBe(2);
-    expect(ragedBubbles[0].attackCombatAbilities).toBe(10);
-    expect(ragedBubbles[1].attackCombatAbilities).toBe(20);
+    expect(ragedBubbles[0].data?.attackCombatAbilities).toBe(10);
+    expect(ragedBubbles[1].data?.attackCombatAbilities).toBe(20);
     game.runReplay(rep, 1000);
     let c1 = game.cells.find((c) => c.id === 1);
     expect(c1?.playerId).toBe(1);
     game.runReplay(rep, 1000);
     clientState = game.toClientGameState();
     ragedBubbles = clientState.bubbles.filter(
-        (bubble) => bubble.attackCombatAbilities > 0
+        (bubble) =>
+            bubble.data !== null && bubble.data.attackCombatAbilities > 0
     );
     expect(clientState.bubbles.length).toBe(1);
     expect(ragedBubbles.length).toBe(0);

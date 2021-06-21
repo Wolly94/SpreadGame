@@ -536,32 +536,49 @@ var SpreadGameImplementation = /** @class */ (function () {
         var perk = st === null || st === void 0 ? void 0 : st.skills.find(function (p) { return p.perk.name === perkName; });
         return perk !== undefined ? perk : null;
     };
-    SpreadGameImplementation.prototype.toClientGameState = function () {
+    SpreadGameImplementation.prototype.toClientGameState = function (playerId) {
         var _this = this;
+        if (playerId === void 0) { playerId = null; }
         var gs = {
             timePassedInMs: this.timePassed,
             cells: this.cells.map(function (cell) {
                 var cellProps = visualizeCellProps_1.visualizeCellUtils.collect(_this.fromAttachedProps({ type: "Cell", id: cell.id }));
+                var hideProps = playerId !== null
+                    ? cellProps.hideProps.get(playerId)
+                    : undefined;
+                var cellData = hideProps === undefined || hideProps.showUnits
+                    ? {
+                        attackerCombatAbilities: cellProps.rageValue,
+                        defenderCombatAbilities: cellProps.combatAbilityModifier,
+                        membraneValue: cellProps.membraneAbsorption,
+                        units: cell.units,
+                    }
+                    : null;
                 return {
                     id: cell.id,
                     playerId: cell.playerId,
-                    units: cell.units,
                     position: cell.position,
                     radius: cell.radius,
-                    defenderCombatAbilities: cellProps.combatAbilityModifier,
-                    attackerCombatAbilities: cellProps.rageValue,
-                    membraneValue: cellProps.membraneAbsorption,
+                    data: cellData,
                 };
             }),
             bubbles: this.bubbles.map(function (bubble) {
                 var bubbleProps = visualizeBubbleProps_1.visualizeBubbleUtils.collect(_this.fromAttachedProps({ type: "Bubble", id: bubble.id }));
+                var hideProps = playerId !== null
+                    ? bubbleProps.hideProps.get(playerId)
+                    : undefined;
+                var bubbleData = hideProps === undefined || !hideProps.invisible
+                    ? {
+                        attackCombatAbilities: bubbleProps.combatAbilityModifier,
+                        position: bubble.position,
+                        radius: bubble.radius,
+                        units: bubble.units,
+                    }
+                    : null;
                 return {
                     id: bubble.id,
                     playerId: bubble.playerId,
-                    units: bubble.units,
-                    position: bubble.position,
-                    radius: bubble.radius,
-                    attackCombatAbilities: bubbleProps.combatAbilityModifier,
+                    data: bubbleData,
                 };
             }),
         };

@@ -1,5 +1,27 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.cellHideUtils = {
+    combine: function (a, b) {
+        return {
+            showUnits: a.showUnits && b.showUnits,
+        };
+    },
+    default: { showUnits: true },
+};
+var combinePlayerCellHideProps = function (a, b) {
+    var res = new Map();
+    Array.from(a.entries()).forEach(function (entry) {
+        var key = entry[0], value = entry[1];
+        var exVal = res.get(key);
+        res.set(key, exports.cellHideUtils.combine(exVal === undefined ? exports.cellHideUtils.default : exVal, value));
+    });
+    Array.from(b.entries()).forEach(function (entry) {
+        var key = entry[0], value = entry[1];
+        var exVal = res.get(key);
+        res.set(key, exports.cellHideUtils.combine(exVal === undefined ? exports.cellHideUtils.default : exVal, value));
+    });
+    return res;
+};
 var type = "VisualizeCellProps";
 exports.visualizeCellUtils = {
     combine: function (a, b) {
@@ -8,6 +30,7 @@ exports.visualizeCellUtils = {
             combatAbilityModifier: a.combatAbilityModifier + b.combatAbilityModifier,
             rageValue: a.rageValue + b.rageValue,
             membraneAbsorption: a.membraneAbsorption + b.membraneAbsorption,
+            hideProps: combinePlayerCellHideProps(a.hideProps, b.hideProps),
         };
     },
     default: {
@@ -15,6 +38,7 @@ exports.visualizeCellUtils = {
         combatAbilityModifier: 0,
         rageValue: 0,
         membraneAbsorption: 0,
+        hideProps: new Map(),
     },
     collect: function (props) {
         return props

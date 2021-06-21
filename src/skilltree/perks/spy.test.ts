@@ -7,7 +7,7 @@ test("spy", () => {
     game.runReplay(rep, rep.lengthInMs);
     const cstate = game.toClientGameState();
     const cell0 = cstate.cells.find((c) => c.id === 0);
-    expect(cell0?.defenderCombatAbilities).toBeGreaterThan(1);
+    expect(cell0?.data?.defenderCombatAbilities).toBeGreaterThan(1);
     const skills = game.getSkilledPerks(0);
     expect(skills.length).toBe(2);
 });
@@ -18,7 +18,7 @@ test("no spy", () => {
     game.runReplay(rep, rep.lengthInMs);
     const cstate = game.toClientGameState();
     const cell0 = cstate.cells.find((c) => c.id === 0);
-    expect(cell0?.defenderCombatAbilities).toBe(0);
+    expect(cell0?.data?.defenderCombatAbilities).toBe(0);
     const skills = game.getSkilledPerks(0);
     expect(skills.length).toBe(1);
 });

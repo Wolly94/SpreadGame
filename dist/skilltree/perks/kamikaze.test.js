@@ -14,6 +14,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var spreadGame_1 = require("../../spreadGame");
 var kamikaze_1 = require("./kamikaze");
 test("test kamikaze", function () {
+    var _a;
     var rep = kamikaze_1.KamikazePerk.replay;
     var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);
     var cstate = game.toClientGameState();
@@ -23,9 +24,10 @@ test("test kamikaze", function () {
     cstate = game.toClientGameState();
     cell0 = cstate.cells.find(function (c) { return c.id === 0; });
     expect(cell0 === null || cell0 === void 0 ? void 0 : cell0.playerId).toBe(1);
-    expect(cell0 === null || cell0 === void 0 ? void 0 : cell0.units).toBeLessThan(30);
+    expect((_a = cell0 === null || cell0 === void 0 ? void 0 : cell0.data) === null || _a === void 0 ? void 0 : _a.units).toBeLessThan(30);
 });
 test("test no kamikaze", function () {
+    var _a;
     var rep = __assign(__assign({}, kamikaze_1.KamikazePerk.replay), { perks: [] });
     var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);
     var cstate = game.toClientGameState();
@@ -35,5 +37,5 @@ test("test no kamikaze", function () {
     cstate = game.toClientGameState();
     cell0 = cstate.cells.find(function (c) { return c.id === 0; });
     expect(cell0 === null || cell0 === void 0 ? void 0 : cell0.playerId).toBe(1);
-    expect(cell0 === null || cell0 === void 0 ? void 0 : cell0.units).toBe(50);
+    expect((_a = cell0 === null || cell0 === void 0 ? void 0 : cell0.data) === null || _a === void 0 ? void 0 : _a.units).toBe(50);
 });

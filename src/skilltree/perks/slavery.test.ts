@@ -13,7 +13,7 @@ test("test slavery", () => {
     var clientState = game.toClientGameState();
     cell2 = clientState.cells.find((c) => c.id === 1);
     expect(cell2?.playerId).toBe(0);
-    expect(cell2?.units).toBeGreaterThanOrEqual(20);
+    expect(cell2?.data?.units).toBeGreaterThanOrEqual(20);
 });
 
 test("test no slavery", () => {
@@ -27,5 +27,5 @@ test("test no slavery", () => {
     var clientState = game.toClientGameState();
     cell2 = clientState.cells.find((c) => c.id === 1);
     expect(cell2?.playerId).toBe(0);
-    expect(cell2?.units).toBeLessThanOrEqual(11);
+    expect(cell2?.data?.units).toBeLessThanOrEqual(11);
 });

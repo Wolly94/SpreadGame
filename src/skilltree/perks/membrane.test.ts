@@ -13,8 +13,8 @@ test("test membrane", () => {
     const cstate = game.toClientGameState();
     const cell = cstate.cells.find((c) => c.id === 0);
     expect(cell?.playerId).toBe(0);
-    expect(cell?.membraneValue).toBeGreaterThan(5);
-    expect(cell?.units).toBeLessThan(25);
+    expect(cell?.data?.membraneValue).toBeGreaterThan(5);
+    expect(cell?.data?.units).toBeLessThan(25);
 });
 
 test("membrane visual", () => {
@@ -54,7 +54,7 @@ test("membrane visual", () => {
     const cstate = game.toClientGameState();
     const cell1 = cstate.cells.find((c) => c.id === 1);
     expect(cell1?.playerId).toBe(0);
-    expect(cell1?.membraneValue).toBeGreaterThan(5);
+    expect(cell1?.data?.membraneValue).toBeGreaterThan(5);
 });
 
 test("test no membrane", () => {

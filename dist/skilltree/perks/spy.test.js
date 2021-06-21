@@ -14,22 +14,24 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var spreadGame_1 = require("../../spreadGame");
 var spy_1 = require("./spy");
 test("spy", function () {
+    var _a;
     var rep = spy_1.SpyPerk.replay;
     var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);
     game.runReplay(rep, rep.lengthInMs);
     var cstate = game.toClientGameState();
     var cell0 = cstate.cells.find(function (c) { return c.id === 0; });
-    expect(cell0 === null || cell0 === void 0 ? void 0 : cell0.defenderCombatAbilities).toBeGreaterThan(1);
+    expect((_a = cell0 === null || cell0 === void 0 ? void 0 : cell0.data) === null || _a === void 0 ? void 0 : _a.defenderCombatAbilities).toBeGreaterThan(1);
     var skills = game.getSkilledPerks(0);
     expect(skills.length).toBe(2);
 });
 test("no spy", function () {
+    var _a;
     var rep = __assign(__assign({}, spy_1.SpyPerk.replay), { perks: [] });
     var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);
     game.runReplay(rep, rep.lengthInMs);
     var cstate = game.toClientGameState();
     var cell0 = cstate.cells.find(function (c) { return c.id === 0; });
-    expect(cell0 === null || cell0 === void 0 ? void 0 : cell0.defenderCombatAbilities).toBe(0);
+    expect((_a = cell0 === null || cell0 === void 0 ? void 0 : cell0.data) === null || _a === void 0 ? void 0 : _a.defenderCombatAbilities).toBe(0);
     var skills = game.getSkilledPerks(0);
     expect(skills.length).toBe(1);
 });

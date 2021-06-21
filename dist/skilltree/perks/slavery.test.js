@@ -14,6 +14,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var spreadGame_1 = require("../../spreadGame");
 var slavery_1 = require("./slavery");
 test("test slavery", function () {
+    var _a;
     var rep = slavery_1.SlaveryPerk.replay;
     var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);
     game.runReplay(rep, 2000);
@@ -24,9 +25,10 @@ test("test slavery", function () {
     var clientState = game.toClientGameState();
     cell2 = clientState.cells.find(function (c) { return c.id === 1; });
     expect(cell2 === null || cell2 === void 0 ? void 0 : cell2.playerId).toBe(0);
-    expect(cell2 === null || cell2 === void 0 ? void 0 : cell2.units).toBeGreaterThanOrEqual(20);
+    expect((_a = cell2 === null || cell2 === void 0 ? void 0 : cell2.data) === null || _a === void 0 ? void 0 : _a.units).toBeGreaterThanOrEqual(20);
 });
 test("test no slavery", function () {
+    var _a;
     var rep = __assign(__assign({}, slavery_1.SlaveryPerk.replay), { perks: [] });
     var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);
     game.runReplay(rep, 2000);
@@ -37,5 +39,5 @@ test("test no slavery", function () {
     var clientState = game.toClientGameState();
     cell2 = clientState.cells.find(function (c) { return c.id === 1; });
     expect(cell2 === null || cell2 === void 0 ? void 0 : cell2.playerId).toBe(0);
-    expect(cell2 === null || cell2 === void 0 ? void 0 : cell2.units).toBeLessThanOrEqual(11);
+    expect((_a = cell2 === null || cell2 === void 0 ? void 0 : cell2.data) === null || _a === void 0 ? void 0 : _a.units).toBeLessThanOrEqual(11);
 });

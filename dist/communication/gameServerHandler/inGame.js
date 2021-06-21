@@ -143,15 +143,17 @@ var InGameImplementation = /** @class */ (function () {
         this.intervalId = setInterval(function () {
             if (_this.gameState !== null) {
                 _this.gameState.step(ms);
-                var message = _this.getGameStateMessage();
-                updateCallback(message);
+                _this.gameState.players.forEach(function (pl) {
+                    var message = _this.getGameStateMessage(pl.id);
+                    updateCallback(message, pl.id);
+                });
                 _this.applyAiMoves();
             }
         }, ms);
     };
     InGameImplementation.prototype.applyAiMoves = function () {
         var _this = this;
-        var data = this.gameState.toClientGameState();
+        var data = this.gameState.toClientGameState(null);
         this.aiClients.forEach(function (aiCl) {
             var move = aiCl.getMove(data);
             if (move != null) {
@@ -159,8 +161,8 @@ var InGameImplementation = /** @class */ (function () {
             }
         });
     };
-    InGameImplementation.prototype.getGameStateMessage = function () {
-        var data = this.gameState.toClientGameState();
+    InGameImplementation.prototype.getGameStateMessage = function (playerId) {
+        var data = this.gameState.toClientGameState(playerId);
         var message = {
             type: "gamestate",
             data: data,

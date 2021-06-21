@@ -1,4 +1,8 @@
-import { ClientGameState } from "../messages/inGame/clientGameState";
+import {
+    BubbleData,
+    CellData,
+    ClientGameState,
+} from "../messages/inGame/clientGameState";
 import { GameSettings } from "../messages/inGame/gameServerMessages";
 import SpreadReplay, { HistoryEntry, Move } from "../messages/replay/replay";
 import {
@@ -92,7 +96,7 @@ export interface SpreadGameInteraction {
 
 export interface SpreadGameFunctions {
     step: (ms: number) => void;
-    toClientGameState: () => ClientGameState;
+    toClientGameState: (playerId: number | null) => ClientGameState;
     getReplay: () => SpreadReplay;
 }
 
@@ -695,36 +699,57 @@ export class SpreadGameImplementation implements SpreadGame {
         return perk !== undefined ? perk : null;
     }
 
-    toClientGameState() {
+    toClientGameState(playerId: number | null = null) {
         const gs: ClientGameState = {
             timePassedInMs: this.timePassed,
             cells: this.cells.map((cell) => {
                 const cellProps: VisualizeCellProps = visualizeCellUtils.collect(
                     this.fromAttachedProps({ type: "Cell", id: cell.id })
                 );
+                const hideProps =
+                    playerId !== null
+                        ? cellProps.hideProps.get(playerId)
+                        : undefined;
+                const cellData: CellData | null =
+                    hideProps === undefined || hideProps.showUnits
+                        ? {
+                              attackerCombatAbilities: cellProps.rageValue,
+                              defenderCombatAbilities:
+                                  cellProps.combatAbilityModifier,
+                              membraneValue: cellProps.membraneAbsorption,
+                              units: cell.units,
+                          }
+                        : null;
                 return {
                     id: cell.id,
                     playerId: cell.playerId,
-                    units: cell.units,
                     position: cell.position,
                     radius: cell.radius,
-                    defenderCombatAbilities: cellProps.combatAbilityModifier,
-                    attackerCombatAbilities: cellProps.rageValue,
-                    membraneValue: cellProps.membraneAbsorption,
+                    data: cellData,
                 };
             }),
             bubbles: this.bubbles.map((bubble) => {
                 const bubbleProps: VisualizeBubbleProps = visualizeBubbleUtils.collect(
                     this.fromAttachedProps({ type: "Bubble", id: bubble.id })
                 );
+                const hideProps =
+                    playerId !== null
+                        ? bubbleProps.hideProps.get(playerId)
+                        : undefined;
+                const bubbleData: BubbleData | null =
+                    hideProps === undefined || !hideProps.invisible
+                        ? {
+                              attackCombatAbilities:
+                                  bubbleProps.combatAbilityModifier,
+                              position: bubble.position,
+                              radius: bubble.radius,
+                              units: bubble.units,
+                          }
+                        : null;
                 return {
                     id: bubble.id,
                     playerId: bubble.playerId,
-                    units: bubble.units,
-                    position: bubble.position,
-                    radius: bubble.radius,
-
-                    attackCombatAbilities: bubbleProps.combatAbilityModifier,
+                    data: bubbleData,
                 };
             }),
         };

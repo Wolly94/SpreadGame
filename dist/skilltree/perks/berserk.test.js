@@ -14,22 +14,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var spreadGame_1 = require("../../spreadGame");
 var berserk_1 = require("./berserk");
 test("test rage", function () {
+    var _a, _b, _c;
     var rep = berserk_1.BerserkPerk.replay;
     var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);
     game.runReplay(rep, 2000);
     var clientState = game.toClientGameState();
-    var ragedBubbles = clientState.bubbles.filter(function (bubble) { return bubble.attackCombatAbilities > 0; });
-    var ragedCell = clientState.cells.find(function (c) { return c.attackerCombatAbilities > 0; });
-    expect(ragedCell === null || ragedCell === void 0 ? void 0 : ragedCell.attackerCombatAbilities).toBe(30);
+    var ragedBubbles = clientState.bubbles.filter(function (bubble) {
+        return bubble.data !== null && bubble.data.attackCombatAbilities > 0;
+    });
+    var ragedCell = clientState.cells.find(function (c) { return c.data !== null && c.data.attackerCombatAbilities > 0; });
+    expect((_a = ragedCell === null || ragedCell === void 0 ? void 0 : ragedCell.data) === null || _a === void 0 ? void 0 : _a.attackerCombatAbilities).toBe(30);
     expect(ragedBubbles.length).toBe(2);
-    expect(ragedBubbles[0].attackCombatAbilities).toBe(10);
-    expect(ragedBubbles[1].attackCombatAbilities).toBe(20);
+    expect((_b = ragedBubbles[0].data) === null || _b === void 0 ? void 0 : _b.attackCombatAbilities).toBe(10);
+    expect((_c = ragedBubbles[1].data) === null || _c === void 0 ? void 0 : _c.attackCombatAbilities).toBe(20);
     game.runReplay(rep, 1000);
     var c1 = game.cells.find(function (c) { return c.id === 1; });
     expect(c1 === null || c1 === void 0 ? void 0 : c1.playerId).toBe(1);
     game.runReplay(rep, 1000);
     clientState = game.toClientGameState();
-    ragedBubbles = clientState.bubbles.filter(function (bubble) { return bubble.attackCombatAbilities > 0; });
+    ragedBubbles = clientState.bubbles.filter(function (bubble) {
+        return bubble.data !== null && bubble.data.attackCombatAbilities > 0;
+    });
     expect(clientState.bubbles.length).toBe(1);
     expect(ragedBubbles.length).toBe(0);
     game.runReplay(rep, 1000);

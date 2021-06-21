@@ -10,12 +10,12 @@ test("test base population", () => {
     let cstate = game.toClientGameState();
     let cell0 = cstate.cells.find((c) => c.id === 0);
     const cell1 = cstate.cells.find((c) => c.id === 1);
-    expect(cell0?.units).toBeGreaterThan(51);
-    expect(cell1?.units).toBe(50);
+    expect(cell0?.data?.units).toBeGreaterThan(51);
+    expect(cell1?.data?.units).toBe(50);
     game.run(100000, 25);
     cstate = game.toClientGameState();
     cell0 = cstate.cells.find((c) => c.id === 0);
-    expect(cell0?.units).toBe(80);
+    expect(cell0?.data?.units).toBe(80);
 });
 
 test("test no base population", () => {
@@ -28,6 +28,6 @@ test("test no base population", () => {
     const cstate = game.toClientGameState();
     const cell0 = cstate.cells.find((c) => c.id === 0);
     const cell1 = cstate.cells.find((c) => c.id === 1);
-    expect(cell0?.units).toBe(50);
-    expect(cell1?.units).toBe(50);
+    expect(cell0?.data?.units).toBe(50);
+    expect(cell1?.data?.units).toBe(50);
 });

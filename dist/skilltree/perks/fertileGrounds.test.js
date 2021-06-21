@@ -14,6 +14,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var spreadGame_1 = require("../../spreadGame");
 var fertileGrounds_1 = require("./fertileGrounds");
 test("test fertile grounds", function () {
+    var _a;
     var rep = fertileGrounds_1.FertileGroundsPerk.replay;
     var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);
     game.runReplay(rep, rep.lengthInMs);
@@ -23,9 +24,10 @@ test("test fertile grounds", function () {
     if (cell1 === undefined)
         expect(true).toBe(false);
     else
-        expect(cell0 === null || cell0 === void 0 ? void 0 : cell0.units).toBeGreaterThan(cell1.units);
+        expect((_a = cell0 === null || cell0 === void 0 ? void 0 : cell0.data) === null || _a === void 0 ? void 0 : _a.units).toBeGreaterThan(cell1.data !== null ? cell1.data.units : 10000000);
 });
 test("test no fertile grounds", function () {
+    var _a;
     var rep = __assign(__assign({}, fertileGrounds_1.FertileGroundsPerk.replay), { perks: [] });
     var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);
     game.runReplay(rep, rep.lengthInMs);
@@ -35,5 +37,5 @@ test("test no fertile grounds", function () {
     if (cell1 === undefined)
         expect(true).toBe(false);
     else
-        expect(cell0 === null || cell0 === void 0 ? void 0 : cell0.units).toBe(cell1.units);
+        expect((_a = cell0 === null || cell0 === void 0 ? void 0 : cell0.data) === null || _a === void 0 ? void 0 : _a.units).toBe(cell1.data !== null ? cell1.data.units : -10000);
 });

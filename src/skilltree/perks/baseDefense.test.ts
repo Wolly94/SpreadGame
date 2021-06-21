@@ -7,7 +7,7 @@ test("test baseDefense", () => {
     var clientState = game.toClientGameState();
     var cell2 = clientState.cells.find((c) => c.id === 1);
     expect(cell2?.playerId).toBe(1);
-    expect(cell2?.defenderCombatAbilities).toBe(30);
+    expect(cell2?.data?.defenderCombatAbilities).toBe(30);
     game.runReplay(rep, 2000);
     clientState = game.toClientGameState();
     cell2 = clientState.cells.find((c) => c.id === 1);
@@ -16,12 +16,12 @@ test("test baseDefense", () => {
     clientState = game.toClientGameState();
     cell2 = clientState.cells.find((c) => c.id === 1);
     expect(cell2?.playerId).toBe(1);
-    expect(cell2?.defenderCombatAbilities).toBe(30);
+    expect(cell2?.data?.defenderCombatAbilities).toBe(30);
     game.runReplay(rep, 2000);
     clientState = game.toClientGameState();
     cell2 = clientState.cells.find((c) => c.id === 1);
     expect(cell2?.playerId).toBe(0);
-    expect(cell2?.defenderCombatAbilities).toBe(0);
+    expect(cell2?.data?.defenderCombatAbilities).toBe(0);
 });
 
 test("test no baseDefense", () => {
@@ -30,7 +30,7 @@ test("test no baseDefense", () => {
     var clientState = game.toClientGameState();
     var cell2 = clientState.cells.find((c) => c.id === 1);
     expect(cell2?.playerId).toBe(1);
-    expect(cell2?.defenderCombatAbilities).toBe(0);
+    expect(cell2?.data?.defenderCombatAbilities).toBe(0);
     game.runReplay(rep, 2000);
     clientState = game.toClientGameState();
     cell2 = clientState.cells.find((c) => c.id === 1);

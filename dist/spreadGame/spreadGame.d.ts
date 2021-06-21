@@ -20,7 +20,7 @@ export interface SpreadGameInteraction {
 }
 export interface SpreadGameFunctions {
     step: (ms: number) => void;
-    toClientGameState: () => ClientGameState;
+    toClientGameState: (playerId: number | null) => ClientGameState;
     getReplay: () => SpreadReplay;
 }
 export declare type SpreadGame = SpreadGameState & SpreadGameFunctions & SpreadGameInteraction;
@@ -53,6 +53,6 @@ export declare class SpreadGameImplementation implements SpreadGame {
     fromAttachedProps(entity: Entity): SpreadGameProps[];
     sendUnits(playerId: number, senderIds: number[], receiverId: number): false | undefined;
     getSkilledPerk(perkName: string, playerId: number | null): import("../skilltree/skilltree").SkilledPerk | null;
-    toClientGameState(): ClientGameState;
+    toClientGameState(playerId?: number | null): ClientGameState;
     getSkilledPerks(playerId: number | null): import("../skilltree/skilltree").SkilledPerk[];
 }

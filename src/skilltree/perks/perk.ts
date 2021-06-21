@@ -7,6 +7,7 @@ import { BaseDefensePerk } from "./baseDefense";
 import { BasePopulationPerk } from "./basePopulation";
 import { BaseSpiritPerk } from "./baseSpirit";
 import { BerserkPerk } from "./berserk";
+import { CamouflagePerk } from "./camouflage";
 import { FertileGroundsPerk } from "./fertileGrounds";
 import { KamikazePerk } from "./kamikaze";
 import { LootsOfVictoryPerk } from "./lootsOfVictory";
@@ -115,6 +116,7 @@ export const allPerks: GeneralPerk[] = [
     //Agility
     BaseAgilityPerk.createFromValues(),
     SpyPerk.createFromValues(),
+    CamouflagePerk.createFromValues(),
 ];
 
 export const numberPerkCreators = [
@@ -130,6 +132,7 @@ export const numberPerkCreators = [
     KamikazePerk,
     BaseAgilityPerk,
     SpyPerk,
+    CamouflagePerk,
 ];
 export const listPerkCreators = [RagePerk, BerserkPerk, PreparationPerk];
 

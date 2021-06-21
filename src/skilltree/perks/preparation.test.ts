@@ -9,7 +9,7 @@ test("test preparation", () => {
     var clientState = game.toClientGameState();
     let cell2 = clientState.cells.find((c) => c.id === 1);
     expect(cell2?.playerId).toBe(1);
-    expect(cell2?.defenderCombatAbilities).toBeGreaterThan(5);
+    expect(cell2?.data?.defenderCombatAbilities).toBeGreaterThan(5);
 
     // check for reset after sent attack
     game.sendUnits(1, [1], 0);
@@ -17,7 +17,7 @@ test("test preparation", () => {
     clientState = game.toClientGameState();
     cell2 = clientState.cells.find((c) => c.id === 1);
     expect(cell2?.playerId).toBe(1);
-    expect(cell2?.defenderCombatAbilities).toBe(0);
+    expect(cell2?.data?.defenderCombatAbilities).toBe(0);
 });
 
 test("test no preparation", () => {
@@ -39,10 +39,11 @@ test("test preparation cap", () => {
     game.runReplay(rep, maxLength / 2);
     var clientState = game.toClientGameState();
     var cell2 = clientState.cells.find((c) => c.id === 1);
-    expect(cell2?.defenderCombatAbilities).toBe(100);
-    const oldValue = cell2 === undefined ? 0 : cell2?.defenderCombatAbilities;
+    expect(cell2?.data?.defenderCombatAbilities).toBe(100);
+    const oldValue =
+        cell2 === undefined ? 0 : cell2?.data?.defenderCombatAbilities;
     game.runReplay(rep, 5000);
     clientState = game.toClientGameState();
     cell2 = clientState.cells.find((c) => c.id === 1);
-    expect(oldValue).toBe(cell2?.defenderCombatAbilities);
+    expect(oldValue).toBe(cell2?.data?.defenderCombatAbilities);
 });
