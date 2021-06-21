@@ -23,6 +23,7 @@ var conquerCell_1 = require("./mechanics/events/conquerCell");
 var defendCell_1 = require("./mechanics/events/defendCell");
 var fight_1 = require("./mechanics/events/fight");
 var growth_1 = require("./mechanics/events/growth");
+var move_1 = require("./mechanics/events/move");
 var sendUnits_1 = require("./mechanics/events/sendUnits");
 var startGame_1 = require("./mechanics/events/startGame");
 var visualizeBubbleProps_1 = require("./mechanics/events/visualizeBubbleProps");
@@ -130,6 +131,9 @@ var SpreadGameImplementation = /** @class */ (function () {
                 else if (tr.type === "Growth" && event.type === "Growth") {
                     return tr.getValue(event, _this);
                 }
+                else if (tr.type === "Move" && event.type === "Move") {
+                    return tr.getValue(event, _this);
+                }
                 else if (tr.type === "ConquerCell" &&
                     event.type === "ConquerCell")
                     return tr.getValue(event, _this);
@@ -170,7 +174,9 @@ var SpreadGameImplementation = /** @class */ (function () {
             var index = this.cells.findIndex(function (c) { return c.id === event.after.cell.id; });
             if (index < 0)
                 throw new Error("Cell not found");
-            this.cells[index] = __assign(__assign({}, this.cells[index]), { units: this.cells[index].units * conquerProps.unitsInPercentToRemain + conquerProps.additionalUnits });
+            this.cells[index] = __assign(__assign({}, this.cells[index]), { units: this.cells[index].units *
+                    conquerProps.unitsInPercentToRemain +
+                    conquerProps.additionalUnits });
         }
         return remProps;
     };
@@ -222,7 +228,16 @@ var SpreadGameImplementation = /** @class */ (function () {
         };
         this.handleEvent(stepEvent);
         this.bubbles = this.bubbles.map(function (bubble) {
-            return _this.mechanics.move(bubble, ms);
+            var moveEvent = {
+                type: "Move",
+                bubble: bubble,
+            };
+            var props = _this.handleEvent(moveEvent);
+            var moveProps = move_1.moveUtils.collect(_this.fromAttachedProps({
+                type: "Bubble",
+                id: bubble.id,
+            }).concat(props));
+            return _this.mechanics.move(bubble, ms, moveProps);
         });
         this.cells = this.cells.map(function (cell) {
             var growthEvent = {

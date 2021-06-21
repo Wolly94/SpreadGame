@@ -51,12 +51,13 @@ const basicMechanics: SpreadGameMechanics = {
         }
         return [null, resCell];
     },
-    move: (bubble: Bubble, ms: number) => {
+    move: (bubble: Bubble, ms: number, moveProps) => {
+        const speed = defaultSpeed * (1+moveProps.additionalSpeedInPercent/100)
         const newPosition: [number, number] = [
             bubble.position[0] +
-                (defaultSpeed * bubble.direction[0] * ms) / 1000.0,
+                (speed * bubble.direction[0] * ms) / 1000.0,
             bubble.position[1] +
-                (defaultSpeed * bubble.direction[1] * ms) / 1000.0,
+                (speed * bubble.direction[1] * ms) / 1000.0,
         ];
         return { ...bubble, position: newPosition };
     },

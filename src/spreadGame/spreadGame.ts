@@ -50,6 +50,7 @@ import {
     cellFightUtils,
 } from "./mechanics/events/fight";
 import { GrowthEvent, growthUtils } from "./mechanics/events/growth";
+import { MoveEvent, moveUtils } from "./mechanics/events/move";
 import { SendUnitsEvent, sendUnitsUtils } from "./mechanics/events/sendUnits";
 import {
     startGameCellUtils,
@@ -212,6 +213,8 @@ export class SpreadGameImplementation implements SpreadGame {
                     return tr.getValue(event, this);
                 } else if (tr.type === "Growth" && event.type === "Growth") {
                     return tr.getValue(event, this);
+                } else if (tr.type === "Move" && event.type === "Move") {
+                    return tr.getValue(event, this);
                 } else if (
                     tr.type === "ConquerCell" &&
                     event.type === "ConquerCell"
@@ -268,7 +271,10 @@ export class SpreadGameImplementation implements SpreadGame {
             if (index < 0) throw new Error("Cell not found");
             this.cells[index] = {
                 ...this.cells[index],
-                units: this.cells[index].units*conquerProps.unitsInPercentToRemain + conquerProps.additionalUnits,
+                units:
+                    this.cells[index].units *
+                        conquerProps.unitsInPercentToRemain +
+                    conquerProps.additionalUnits,
             };
         }
         return remProps;
@@ -327,9 +333,20 @@ export class SpreadGameImplementation implements SpreadGame {
             ms: ms,
         };
         this.handleEvent(stepEvent);
-        this.bubbles = this.bubbles.map((bubble) =>
-            this.mechanics.move(bubble, ms)
-        );
+        this.bubbles = this.bubbles.map((bubble) => {
+            const moveEvent: MoveEvent = {
+                type: "Move",
+                bubble: bubble,
+            };
+            const props = this.handleEvent(moveEvent);
+            const moveProps = moveUtils.collect(
+                this.fromAttachedProps({
+                    type: "Bubble",
+                    id: bubble.id,
+                }).concat(props)
+            );
+            return this.mechanics.move(bubble, ms, moveProps);
+        });
         this.cells = this.cells.map((cell) => {
             const growthEvent: GrowthEvent = {
                 type: "Growth",
@@ -586,7 +603,7 @@ export class SpreadGameImplementation implements SpreadGame {
         fightResults.forEach(([before, after]) =>
             this.processFight(before, after)
         );
-        eventsToProcess.forEach(ev => this.handleEvent(ev));
+        eventsToProcess.forEach((ev) => this.handleEvent(ev));
     }
     fromAttachedProps(entity: Entity) {
         const result = this.attachedProps

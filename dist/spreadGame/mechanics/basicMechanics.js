@@ -56,12 +56,13 @@ var basicMechanics = {
         }
         return [null, resCell];
     },
-    move: function (bubble, ms) {
+    move: function (bubble, ms, moveProps) {
+        var speed = exports.defaultSpeed * (1 + moveProps.additionalSpeedInPercent / 100);
         var newPosition = [
             bubble.position[0] +
-                (exports.defaultSpeed * bubble.direction[0] * ms) / 1000.0,
+                (speed * bubble.direction[0] * ms) / 1000.0,
             bubble.position[1] +
-                (exports.defaultSpeed * bubble.direction[1] * ms) / 1000.0,
+                (speed * bubble.direction[1] * ms) / 1000.0,
         ];
         return __assign(__assign({}, bubble), { position: newPosition });
     },

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var baseAgility_1 = require("./baseAgility");
 var baseAttack_1 = require("./baseAttack");
 var baseDefense_1 = require("./baseDefense");
 var basePopulation_1 = require("./basePopulation");
@@ -61,6 +62,8 @@ exports.allPerks = [
     //Spirit
     baseSpirit_1.BaseSpiritPerk.createFromValues(),
     kamikaze_1.KamikazePerk.createFromValues(),
+    //Agility
+    baseAgility_1.BaseAgilityPerk.createFromValues(),
 ];
 exports.numberPerkCreators = [
     baseAttack_1.BaseAttackPerk,
@@ -73,6 +76,7 @@ exports.numberPerkCreators = [
     reinforcements_1.ReinforcementsPerk,
     baseSpirit_1.BaseSpiritPerk,
     kamikaze_1.KamikazePerk,
+    baseAgility_1.BaseAgilityPerk,
 ];
 exports.listPerkCreators = [rage_1.RagePerk, berserk_1.BerserkPerk, preparation_1.PreparationPerk];
 exports.getPerkReplay = function (perk) {

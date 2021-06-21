@@ -105,8 +105,8 @@ var bounceMechanics = {
         resBubble.direction = newDirection;
         return [resBubble, resCell];
     },
-    move: function (bubble, ms) {
-        bubble = basicMechanics_1.default.move(bubble, ms);
+    move: function (bubble, ms, moveProps) {
+        bubble = basicMechanics_1.default.move(bubble, ms, moveProps);
         bubble.direction = adjustedDirection(bubble.position, bubble.direction, bubble.targetPos);
         return bubble;
     },

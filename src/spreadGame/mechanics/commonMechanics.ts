@@ -8,6 +8,7 @@ import {
     isCellFightProps,
 } from "./events/fight";
 import { GrowthProps } from "./events/growth";
+import { MoveProps } from "./events/move"
 import { SendUnitsProps } from "./events/sendUnits";
 
 export const calculationAccuracy = 0.01;
@@ -134,7 +135,7 @@ export interface SpreadGameMechanics {
         f1: BubbleFightProps,
         f2: CellFightProps
     ) => [Bubble | null, Cell];
-    move: (bubble: Bubble, ms: number) => Bubble;
+    move: (bubble: Bubble, ms: number, moveProps: MoveProps) => Bubble;
     grow: (cell: Cell, ms: number, growthProps: GrowthProps) => Cell;
     sendBubble: (
         sender: Cell,

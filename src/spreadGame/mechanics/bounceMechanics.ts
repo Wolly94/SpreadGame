@@ -106,8 +106,8 @@ const bounceMechanics: SpreadGameMechanics = {
 
         return [resBubble, resCell];
     },
-    move: (bubble, ms) => {
-        bubble = basicMechanics.move(bubble, ms);
+    move: (bubble, ms, moveProps) => {
+        bubble = basicMechanics.move(bubble, ms, moveProps);
         bubble.direction = adjustedDirection(
             bubble.position,
             bubble.direction,

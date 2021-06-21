@@ -1,6 +1,7 @@
 import SpreadReplay from "../../messages/replay/replay";
 import { SpreadGameImplementation } from "../../spreadGame";
 import { SpreadGameEffect } from "../../spreadGame/mechanics/events/definitions";
+import { BaseAgilityPerk } from "./baseAgility";
 import { BaseAttackPerk } from "./baseAttack";
 import { BaseDefensePerk } from "./baseDefense";
 import { BasePopulationPerk } from "./basePopulation";
@@ -109,6 +110,9 @@ export const allPerks: GeneralPerk[] = [
     //Spirit
     BaseSpiritPerk.createFromValues(),
     KamikazePerk.createFromValues(),
+
+    //Agility
+    BaseAgilityPerk.createFromValues(),
 ];
 
 export const numberPerkCreators = [
@@ -122,6 +126,7 @@ export const numberPerkCreators = [
     ReinforcementsPerk,
     BaseSpiritPerk,
     KamikazePerk,
+    BaseAgilityPerk,
 ];
 export const listPerkCreators = [RagePerk, BerserkPerk, PreparationPerk];
 
