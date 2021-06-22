@@ -20,9 +20,9 @@ export const DeadlyEnvironmentPerk: CreatePerk<number> = {
             defaultValue: defaultValue,
             values: values,
             description: (lvl) =>
-                "Enemy bubbles decrease in population over time. (-" +
-                formatDescription(values, (val) => val.toString(), "/") +
-                " units/second",
+                "Enemy bubbles decrease in population over time. (" +
+                formatDescription(values, (val) => "-"+val.toString(), "/") +
+                " units/second)",
             triggers: [
                 {
                     type: "CreateBubble",

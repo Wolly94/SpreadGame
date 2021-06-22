@@ -28,9 +28,9 @@ exports.DeadlyEnvironmentPerk = {
             defaultValue: defaultValue,
             values: values,
             description: function (lvl) {
-                return "Enemy bubbles decrease in population over time. (-" +
-                    utils_1.formatDescription(values, function (val) { return val.toString(); }, "/") +
-                    " units/second";
+                return "Enemy bubbles decrease in population over time. (" +
+                    utils_1.formatDescription(values, function (val) { return "-" + val.toString(); }, "/") +
+                    " units/second)";
             },
             triggers: [
                 {
