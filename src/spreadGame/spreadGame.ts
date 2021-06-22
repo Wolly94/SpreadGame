@@ -60,6 +60,10 @@ import {
     isRaisableEvent,
     RaiseEventProps,
 } from "./mechanics/events/raiseEvent";
+import {
+    ReinforceCellEffect,
+    ReinforceCellEvent,
+} from "./mechanics/events/reinforceCell";
 import { SendUnitsEvent, sendUnitsUtils } from "./mechanics/events/sendUnits";
 import {
     startGameCellUtils,
@@ -239,6 +243,11 @@ export class SpreadGameImplementation implements SpreadGame {
                 else if (
                     tr.type === "DefendCell" &&
                     event.type === "DefendCell"
+                )
+                    return tr.getValue(event, this);
+                else if (
+                    tr.type === "ReinforceCell" &&
+                    event.type === "ReinforceCell"
                 )
                     return tr.getValue(event, this);
                 else if (tr.type === "SendUnits" && event.type === "SendUnits")
@@ -543,7 +552,11 @@ export class SpreadGameImplementation implements SpreadGame {
     }
     collideBubblesWithCells() {
         const fightResults: [BeforeFightState, AfterFightState][] = [];
-        const eventsToProcess: (ConquerCellEvent | DefendCellEvent)[] = [];
+        const eventsToProcess: (
+            | ConquerCellEvent
+            | DefendCellEvent
+            | ReinforceCellEvent
+        )[] = [];
         var remainingBubbles: Bubble[] = [];
         this.bubbles.forEach((bubble) => {
             var currentBubble: Bubble | null = bubble;
@@ -593,7 +606,23 @@ export class SpreadGameImplementation implements SpreadGame {
                     };
                     fightResults.push([beforeFight, afterFight]);
 
-                    if (newCell.playerId !== cell.playerId) {
+                    if (cell.playerId === currentBubble.playerId) {
+                        const reinforceEvent: ReinforceCellEvent = {
+                            type: "ReinforceCell",
+                            before: {
+                                cell: { ...beforeFight.defender.val },
+                                bubble: { ...beforeFight.attacker },
+                            },
+                            after: {
+                                cell: { ...newCell },
+                                bubble:
+                                    afterFight.attacker !== null
+                                        ? { ...afterFight.attacker }
+                                        : null,
+                            },
+                        };
+                        eventsToProcess.push(reinforceEvent);
+                    } else if (newCell.playerId !== cell.playerId) {
                         const conquerEvent: ConquerCellEvent = {
                             type: "ConquerCell",
                             before: { cell: { ...cell } },

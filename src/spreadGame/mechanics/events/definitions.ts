@@ -21,9 +21,11 @@ import {
     CellFightProps,
 } from "./fight";
 import { GrowthEffect, GrowthEvent, GrowthProps } from "./growth";
-import { InfectCellProps } from "./infectCell"
+import { InfectBubbleProps } from "./infectBubble";
+import { InfectCellProps } from "./infectCell";
 import { MoveEffect, MoveEvent, MoveProps } from "./move";
 import { RaisableEvent, RaiseEventEffect, RaiseEventProps } from "./raiseEvent";
+import { ReinforceCellEffect, ReinforceCellEvent } from "./reinforceCell"
 import { SendUnitsEffect, SendUnitsEvent, SendUnitsProps } from "./sendUnits";
 import {
     StartGameCellProps,
@@ -51,7 +53,8 @@ export type NewSpreadGameEvent =
     | BeforeFightEvent
     | GrowthEvent
     | MoveEvent
-    | RaisableEvent;
+    | RaisableEvent
+    | ReinforceCellEvent;
 
 export type SpreadGameProps =
     | StartGameCellProps
@@ -66,6 +69,7 @@ export type SpreadGameProps =
     | MoveProps
     | StolenPerksProps
     | InfectCellProps
+    | InfectBubbleProps
     | RaiseEventProps;
 
 export interface TimedProps<TProps> {
@@ -107,7 +111,8 @@ export type SpreadGameEffect =
     | BeforeFightEffect
     | GrowthEffect
     | MoveEffect
-    | RaiseEventEffect;
+    | RaiseEventEffect
+    | ReinforceCellEffect;
 
 /*
 

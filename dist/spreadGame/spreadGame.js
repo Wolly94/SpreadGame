@@ -150,6 +150,9 @@ var SpreadGameImplementation = /** @class */ (function () {
                 else if (tr.type === "DefendCell" &&
                     event.type === "DefendCell")
                     return tr.getValue(event, _this);
+                else if (tr.type === "ReinforceCell" &&
+                    event.type === "ReinforceCell")
+                    return tr.getValue(event, _this);
                 else if (tr.type === "SendUnits" && event.type === "SendUnits")
                     return tr.getValue(event, _this);
                 else if (tr.type === "BeforeFightEvent" &&
@@ -432,7 +435,22 @@ var SpreadGameImplementation = /** @class */ (function () {
                         defender: { type: "Cell", val: __assign({}, newCell) },
                     };
                     fightResults.push([beforeFight, afterFight]);
-                    if (newCell.playerId !== cell.playerId) {
+                    if (cell.playerId === currentBubble.playerId) {
+                        var reinforceEvent = {
+                            type: "ReinforceCell",
+                            before: {
+                                cell: __assign({}, beforeFight.defender.val),
+                                bubble: __assign({}, beforeFight.attacker),
+                            },
+                            after: {
+                                cell: __assign({}, newCell),
+                                bubble: afterFight.attacker !== null
+                                    ? __assign({}, afterFight.attacker) : null,
+                            },
+                        };
+                        eventsToProcess.push(reinforceEvent);
+                    }
+                    else if (newCell.playerId !== cell.playerId) {
                         var conquerEvent = {
                             type: "ConquerCell",
                             before: { cell: __assign({}, cell) },
