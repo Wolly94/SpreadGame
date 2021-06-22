@@ -103,7 +103,7 @@ exports.BaseInfectionPerk = {
                     id: 0,
                     playerId: 0,
                     position: [100, 100],
-                    radius: 50,
+                    radius: common_1.unitsToRadius(90),
                     units: 140,
                 },
                 {

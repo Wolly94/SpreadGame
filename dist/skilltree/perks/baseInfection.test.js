@@ -14,21 +14,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var spreadGame_1 = require("../../spreadGame");
 var baseInfection_1 = require("./baseInfection");
 test("base infection", function () {
-    var _a, _b, _c, _d;
+    var _a, _b, _c, _d, _e, _f, _g;
     var rep = baseInfection_1.BaseInfectionPerk.replay;
     var game = spreadGame_1.SpreadGameImplementation.fromReplay(rep);
     game.runReplay(rep, 1500);
     var cstate = game.toClientGameState();
+    var cell0 = cstate.cells.find(function (c) { return c.id === 0; });
     var cell1 = cstate.cells.find(function (c) { return c.id === 1; });
     var unitsAfter = ((_a = cell1 === null || cell1 === void 0 ? void 0 : cell1.data) === null || _a === void 0 ? void 0 : _a.units) === undefined ? -1 : (_b = cell1 === null || cell1 === void 0 ? void 0 : cell1.data) === null || _b === void 0 ? void 0 : _b.units;
+    var control0 = ((_c = cell0 === null || cell0 === void 0 ? void 0 : cell0.data) === null || _c === void 0 ? void 0 : _c.units) === undefined ? -1 : (_d = cell0 === null || cell0 === void 0 ? void 0 : cell0.data) === null || _d === void 0 ? void 0 : _d.units;
     game.runReplay(rep, 1000);
     cstate = game.toClientGameState();
     cell1 = cstate.cells.find(function (c) { return c.id === 1; });
-    expect((_c = cell1 === null || cell1 === void 0 ? void 0 : cell1.data) === null || _c === void 0 ? void 0 : _c.units).toBe(unitsAfter);
+    cell0 = cstate.cells.find(function (c) { return c.id === 0; });
+    expect((_e = cell1 === null || cell1 === void 0 ? void 0 : cell1.data) === null || _e === void 0 ? void 0 : _e.units).toBe(unitsAfter);
+    expect((_f = cell0 === null || cell0 === void 0 ? void 0 : cell0.data) === null || _f === void 0 ? void 0 : _f.units).toBeGreaterThan(control0);
     game.run(1500, 25);
     cstate = game.toClientGameState();
     cell1 = cstate.cells.find(function (c) { return c.id === 1; });
-    expect((_d = cell1 === null || cell1 === void 0 ? void 0 : cell1.data) === null || _d === void 0 ? void 0 : _d.units).toBeGreaterThan(unitsAfter + 2);
+    expect((_g = cell1 === null || cell1 === void 0 ? void 0 : cell1.data) === null || _g === void 0 ? void 0 : _g.units).toBeGreaterThan(unitsAfter + 2);
 });
 test("no base infection", function () {
     var _a, _b, _c;

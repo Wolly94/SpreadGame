@@ -136,7 +136,7 @@ export const BaseInfectionPerk: CreatePerk<number> = {
                     id: 0,
                     playerId: 0,
                     position: [100, 100],
-                    radius: 50,
+                    radius: unitsToRadius(90),
                     units: 140,
                 },
                 {
