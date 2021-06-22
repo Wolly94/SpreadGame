@@ -35,20 +35,33 @@ export const DeadlyEnvironmentPerk: CreatePerk<number> = {
                         trigger,
                         game
                     ): AttachProps<TimedProps<VisualizeGameProps>>[] => {
-                        return [
-                            {
-                                entity: { type: "Game", id: null },
-                                perkName: name,
-                                triggerType: "StartGame",
-                                props: {
-                                    expirationInMs: "Never",
-                                    value: {
-                                        ...visualizeGameUtils.default,
-                                        deadlyEnvironment: true,
+                        const val = game.players
+                            .map((pl) => {
+                                return getPerkValue(
+                                    game,
+                                    name,
+                                    pl.id,
+                                    values,
+                                    defaultValue
+                                );
+                            })
+                            .reduce((prev, curr) => Math.max(prev, curr), 0);
+                        if (val === defaultValue) return [];
+                        else
+                            return [
+                                {
+                                    entity: { type: "Game", id: null },
+                                    perkName: name,
+                                    triggerType: "StartGame",
+                                    props: {
+                                        expirationInMs: "Never",
+                                        value: {
+                                            ...visualizeGameUtils.default,
+                                            deadlyEnvironment: true,
+                                        },
                                     },
                                 },
-                            },
-                        ];
+                            ];
                     },
                 },
                 {

@@ -1,5 +1,7 @@
+import SpreadReplay from "../../messages/replay/replay";
 import { SpreadGameImplementation } from "../../spreadGame";
 import { DeadlyEnvironmentPerk } from "./deadlyEnvironment";
+import { playersWithoutSkills } from "./testHelper";
 
 test("deadly environment", () => {
     const rep = DeadlyEnvironmentPerk.replay;
@@ -12,7 +14,10 @@ test("deadly environment", () => {
 });
 
 test("no deadly environment", () => {
-    const rep = { ...DeadlyEnvironmentPerk.replay, perks: [] };
+    const rep: SpreadReplay = {
+        ...DeadlyEnvironmentPerk.replay,
+        players: playersWithoutSkills(2),
+    };
     const game = SpreadGameImplementation.fromReplay(rep);
     game.runReplay(rep, rep.lengthInMs);
     const cstate = game.toClientGameState();

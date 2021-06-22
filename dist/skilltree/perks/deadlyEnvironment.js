@@ -37,17 +37,25 @@ exports.DeadlyEnvironmentPerk = {
                 {
                     type: "StartGame",
                     getValue: function (trigger, game) {
-                        return [
-                            {
-                                entity: { type: "Game", id: null },
-                                perkName: name,
-                                triggerType: "StartGame",
-                                props: {
-                                    expirationInMs: "Never",
-                                    value: __assign(__assign({}, visualizeGameProps_1.visualizeGameUtils.default), { deadlyEnvironment: true }),
+                        var val = game.players
+                            .map(function (pl) {
+                            return perk_1.getPerkValue(game, name, pl.id, values, defaultValue);
+                        })
+                            .reduce(function (prev, curr) { return Math.max(prev, curr); }, 0);
+                        if (val === defaultValue)
+                            return [];
+                        else
+                            return [
+                                {
+                                    entity: { type: "Game", id: null },
+                                    perkName: name,
+                                    triggerType: "StartGame",
+                                    props: {
+                                        expirationInMs: "Never",
+                                        value: __assign(__assign({}, visualizeGameProps_1.visualizeGameUtils.default), { deadlyEnvironment: true }),
+                                    },
                                 },
-                            },
-                        ];
+                            ];
                     },
                 },
                 {
