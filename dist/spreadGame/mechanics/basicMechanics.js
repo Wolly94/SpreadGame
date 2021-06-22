@@ -59,12 +59,11 @@ var basicMechanics = {
     move: function (bubble, ms, moveProps) {
         var speed = exports.defaultSpeed * (1 + moveProps.additionalSpeedInPercent / 100);
         var newPosition = [
-            bubble.position[0] +
-                (speed * bubble.direction[0] * ms) / 1000.0,
-            bubble.position[1] +
-                (speed * bubble.direction[1] * ms) / 1000.0,
+            bubble.position[0] + (speed * bubble.direction[0] * ms) / 1000.0,
+            bubble.position[1] + (speed * bubble.direction[1] * ms) / 1000.0,
         ];
-        return __assign(__assign({}, bubble), { position: newPosition });
+        var newUnits = bubble.units - (moveProps.unitLossPerSecond * ms) / 1000;
+        return __assign(__assign({}, bubble), { position: newPosition, units: newUnits });
     },
     grow: function (cell, ms, growthProps) {
         if (cell.playerId === null)
@@ -73,7 +72,9 @@ var basicMechanics = {
         var growthFactor = 1 + growthProps.additionalGrowthInPercent / 100;
         var posGrowthPerSecond = common_1.radiusToGrowth(cell.radius) * growthFactor;
         var negGrowthPerSecond = common_1.radiusToGrowth(cell.radius) / growthFactor;
-        var toGrow = growthProps.blocked ? 0 : (posGrowthPerSecond * ms) / 1000;
+        var toGrow = growthProps.blocked
+            ? 0
+            : (posGrowthPerSecond * ms) / 1000;
         var toReduce = (negGrowthPerSecond * ms) / 1000;
         var nextUnits = cell.units < saturatedUnitCount
             ? Math.min(cell.units + toGrow, saturatedUnitCount)

@@ -6,11 +6,13 @@ exports.moveUtils = {
         return {
             type: type,
             additionalSpeedInPercent: a.additionalSpeedInPercent + b.additionalSpeedInPercent,
+            unitLossPerSecond: Math.max(a.unitLossPerSecond, b.unitLossPerSecond),
         };
     },
     default: {
         type: type,
         additionalSpeedInPercent: 0,
+        unitLossPerSecond: 0,
     },
     collect: function (props) {
         return props

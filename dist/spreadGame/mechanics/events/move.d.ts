@@ -7,6 +7,7 @@ export interface MoveEvent {
 export interface MoveProps {
     type: MoveEvent["type"];
     additionalSpeedInPercent: number;
+    unitLossPerSecond: number;
 }
 export interface MoveEffect extends Effect<MoveEvent> {
     type: MoveEvent["type"];

@@ -10,6 +10,7 @@ import { BasePopulationPerk } from "./basePopulation";
 import { BaseSpiritPerk } from "./baseSpirit";
 import { BerserkPerk } from "./berserk";
 import { CamouflagePerk } from "./camouflage";
+import { DeadlyEnvironmentPerk } from "./deadlyEnvironment";
 import { FertileGroundsPerk } from "./fertileGrounds";
 import { KamikazePerk } from "./kamikaze";
 import { LootsOfVictoryPerk } from "./lootsOfVictory";
@@ -122,6 +123,8 @@ export const allPerks: GeneralPerk[] = [
 
     //Infection
     BaseInfectionPerk.createFromValues(),
+
+    DeadlyEnvironmentPerk.createFromValues(),
 ];
 
 export const numberPerkCreators = [
@@ -139,6 +142,8 @@ export const numberPerkCreators = [
     SpyPerk,
     CamouflagePerk,
     BaseInfectionPerk,
+
+    DeadlyEnvironmentPerk,
 ];
 export const listPerkCreators = [RagePerk, BerserkPerk, PreparationPerk];
 

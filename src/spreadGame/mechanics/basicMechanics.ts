@@ -52,14 +52,19 @@ const basicMechanics: SpreadGameMechanics = {
         return [null, resCell];
     },
     move: (bubble: Bubble, ms: number, moveProps) => {
-        const speed = defaultSpeed * (1+moveProps.additionalSpeedInPercent/100)
+        const speed =
+            defaultSpeed * (1 + moveProps.additionalSpeedInPercent / 100);
         const newPosition: [number, number] = [
-            bubble.position[0] +
-                (speed * bubble.direction[0] * ms) / 1000.0,
-            bubble.position[1] +
-                (speed * bubble.direction[1] * ms) / 1000.0,
+            bubble.position[0] + (speed * bubble.direction[0] * ms) / 1000.0,
+            bubble.position[1] + (speed * bubble.direction[1] * ms) / 1000.0,
         ];
-        return { ...bubble, position: newPosition };
+        const newUnits =
+            bubble.units - (moveProps.unitLossPerSecond * ms) / 1000;
+        return {
+            ...bubble,
+            position: newPosition,
+            units: newUnits,
+        };
     },
     grow(cell: Cell, ms: number, growthProps: GrowthProps) {
         if (cell.playerId === null) return { ...cell };
@@ -68,7 +73,9 @@ const basicMechanics: SpreadGameMechanics = {
         const growthFactor = 1 + growthProps.additionalGrowthInPercent / 100;
         const posGrowthPerSecond = radiusToGrowth(cell.radius) * growthFactor;
         const negGrowthPerSecond = radiusToGrowth(cell.radius) / growthFactor;
-        const toGrow = growthProps.blocked ? 0 : (posGrowthPerSecond * ms) / 1000;
+        const toGrow = growthProps.blocked
+            ? 0
+            : (posGrowthPerSecond * ms) / 1000;
         const toReduce = (negGrowthPerSecond * ms) / 1000;
         let nextUnits =
             cell.units < saturatedUnitCount

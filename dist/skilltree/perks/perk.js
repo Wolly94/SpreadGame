@@ -8,6 +8,7 @@ var basePopulation_1 = require("./basePopulation");
 var baseSpirit_1 = require("./baseSpirit");
 var berserk_1 = require("./berserk");
 var camouflage_1 = require("./camouflage");
+var deadlyEnvironment_1 = require("./deadlyEnvironment");
 var fertileGrounds_1 = require("./fertileGrounds");
 var kamikaze_1 = require("./kamikaze");
 var lootsOfVictory_1 = require("./lootsOfVictory");
@@ -71,6 +72,7 @@ exports.allPerks = [
     camouflage_1.CamouflagePerk.createFromValues(),
     //Infection
     baseInfection_1.BaseInfectionPerk.createFromValues(),
+    deadlyEnvironment_1.DeadlyEnvironmentPerk.createFromValues(),
 ];
 exports.numberPerkCreators = [
     baseAttack_1.BaseAttackPerk,
@@ -87,6 +89,7 @@ exports.numberPerkCreators = [
     spy_1.SpyPerk,
     camouflage_1.CamouflagePerk,
     baseInfection_1.BaseInfectionPerk,
+    deadlyEnvironment_1.DeadlyEnvironmentPerk,
 ];
 exports.listPerkCreators = [rage_1.RagePerk, berserk_1.BerserkPerk, preparation_1.PreparationPerk];
 exports.getPerkReplay = function (perk) {
