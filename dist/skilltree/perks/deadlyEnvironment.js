@@ -13,6 +13,7 @@ var __assign = (this && this.__assign) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var common_1 = require("../../spreadGame/common");
 var move_1 = require("../../spreadGame/mechanics/events/move");
+var visualizeGameProps_1 = require("../../spreadGame/mechanics/events/visualizeGameProps");
 var utils_1 = require("../utils");
 var perk_1 = require("./perk");
 var name = "DeadlyEnvironment";
@@ -33,6 +34,22 @@ exports.DeadlyEnvironmentPerk = {
                     " units/second)";
             },
             triggers: [
+                {
+                    type: "StartGame",
+                    getValue: function (trigger, game) {
+                        return [
+                            {
+                                entity: { type: "Game", id: null },
+                                perkName: name,
+                                triggerType: "StartGame",
+                                props: {
+                                    expirationInMs: "Never",
+                                    value: __assign(__assign({}, visualizeGameProps_1.visualizeGameUtils.default), { deadlyEnvironment: true }),
+                                },
+                            },
+                        ];
+                    },
+                },
                 {
                     type: "CreateBubble",
                     getValue: function (trigger, game) {

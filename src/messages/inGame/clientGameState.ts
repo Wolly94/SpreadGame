@@ -34,4 +34,5 @@ export interface ClientGameState {
     timePassedInMs: number;
     cells: ClientCell[];
     bubbles: ClientBubble[];
+    deadlyEnvironment: boolean;
 }

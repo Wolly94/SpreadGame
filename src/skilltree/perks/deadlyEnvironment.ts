@@ -1,9 +1,14 @@
 import { unitsToRadius } from "../../spreadGame/common";
 import {
     AttachProps,
+    Entity,
     TimedProps,
 } from "../../spreadGame/mechanics/events/definitions";
 import { MoveProps, moveUtils } from "../../spreadGame/mechanics/events/move";
+import {
+    VisualizeGameProps,
+    visualizeGameUtils,
+} from "../../spreadGame/mechanics/events/visualizeGameProps";
 import { formatDescription } from "../utils";
 import { CreatePerk, getPerkValue } from "./perk";
 
@@ -21,9 +26,31 @@ export const DeadlyEnvironmentPerk: CreatePerk<number> = {
             values: values,
             description: (lvl) =>
                 "Enemy bubbles decrease in population over time. (" +
-                formatDescription(values, (val) => "-"+val.toString(), "/") +
+                formatDescription(values, (val) => "-" + val.toString(), "/") +
                 " units/second)",
             triggers: [
+                {
+                    type: "StartGame",
+                    getValue: (
+                        trigger,
+                        game
+                    ): AttachProps<TimedProps<VisualizeGameProps>>[] => {
+                        return [
+                            {
+                                entity: { type: "Game", id: null },
+                                perkName: name,
+                                triggerType: "StartGame",
+                                props: {
+                                    expirationInMs: "Never",
+                                    value: {
+                                        ...visualizeGameUtils.default,
+                                        deadlyEnvironment: true,
+                                    },
+                                },
+                            },
+                        ];
+                    },
+                },
                 {
                     type: "CreateBubble",
                     getValue: (

@@ -79,6 +79,10 @@ import {
     VisualizeCellProps,
     visualizeCellUtils,
 } from "./mechanics/events/visualizeCellProps";
+import {
+    VisualizeGameProps,
+    visualizeGameUtils,
+} from "./mechanics/events/visualizeGameProps";
 import scrapeOffMechanics from "./mechanics/scrapeOffMechanics";
 import Player, { dataFromPlayer, playerFromData } from "./player";
 
@@ -755,7 +759,11 @@ export class SpreadGameImplementation implements SpreadGame {
     }
 
     toClientGameState(playerId: number | null = null) {
+        const gameProps: VisualizeGameProps = visualizeGameUtils.collect(
+            this.fromAttachedProps({ type: "Game", id: null })
+        );
         const gs: ClientGameState = {
+            deadlyEnvironment: gameProps.deadlyEnvironment,
             timePassedInMs: this.timePassed,
             cells: this.cells.map((cell) => {
                 const cellProps: VisualizeCellProps = visualizeCellUtils.collect(

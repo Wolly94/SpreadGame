@@ -30,6 +30,7 @@ var startGame_1 = require("./mechanics/events/startGame");
 var stolenPerk_1 = require("./mechanics/events/stolenPerk");
 var visualizeBubbleProps_1 = require("./mechanics/events/visualizeBubbleProps");
 var visualizeCellProps_1 = require("./mechanics/events/visualizeCellProps");
+var visualizeGameProps_1 = require("./mechanics/events/visualizeGameProps");
 var scrapeOffMechanics_1 = __importDefault(require("./mechanics/scrapeOffMechanics"));
 var player_1 = require("./player");
 var getMechanics = function (settings) {
@@ -575,7 +576,9 @@ var SpreadGameImplementation = /** @class */ (function () {
     SpreadGameImplementation.prototype.toClientGameState = function (playerId) {
         var _this = this;
         if (playerId === void 0) { playerId = null; }
+        var gameProps = visualizeGameProps_1.visualizeGameUtils.collect(this.fromAttachedProps({ type: "Game", id: null }));
         var gs = {
+            deadlyEnvironment: gameProps.deadlyEnvironment,
             timePassedInMs: this.timePassed,
             cells: this.cells.map(function (cell) {
                 var cellProps = visualizeCellProps_1.visualizeCellUtils.collect(_this.fromAttachedProps({ type: "Cell", id: cell.id }));

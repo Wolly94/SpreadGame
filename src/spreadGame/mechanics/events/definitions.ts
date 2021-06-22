@@ -25,7 +25,7 @@ import { InfectBubbleProps } from "./infectBubble";
 import { InfectCellProps } from "./infectCell";
 import { MoveEffect, MoveEvent, MoveProps } from "./move";
 import { RaisableEvent, RaiseEventEffect, RaiseEventProps } from "./raiseEvent";
-import { ReinforceCellEffect, ReinforceCellEvent } from "./reinforceCell"
+import { ReinforceCellEffect, ReinforceCellEvent } from "./reinforceCell";
 import { SendUnitsEffect, SendUnitsEvent, SendUnitsProps } from "./sendUnits";
 import {
     StartGameCellProps,
@@ -36,6 +36,7 @@ import { StolenPerksProps } from "./stolenPerk";
 import { TimeStepEffect, TimeStepEvent } from "./timeStep";
 import { VisualizeBubbleProps } from "./visualizeBubbleProps";
 import { VisualizeCellProps } from "./visualizeCellProps";
+import { VisualizeGameProps } from "./visualizeGameProps";
 
 export type PropUtils<TProps> = {
     combine: (a: TProps, b: TProps) => TProps;
@@ -65,6 +66,7 @@ export type SpreadGameProps =
     | DefendCellProps
     | VisualizeCellProps
     | VisualizeBubbleProps
+    | VisualizeGameProps
     | GrowthProps
     | MoveProps
     | StolenPerksProps
@@ -78,14 +80,9 @@ export interface TimedProps<TProps> {
 }
 
 export interface Entity {
-    type: "Player" | "Bubble" | "Cell";
+    type: "Game" | "Player" | "Bubble" | "Cell";
     id: number | null;
 }
-
-export type ValueEntity =
-    | { type: "Player"; val: Player }
-    | { type: "Bubble"; val: Bubble }
-    | { type: "Cell"; val: Cell };
 
 export interface AttachProps<TProps> {
     entity: Entity | null;
