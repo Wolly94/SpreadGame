@@ -27,7 +27,7 @@ test("test base population", function () {
     game.run(100000, 25);
     cstate = game.toClientGameState();
     cell0 = cstate.cells.find(function (c) { return c.id === 0; });
-    expect((_c = cell0 === null || cell0 === void 0 ? void 0 : cell0.data) === null || _c === void 0 ? void 0 : _c.units).toBe(80);
+    expect((_c = cell0 === null || cell0 === void 0 ? void 0 : cell0.data) === null || _c === void 0 ? void 0 : _c.units).toBe(110);
 });
 test("test no base population", function () {
     var _a, _b;

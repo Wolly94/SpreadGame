@@ -34,6 +34,24 @@ exports.SpyPerk = {
                 return "For every captured enemy cell you gain one of your enemies skills (starting with the cheapest).";
             },
             triggers: [
+                // this trigger initializes e.g. BaseDefensePerk
+                {
+                    type: "StolenPerk",
+                    getValue: function (trigger, game) {
+                        // simulate StartGameEvent:
+                        var startGameEvent = {
+                            type: "StartGame",
+                        };
+                        var initProps = trigger.stolenPerk.perk.triggers
+                            .filter(function (trigger) {
+                            return trigger.type === "StartGame";
+                        })
+                            .flatMap(function (trigger) {
+                            return trigger.getValue(startGameEvent, game);
+                        });
+                        return initProps;
+                    },
+                },
                 {
                     type: "ConquerCell",
                     getValue: function (trigger, game) {
@@ -56,7 +74,23 @@ exports.SpyPerk = {
                         if (availablePerks.length === 0)
                             return [];
                         var stealPerk = __assign(__assign({}, availablePerks[0]), { level: 1 });
+                        var raiseProps = {
+                            type: "RaiseEvent",
+                            event: {
+                                type: "StolenPerk",
+                                stolenPerk: stealPerk,
+                            },
+                        };
                         return [
+                            {
+                                entity: null,
+                                perkName: name,
+                                triggerType: "ConquerCell",
+                                props: {
+                                    expirationInMs: "Never",
+                                    value: raiseProps,
+                                },
+                            },
                             {
                                 entity: { type: "Player", id: playerId },
                                 perkName: name,

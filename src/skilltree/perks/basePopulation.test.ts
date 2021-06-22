@@ -15,7 +15,7 @@ test("test base population", () => {
     game.run(100000, 25);
     cstate = game.toClientGameState();
     cell0 = cstate.cells.find((c) => c.id === 0);
-    expect(cell0?.data?.units).toBe(80);
+    expect(cell0?.data?.units).toBe(110);
 });
 
 test("test no base population", () => {

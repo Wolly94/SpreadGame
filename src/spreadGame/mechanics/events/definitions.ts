@@ -22,6 +22,7 @@ import {
 } from "./fight";
 import { GrowthEffect, GrowthEvent, GrowthProps } from "./growth";
 import { MoveEffect, MoveEvent, MoveProps } from "./move";
+import { RaisableEvent, RaiseEventEffect, RaiseEventProps } from "./raiseEvent"
 import { SendUnitsEffect, SendUnitsEvent, SendUnitsProps } from "./sendUnits";
 import {
     StartGameCellProps,
@@ -48,7 +49,8 @@ export type NewSpreadGameEvent =
     | DefendCellEvent
     | BeforeFightEvent
     | GrowthEvent
-    | MoveEvent;
+    | MoveEvent
+    | RaisableEvent;
 
 export type SpreadGameProps =
     | StartGameCellProps
@@ -61,7 +63,8 @@ export type SpreadGameProps =
     | VisualizeBubbleProps
     | GrowthProps
     | MoveProps
-    | StolenPerksProps;
+    | StolenPerksProps
+    | RaiseEventProps;
 
 export interface TimedProps<TProps> {
     expirationInMs: "Never" | number;
@@ -89,7 +92,7 @@ export interface Effect<TEvent> {
     getValue: (
         trigger: TEvent,
         spreadGame: SpreadGameImplementation
-    ) => AttachProps<TimedProps<SpreadGameProps>>[];
+    ) => AttachProps<TimedProps<SpreadGameProps | RaiseEventProps>>[];
 }
 
 export type SpreadGameEffect =
@@ -101,7 +104,8 @@ export type SpreadGameEffect =
     | DefendCellEffect
     | BeforeFightEffect
     | GrowthEffect
-    | MoveEffect;
+    | MoveEffect
+    | RaiseEventEffect
 
 /*
 

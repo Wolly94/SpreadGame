@@ -8,6 +8,7 @@ import { DefendCellEffect, DefendCellEvent, DefendCellProps } from "./defendCell
 import { BeforeFightEffect, BeforeFightEvent, BubbleFightProps, CellFightProps } from "./fight";
 import { GrowthEffect, GrowthEvent, GrowthProps } from "./growth";
 import { MoveEffect, MoveEvent, MoveProps } from "./move";
+import { RaisableEvent, RaiseEventEffect, RaiseEventProps } from "./raiseEvent";
 import { SendUnitsEffect, SendUnitsEvent, SendUnitsProps } from "./sendUnits";
 import { StartGameCellProps, StartGameEffect, StartGameEvent } from "./startGame";
 import { StolenPerksProps } from "./stolenPerk";
@@ -19,8 +20,8 @@ export declare type PropUtils<TProps> = {
     collect: (props: SpreadGameProps[]) => TProps;
     default: TProps;
 };
-export declare type NewSpreadGameEvent = TimeStepEvent | StartGameEvent | CreateBubbleEvent | SendUnitsEvent | ConquerCellEvent | DefendCellEvent | BeforeFightEvent | GrowthEvent | MoveEvent;
-export declare type SpreadGameProps = StartGameCellProps | ConquerCellProps | SendUnitsProps | BubbleFightProps | CellFightProps | DefendCellProps | VisualizeCellProps | VisualizeBubbleProps | GrowthProps | MoveProps | StolenPerksProps;
+export declare type NewSpreadGameEvent = TimeStepEvent | StartGameEvent | CreateBubbleEvent | SendUnitsEvent | ConquerCellEvent | DefendCellEvent | BeforeFightEvent | GrowthEvent | MoveEvent | RaisableEvent;
+export declare type SpreadGameProps = StartGameCellProps | ConquerCellProps | SendUnitsProps | BubbleFightProps | CellFightProps | DefendCellProps | VisualizeCellProps | VisualizeBubbleProps | GrowthProps | MoveProps | StolenPerksProps | RaiseEventProps;
 export interface TimedProps<TProps> {
     expirationInMs: "Never" | number;
     value: TProps;
@@ -46,6 +47,6 @@ export interface AttachProps<TProps> {
     props: TProps;
 }
 export interface Effect<TEvent> {
-    getValue: (trigger: TEvent, spreadGame: SpreadGameImplementation) => AttachProps<TimedProps<SpreadGameProps>>[];
+    getValue: (trigger: TEvent, spreadGame: SpreadGameImplementation) => AttachProps<TimedProps<SpreadGameProps | RaiseEventProps>>[];
 }
-export declare type SpreadGameEffect = TimeStepEffect | StartGameEffect | ConquerCellEffect | SendUnitsEffect | CreateBubbleEffect | DefendCellEffect | BeforeFightEffect | GrowthEffect | MoveEffect;
+export declare type SpreadGameEffect = TimeStepEffect | StartGameEffect | ConquerCellEffect | SendUnitsEffect | CreateBubbleEffect | DefendCellEffect | BeforeFightEffect | GrowthEffect | MoveEffect | RaiseEventEffect;

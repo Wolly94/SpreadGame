@@ -55,6 +55,11 @@ import {
 } from "./mechanics/events/fight";
 import { GrowthEvent, growthUtils } from "./mechanics/events/growth";
 import { MoveEvent, moveUtils } from "./mechanics/events/move";
+import {
+    isRaisableEffect,
+    isRaisableEvent,
+    RaiseEventProps,
+} from "./mechanics/events/raiseEvent";
 import { SendUnitsEvent, sendUnitsUtils } from "./mechanics/events/sendUnits";
 import {
     startGameCellUtils,
@@ -211,6 +216,8 @@ export class SpreadGameImplementation implements SpreadGame {
             return perk.triggers.flatMap((tr) => {
                 if (tr.type === "StartGame" && event.type === "StartGame") {
                     return tr.getValue(event, this);
+                } else if (isRaisableEffect(tr) && isRaisableEvent(event)) {
+                    return tr.getValue(event, this);
                 } else if (
                     tr.type === "TimeStep" &&
                     event.type === "TimeStep"
@@ -246,6 +253,11 @@ export class SpreadGameImplementation implements SpreadGame {
             });
         });
         const remProps = this.attachProps(props);
+        remProps
+            .filter(
+                (prop): prop is RaiseEventProps => prop.type === "RaiseEvent"
+            )
+            .map((raiseProp) => this.handleEvent(raiseProp.event));
         if (event.type === "DefendCell") {
             const fromAttachedProps = this.fromAttachedProps({
                 type: "Cell",
@@ -694,8 +706,9 @@ export class SpreadGameImplementation implements SpreadGame {
     }
 
     getSkilledPerk(perkName: string, playerId: number | null) {
-        const st = this.players.find((pl) => pl.id === playerId);
-        const perk = st?.skills.find((p) => p.perk.name === perkName);
+        const perk = this.getSkilledPerks(playerId).find(
+            (p) => p.perk.name === perkName
+        );
         return perk !== undefined ? perk : null;
     }
 

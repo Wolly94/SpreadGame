@@ -1,6 +1,7 @@
 import SpreadReplay from "../../messages/replay/replay";
 import { SpreadGameImplementation } from "../../spreadGame";
 import { SpreadGameEffect } from "../../spreadGame/mechanics/events/definitions";
+import { RaiseEventEffect } from "../../spreadGame/mechanics/events/raiseEvent";
 import { BaseAgilityPerk } from "./baseAgility";
 import { BaseAttackPerk } from "./baseAttack";
 import { BaseDefensePerk } from "./baseDefense";

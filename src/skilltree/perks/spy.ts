@@ -1,7 +1,13 @@
 import {
     AttachProps,
+    SpreadGameProps,
     TimedProps,
 } from "../../spreadGame/mechanics/events/definitions";
+import { RaiseEventProps } from "../../spreadGame/mechanics/events/raiseEvent";
+import {
+    StartGameEffect,
+    StartGameEvent,
+} from "../../spreadGame/mechanics/events/startGame";
 import {
     StolenPerksProps,
     stolenPerksUtils,
@@ -30,12 +36,35 @@ export const SpyPerk: CreatePerk<number> = {
             description: (lvl) =>
                 "For every captured enemy cell you gain one of your enemies skills (starting with the cheapest).",
             triggers: [
+                // this trigger initializes e.g. BaseDefensePerk
+                {
+                    type: "StolenPerk",
+                    getValue: (trigger, game) => {
+                        // simulate StartGameEvent:
+                        const startGameEvent: StartGameEvent = {
+                            type: "StartGame",
+                        };
+                        const initProps: AttachProps<
+                            TimedProps<SpreadGameProps>
+                        >[] = trigger.stolenPerk.perk.triggers
+                            .filter(
+                                (trigger): trigger is StartGameEffect =>
+                                    trigger.type === "StartGame"
+                            )
+                            .flatMap((trigger) => {
+                                return trigger.getValue(startGameEvent, game);
+                            });
+                        return initProps;
+                    },
+                },
                 {
                     type: "ConquerCell",
                     getValue: (
                         trigger,
                         game
-                    ): AttachProps<TimedProps<StolenPerksProps>>[] => {
+                    ): AttachProps<
+                        TimedProps<StolenPerksProps | RaiseEventProps>
+                    >[] => {
                         const playerId = trigger.after.cell.playerId;
                         const val = getPerkValue(
                             game,
@@ -65,7 +94,23 @@ export const SpyPerk: CreatePerk<number> = {
                             ...availablePerks[0],
                             level: 1,
                         };
+                        const raiseProps: RaiseEventProps = {
+                            type: "RaiseEvent",
+                            event: {
+                                type: "StolenPerk",
+                                stolenPerk: stealPerk,
+                            },
+                        };
                         return [
+                            {
+                                entity: null,
+                                perkName: name,
+                                triggerType: "ConquerCell",
+                                props: {
+                                    expirationInMs: "Never",
+                                    value: raiseProps,
+                                },
+                            },
                             {
                                 entity: { type: "Player", id: playerId },
                                 perkName: name,

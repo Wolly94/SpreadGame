@@ -117,7 +117,7 @@ export const BasePopulationPerk: CreatePerk<number> = {
             { id: 0, skills: [{ name: name, level: 3 }] },
             { id: 1, skills: [] },
         ],
-        perks: [{ name: name, data: { type: "number", val: [10, 20, 30] } }],
+        perks: [{ name: name, data: { type: "number", val: defaultValues } }],
         moveHistory: [],
     },
 };

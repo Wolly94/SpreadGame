@@ -24,6 +24,7 @@ var defendCell_1 = require("./mechanics/events/defendCell");
 var fight_1 = require("./mechanics/events/fight");
 var growth_1 = require("./mechanics/events/growth");
 var move_1 = require("./mechanics/events/move");
+var raiseEvent_1 = require("./mechanics/events/raiseEvent");
 var sendUnits_1 = require("./mechanics/events/sendUnits");
 var startGame_1 = require("./mechanics/events/startGame");
 var stolenPerk_1 = require("./mechanics/events/stolenPerk");
@@ -125,6 +126,9 @@ var SpreadGameImplementation = /** @class */ (function () {
                 if (tr.type === "StartGame" && event.type === "StartGame") {
                     return tr.getValue(event, _this);
                 }
+                else if (raiseEvent_1.isRaisableEffect(tr) && raiseEvent_1.isRaisableEvent(event)) {
+                    return tr.getValue(event, _this);
+                }
                 else if (tr.type === "TimeStep" &&
                     event.type === "TimeStep") {
                     return tr.getValue(event, _this);
@@ -155,6 +159,9 @@ var SpreadGameImplementation = /** @class */ (function () {
             });
         });
         var remProps = this.attachProps(props);
+        remProps
+            .filter(function (prop) { return prop.type === "RaiseEvent"; })
+            .map(function (raiseProp) { return _this.handleEvent(raiseProp.event); });
         if (event.type === "DefendCell") {
             var fromAttachedProps = this.fromAttachedProps({
                 type: "Cell",
@@ -532,8 +539,7 @@ var SpreadGameImplementation = /** @class */ (function () {
         }));
     };
     SpreadGameImplementation.prototype.getSkilledPerk = function (perkName, playerId) {
-        var st = this.players.find(function (pl) { return pl.id === playerId; });
-        var perk = st === null || st === void 0 ? void 0 : st.skills.find(function (p) { return p.perk.name === perkName; });
+        var perk = this.getSkilledPerks(playerId).find(function (p) { return p.perk.name === perkName; });
         return perk !== undefined ? perk : null;
     };
     SpreadGameImplementation.prototype.toClientGameState = function (playerId) {
