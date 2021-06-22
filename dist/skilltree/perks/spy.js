@@ -125,7 +125,7 @@ exports.SpyPerk = {
                     playerId: 1,
                     position: [400, 100],
                     radius: 50,
-                    units: 40,
+                    units: 20,
                 },
             ],
             players: 2,
