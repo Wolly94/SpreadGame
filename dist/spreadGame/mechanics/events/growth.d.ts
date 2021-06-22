@@ -8,6 +8,7 @@ export interface GrowthProps {
     type: GrowthEvent["type"];
     additionalCapacity: number;
     additionalGrowthInPercent: number;
+    blocked: boolean;
 }
 export interface GrowthEffect extends Effect<GrowthEvent> {
     type: GrowthEvent["type"];

@@ -68,7 +68,7 @@ const basicMechanics: SpreadGameMechanics = {
         const growthFactor = 1 + growthProps.additionalGrowthInPercent / 100;
         const posGrowthPerSecond = radiusToGrowth(cell.radius) * growthFactor;
         const negGrowthPerSecond = radiusToGrowth(cell.radius) / growthFactor;
-        const toGrow = (posGrowthPerSecond * ms) / 1000;
+        const toGrow = growthProps.blocked ? 0 : (posGrowthPerSecond * ms) / 1000;
         const toReduce = (negGrowthPerSecond * ms) / 1000;
         let nextUnits =
             cell.units < saturatedUnitCount

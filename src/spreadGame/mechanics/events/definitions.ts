@@ -21,8 +21,9 @@ import {
     CellFightProps,
 } from "./fight";
 import { GrowthEffect, GrowthEvent, GrowthProps } from "./growth";
+import { InfectCellProps } from "./infectCell"
 import { MoveEffect, MoveEvent, MoveProps } from "./move";
-import { RaisableEvent, RaiseEventEffect, RaiseEventProps } from "./raiseEvent"
+import { RaisableEvent, RaiseEventEffect, RaiseEventProps } from "./raiseEvent";
 import { SendUnitsEffect, SendUnitsEvent, SendUnitsProps } from "./sendUnits";
 import {
     StartGameCellProps,
@@ -64,6 +65,7 @@ export type SpreadGameProps =
     | GrowthProps
     | MoveProps
     | StolenPerksProps
+    | InfectCellProps
     | RaiseEventProps;
 
 export interface TimedProps<TProps> {
@@ -105,7 +107,7 @@ export type SpreadGameEffect =
     | BeforeFightEffect
     | GrowthEffect
     | MoveEffect
-    | RaiseEventEffect
+    | RaiseEventEffect;
 
 /*
 

@@ -12,6 +12,7 @@ export interface GrowthProps {
     type: GrowthEvent["type"];
     additionalCapacity: number;
     additionalGrowthInPercent: number;
+    blocked: boolean;
 }
 
 export interface GrowthEffect extends Effect<GrowthEvent> {
@@ -25,19 +26,20 @@ export const growthUtils: PropUtils<GrowthProps> = {
             additionalCapacity: a.additionalCapacity + b.additionalCapacity,
             additionalGrowthInPercent:
                 a.additionalGrowthInPercent + b.additionalGrowthInPercent,
+            blocked: a.blocked || b.blocked,
         };
     },
     default: {
         type: type,
         additionalCapacity: 0,
         additionalGrowthInPercent: 0,
+        blocked: false,
     },
     collect: (props) => {
         return props
             .filter((prop): prop is GrowthProps => prop.type === type)
             .reduce((prev, curr) => {
-                if (curr.type === type)
-                    return growthUtils.combine(prev, curr);
+                if (curr.type === type) return growthUtils.combine(prev, curr);
                 else return prev;
             }, growthUtils.default);
     },

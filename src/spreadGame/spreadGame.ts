@@ -217,7 +217,11 @@ export class SpreadGameImplementation implements SpreadGame {
                 if (tr.type === "StartGame" && event.type === "StartGame") {
                     return tr.getValue(event, this);
                 } else if (isRaisableEffect(tr) && isRaisableEvent(event)) {
-                    return tr.getValue(event, this);
+                    if (tr.type === "StolenPerk" && event.type === "StolenPerk")
+                        return tr.getValue(event, this);
+                    else if (tr.type === "Infect" && event.type === "Infect")
+                        return tr.getValue(event, this);
+                    else return [];
                 } else if (
                     tr.type === "TimeStep" &&
                     event.type === "TimeStep"
@@ -600,8 +604,17 @@ export class SpreadGameImplementation implements SpreadGame {
                         /* if (newCell.playerId === cell.playerId) { */
                         const defendEvent: DefendCellEvent = {
                             type: "DefendCell",
-                            before: { cell: { ...cell } },
-                            after: { cell: { ...newCell } },
+                            before: {
+                                cell: { ...beforeFight.defender.val },
+                                bubble: { ...beforeFight.attacker },
+                            },
+                            after: {
+                                cell: { ...newCell },
+                                bubble:
+                                    afterFight.attacker !== null
+                                        ? { ...afterFight.attacker }
+                                        : null,
+                            },
                         };
                         eventsToProcess.push(defendEvent);
                     }

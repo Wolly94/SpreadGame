@@ -73,7 +73,7 @@ var basicMechanics = {
         var growthFactor = 1 + growthProps.additionalGrowthInPercent / 100;
         var posGrowthPerSecond = common_1.radiusToGrowth(cell.radius) * growthFactor;
         var negGrowthPerSecond = common_1.radiusToGrowth(cell.radius) / growthFactor;
-        var toGrow = (posGrowthPerSecond * ms) / 1000;
+        var toGrow = growthProps.blocked ? 0 : (posGrowthPerSecond * ms) / 1000;
         var toReduce = (negGrowthPerSecond * ms) / 1000;
         var nextUnits = cell.units < saturatedUnitCount
             ? Math.min(cell.units + toGrow, saturatedUnitCount)

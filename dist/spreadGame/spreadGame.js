@@ -127,7 +127,12 @@ var SpreadGameImplementation = /** @class */ (function () {
                     return tr.getValue(event, _this);
                 }
                 else if (raiseEvent_1.isRaisableEffect(tr) && raiseEvent_1.isRaisableEvent(event)) {
-                    return tr.getValue(event, _this);
+                    if (tr.type === "StolenPerk" && event.type === "StolenPerk")
+                        return tr.getValue(event, _this);
+                    else if (tr.type === "Infect" && event.type === "Infect")
+                        return tr.getValue(event, _this);
+                    else
+                        return [];
                 }
                 else if (tr.type === "TimeStep" &&
                     event.type === "TimeStep") {
@@ -439,8 +444,15 @@ var SpreadGameImplementation = /** @class */ (function () {
                         /* if (newCell.playerId === cell.playerId) { */
                         var defendEvent = {
                             type: "DefendCell",
-                            before: { cell: __assign({}, cell) },
-                            after: { cell: __assign({}, newCell) },
+                            before: {
+                                cell: __assign({}, beforeFight.defender.val),
+                                bubble: __assign({}, beforeFight.attacker),
+                            },
+                            after: {
+                                cell: __assign({}, newCell),
+                                bubble: afterFight.attacker !== null
+                                    ? __assign({}, afterFight.attacker) : null,
+                            },
                         };
                         eventsToProcess.push(defendEvent);
                     }

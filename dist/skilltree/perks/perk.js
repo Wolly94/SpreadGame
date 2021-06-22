@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var baseAgility_1 = require("./baseAgility");
 var baseAttack_1 = require("./baseAttack");
 var baseDefense_1 = require("./baseDefense");
+var baseInfection_1 = require("./baseInfection");
 var basePopulation_1 = require("./basePopulation");
 var baseSpirit_1 = require("./baseSpirit");
 var berserk_1 = require("./berserk");
@@ -68,6 +69,8 @@ exports.allPerks = [
     baseAgility_1.BaseAgilityPerk.createFromValues(),
     spy_1.SpyPerk.createFromValues(),
     camouflage_1.CamouflagePerk.createFromValues(),
+    //Infection
+    baseInfection_1.BaseInfectionPerk.createFromValues(),
 ];
 exports.numberPerkCreators = [
     baseAttack_1.BaseAttackPerk,
@@ -83,6 +86,7 @@ exports.numberPerkCreators = [
     baseAgility_1.BaseAgilityPerk,
     spy_1.SpyPerk,
     camouflage_1.CamouflagePerk,
+    baseInfection_1.BaseInfectionPerk,
 ];
 exports.listPerkCreators = [rage_1.RagePerk, berserk_1.BerserkPerk, preparation_1.PreparationPerk];
 exports.getPerkReplay = function (perk) {

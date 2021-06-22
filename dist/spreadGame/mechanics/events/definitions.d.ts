@@ -7,6 +7,7 @@ import { CreateBubbleEffect, CreateBubbleEvent } from "./createBubble";
 import { DefendCellEffect, DefendCellEvent, DefendCellProps } from "./defendCell";
 import { BeforeFightEffect, BeforeFightEvent, BubbleFightProps, CellFightProps } from "./fight";
 import { GrowthEffect, GrowthEvent, GrowthProps } from "./growth";
+import { InfectCellProps } from "./infectCell";
 import { MoveEffect, MoveEvent, MoveProps } from "./move";
 import { RaisableEvent, RaiseEventEffect, RaiseEventProps } from "./raiseEvent";
 import { SendUnitsEffect, SendUnitsEvent, SendUnitsProps } from "./sendUnits";
@@ -21,7 +22,7 @@ export declare type PropUtils<TProps> = {
     default: TProps;
 };
 export declare type NewSpreadGameEvent = TimeStepEvent | StartGameEvent | CreateBubbleEvent | SendUnitsEvent | ConquerCellEvent | DefendCellEvent | BeforeFightEvent | GrowthEvent | MoveEvent | RaisableEvent;
-export declare type SpreadGameProps = StartGameCellProps | ConquerCellProps | SendUnitsProps | BubbleFightProps | CellFightProps | DefendCellProps | VisualizeCellProps | VisualizeBubbleProps | GrowthProps | MoveProps | StolenPerksProps | RaiseEventProps;
+export declare type SpreadGameProps = StartGameCellProps | ConquerCellProps | SendUnitsProps | BubbleFightProps | CellFightProps | DefendCellProps | VisualizeCellProps | VisualizeBubbleProps | GrowthProps | MoveProps | StolenPerksProps | InfectCellProps | RaiseEventProps;
 export interface TimedProps<TProps> {
     expirationInMs: "Never" | number;
     value: TProps;

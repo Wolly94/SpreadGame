@@ -5,6 +5,7 @@ import { RaiseEventEffect } from "../../spreadGame/mechanics/events/raiseEvent";
 import { BaseAgilityPerk } from "./baseAgility";
 import { BaseAttackPerk } from "./baseAttack";
 import { BaseDefensePerk } from "./baseDefense";
+import { BaseInfectionPerk } from "./baseInfection";
 import { BasePopulationPerk } from "./basePopulation";
 import { BaseSpiritPerk } from "./baseSpirit";
 import { BerserkPerk } from "./berserk";
@@ -118,6 +119,9 @@ export const allPerks: GeneralPerk[] = [
     BaseAgilityPerk.createFromValues(),
     SpyPerk.createFromValues(),
     CamouflagePerk.createFromValues(),
+
+    //Infection
+    BaseInfectionPerk.createFromValues(),
 ];
 
 export const numberPerkCreators = [
@@ -134,6 +138,7 @@ export const numberPerkCreators = [
     BaseAgilityPerk,
     SpyPerk,
     CamouflagePerk,
+    BaseInfectionPerk,
 ];
 export const listPerkCreators = [RagePerk, BerserkPerk, PreparationPerk];
 

@@ -1,3 +1,4 @@
+import Bubble from "../../bubble";
 import Cell from "../../cell";
 import { Effect, PropUtils } from "./definitions";
 
@@ -5,8 +6,8 @@ const type = "DefendCell";
 
 export interface DefendCellEvent {
     type: "DefendCell";
-    before: { cell: Cell };
-    after: { cell: Cell };
+    before: { cell: Cell; bubble: Bubble };
+    after: { cell: Cell; bubble: Bubble | null };
 }
 
 export interface DefendCellProps {
