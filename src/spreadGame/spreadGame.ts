@@ -781,6 +781,7 @@ export class SpreadGameImplementation implements SpreadGame {
                     position: cell.position,
                     radius: cell.radius,
                     data: cellData,
+                    infected: cellProps.infected,
                 };
             }),
             bubbles: this.bubbles.map((bubble) => {
@@ -805,6 +806,7 @@ export class SpreadGameImplementation implements SpreadGame {
                     id: bubble.id,
                     playerId: bubble.playerId,
                     data: bubbleData,
+                    infected: bubbleProps.infected,
                 };
             }),
         };

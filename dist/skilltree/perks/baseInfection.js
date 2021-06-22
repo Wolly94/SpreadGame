@@ -14,6 +14,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var common_1 = require("../../spreadGame/common");
 var growth_1 = require("../../spreadGame/mechanics/events/growth");
 var infectCell_1 = require("../../spreadGame/mechanics/events/infectCell");
+var visualizeCellProps_1 = require("../../spreadGame/mechanics/events/visualizeCellProps");
 var utils_1 = require("../utils");
 var perk_1 = require("./perk");
 var name = "BaseInfection";
@@ -37,21 +38,22 @@ exports.BaseInfectionPerk = {
                 {
                     type: "Infect",
                     getValue: function (trigger, game) {
+                        var infectionProps = __assign(__assign({}, infectCell_1.infectCellUtils.default), { infectedBy: new Set([trigger.causerPlayerId]) });
                         var infRes = {
                             entity: trigger.entityToInfect,
                             perkName: name,
                             triggerType: "InfectEntity",
                             props: {
                                 expirationInMs: game.timePassed + trigger.duration,
-                                value: __assign(__assign({}, infectCell_1.infectCellUtils.default), { infectedBy: new Set([
-                                        trigger.causerPlayerId,
-                                    ]) }),
+                                value: infectionProps,
                             },
                         };
                         if (trigger.entityToInfect.type === "Cell") {
                             var growthProps = __assign(__assign({}, growth_1.growthUtils.default), { blocked: true });
+                            var visProps = __assign(__assign({}, visualizeCellProps_1.visualizeCellUtils.default), { infected: true });
                             var groRes = __assign(__assign({}, infRes), { props: __assign(__assign({}, infRes.props), { value: growthProps }) });
-                            return [infRes, groRes];
+                            var visRes = __assign(__assign({}, infRes), { props: __assign(__assign({}, infRes.props), { value: visProps }) });
+                            return [infRes, groRes, visRes];
                         }
                         else {
                             return [infRes];

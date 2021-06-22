@@ -29,12 +29,14 @@ exports.visualizeBubbleUtils = {
             type: type,
             combatAbilityModifier: a.combatAbilityModifier + b.combatAbilityModifier,
             hideProps: combinePlayerBubbleHideProps(a.hideProps, b.hideProps),
+            infected: a.infected || b.infected,
         };
     },
     default: {
         type: type,
         combatAbilityModifier: 0,
         hideProps: new Map(),
+        infected: false,
     },
     collect: function (props) {
         return props

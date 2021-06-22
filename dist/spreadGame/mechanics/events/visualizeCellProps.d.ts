@@ -15,6 +15,7 @@ export interface VisualizeCellProps {
     combatAbilityModifier: number;
     membraneAbsorption: number;
     rageValue: number;
+    infected: boolean;
 }
 export declare const visualizeCellUtils: PropUtils<VisualizeCellProps>;
 export {};

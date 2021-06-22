@@ -14,7 +14,7 @@ import {
 } from "../../spreadGame/mechanics/events/stolenPerk";
 import { SkilledPerk } from "../skilltree";
 import { BaseDefensePerk } from "./baseDefense";
-import { backupFromPerk, BackUpPerk, CreatePerk, getPerkValue } from "./perk";
+import { BackUpPerk, CreatePerk, getPerkValue } from "./perk";
 
 const name = "Spy";
 const defaultValue = 0;

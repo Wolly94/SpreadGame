@@ -53,6 +53,7 @@ export interface VisualizeCellProps {
     combatAbilityModifier: number;
     membraneAbsorption: number;
     rageValue: number;
+    infected: boolean;
 }
 
 export const visualizeCellUtils: PropUtils<VisualizeCellProps> = {
@@ -64,6 +65,7 @@ export const visualizeCellUtils: PropUtils<VisualizeCellProps> = {
             rageValue: a.rageValue + b.rageValue,
             membraneAbsorption: a.membraneAbsorption + b.membraneAbsorption,
             hideProps: combinePlayerCellHideProps(a.hideProps, b.hideProps),
+            infected: a.infected || b.infected,
         };
     },
     default: {
@@ -72,6 +74,7 @@ export const visualizeCellUtils: PropUtils<VisualizeCellProps> = {
         rageValue: 0,
         membraneAbsorption: 0,
         hideProps: new Map(),
+        infected: false,
     },
     collect: (props) => {
         return props

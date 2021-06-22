@@ -14,6 +14,11 @@ import {
     infectCellUtils,
 } from "../../spreadGame/mechanics/events/infectCell";
 import { RaiseEventProps } from "../../spreadGame/mechanics/events/raiseEvent";
+import { VisualizeBubbleProps } from "../../spreadGame/mechanics/events/visualizeBubbleProps";
+import {
+    VisualizeCellProps,
+    visualizeCellUtils,
+} from "../../spreadGame/mechanics/events/visualizeCellProps";
 import { formatDescription } from "../utils";
 import { CreatePerk, getPerkValue } from "./perk";
 
@@ -44,8 +49,17 @@ export const BaseInfectionPerk: CreatePerk<number> = {
                         trigger,
                         game
                     ): AttachProps<
-                        TimedProps<InfectCellProps | GrowthProps>
+                        TimedProps<
+                            | InfectCellProps
+                            | GrowthProps
+                            | VisualizeCellProps
+                            | VisualizeBubbleProps
+                        >
                     >[] => {
+                        const infectionProps: InfectCellProps = {
+                            ...infectCellUtils.default,
+                            infectedBy: new Set([trigger.causerPlayerId]),
+                        };
                         const infRes = {
                             entity: trigger.entityToInfect,
                             perkName: name,
@@ -53,18 +67,17 @@ export const BaseInfectionPerk: CreatePerk<number> = {
                             props: {
                                 expirationInMs:
                                     game.timePassed + trigger.duration,
-                                value: {
-                                    ...infectCellUtils.default,
-                                    infectedBy: new Set([
-                                        trigger.causerPlayerId,
-                                    ]),
-                                },
+                                value: infectionProps,
                             },
                         };
                         if (trigger.entityToInfect.type === "Cell") {
                             const growthProps: GrowthProps = {
                                 ...growthUtils.default,
                                 blocked: true,
+                            };
+                            const visProps: VisualizeCellProps = {
+                                ...visualizeCellUtils.default,
+                                infected: true,
                             };
                             const groRes: AttachProps<
                                 TimedProps<GrowthProps>
@@ -75,7 +88,13 @@ export const BaseInfectionPerk: CreatePerk<number> = {
                                     value: growthProps,
                                 },
                             };
-                            return [infRes, groRes];
+                            const visRes: AttachProps<
+                                TimedProps<VisualizeCellProps>
+                            > = {
+                                ...infRes,
+                                props: { ...infRes.props, value: visProps },
+                            };
+                            return [infRes, groRes, visRes];
                         } else {
                             return [infRes];
                         }

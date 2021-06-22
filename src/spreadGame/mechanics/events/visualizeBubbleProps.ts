@@ -49,8 +49,9 @@ const type = "VisualizeBubbleProps";
 
 export interface VisualizeBubbleProps {
     type: "VisualizeBubbleProps";
-    combatAbilityModifier: number;
     hideProps: PlayerBubbleHideProps;
+    combatAbilityModifier: number;
+    infected: boolean;
 }
 
 export const visualizeBubbleUtils: PropUtils<VisualizeBubbleProps> = {
@@ -60,12 +61,14 @@ export const visualizeBubbleUtils: PropUtils<VisualizeBubbleProps> = {
             combatAbilityModifier:
                 a.combatAbilityModifier + b.combatAbilityModifier,
             hideProps: combinePlayerBubbleHideProps(a.hideProps, b.hideProps),
+            infected: a.infected || b.infected,
         };
     },
     default: {
         type: type,
         combatAbilityModifier: 0,
         hideProps: new Map(),
+        infected: false,
     },
     collect: (props) => {
         return props

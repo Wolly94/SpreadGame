@@ -596,6 +596,7 @@ var SpreadGameImplementation = /** @class */ (function () {
                     position: cell.position,
                     radius: cell.radius,
                     data: cellData,
+                    infected: cellProps.infected,
                 };
             }),
             bubbles: this.bubbles.map(function (bubble) {
@@ -615,6 +616,7 @@ var SpreadGameImplementation = /** @class */ (function () {
                     id: bubble.id,
                     playerId: bubble.playerId,
                     data: bubbleData,
+                    infected: bubbleProps.infected,
                 };
             }),
         };

@@ -16,6 +16,7 @@ test("base infection", () => {
     cstate = game.toClientGameState();
     cell1 = cstate.cells.find((c) => c.id === 1);
     cell0 = cstate.cells.find((c) => c.id === 0);
+    expect(cell1?.infected).toBe(true);
     expect(cell1?.data?.units).toBe(unitsAfter);
     expect(cell0?.data?.units).toBeGreaterThan(control0);
 
@@ -37,5 +38,6 @@ test("no base infection", () => {
     game.runReplay(rep, 1000);
     cstate = game.toClientGameState();
     cell1 = cstate.cells.find((c) => c.id === 1);
+    expect(cell1?.infected).toBe(false);
     expect(cell1?.data?.units).not.toBe(unitsAfter);
 });

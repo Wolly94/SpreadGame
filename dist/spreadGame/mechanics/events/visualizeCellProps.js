@@ -31,6 +31,7 @@ exports.visualizeCellUtils = {
             rageValue: a.rageValue + b.rageValue,
             membraneAbsorption: a.membraneAbsorption + b.membraneAbsorption,
             hideProps: combinePlayerCellHideProps(a.hideProps, b.hideProps),
+            infected: a.infected || b.infected,
         };
     },
     default: {
@@ -39,6 +40,7 @@ exports.visualizeCellUtils = {
         rageValue: 0,
         membraneAbsorption: 0,
         hideProps: new Map(),
+        infected: false,
     },
     collect: function (props) {
         return props

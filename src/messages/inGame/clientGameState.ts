@@ -16,6 +16,8 @@ export interface ClientBubble {
     id: number;
     playerId: number;
     data: BubbleData | null;
+
+    infected: boolean;
 }
 
 export interface ClientCell {
@@ -24,6 +26,8 @@ export interface ClientCell {
     radius: number;
     position: [number, number];
     data: CellData | null;
+
+    infected: boolean;
 }
 
 export interface ClientGameState {

@@ -4,21 +4,14 @@ import {
     TimedProps,
 } from "../../spreadGame/mechanics/events/definitions";
 import {
-    InfectEffect,
-    InfectEvent,
-} from "../../spreadGame/mechanics/events/infect";
-import {
     InfectBubbleProps,
     infectBubbleUtils,
     PlayerInfectBubbleProps,
 } from "../../spreadGame/mechanics/events/infectBubble";
-import {
-    InfectCellProps,
-    infectCellUtils,
-} from "../../spreadGame/mechanics/events/infectCell";
+import { infectCellUtils } from "../../spreadGame/mechanics/events/infectCell";
 import { RaiseEventProps } from "../../spreadGame/mechanics/events/raiseEvent";
 import { BaseInfectionPerk } from "./baseInfection";
-import { backupFromPerk, CreatePerk, getPerkValue } from "./perk";
+import { CreatePerk, getPerkValue } from "./perk";
 
 const name = "Contaigous";
 const defaultValue = 0;

@@ -11,8 +11,9 @@ export declare const bubbleHideUtils: {
 export declare type PlayerBubbleHideProps = Map<number, BubbleHideProps>;
 export interface VisualizeBubbleProps {
     type: "VisualizeBubbleProps";
-    combatAbilityModifier: number;
     hideProps: PlayerBubbleHideProps;
+    combatAbilityModifier: number;
+    infected: boolean;
 }
 export declare const visualizeBubbleUtils: PropUtils<VisualizeBubbleProps>;
 export {};
