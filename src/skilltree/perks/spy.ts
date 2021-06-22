@@ -176,7 +176,7 @@ export const SpyPerk: CreatePerk<number> = {
         ],
         players: [
             { id: 0, skills: [{ name: name, level: 1 }] },
-            { id: 1, skills: [{ name: BaseDefensePerk.name, level: 1 }] },
+            { id: 1, skills: [{ name: BaseDefensePerk.name, level: 3 }] },
         ],
     },
 };

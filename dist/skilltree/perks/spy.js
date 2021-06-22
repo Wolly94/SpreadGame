@@ -152,7 +152,7 @@ exports.SpyPerk = {
         ],
         players: [
             { id: 0, skills: [{ name: name, level: 1 }] },
-            { id: 1, skills: [{ name: baseDefense_1.BaseDefensePerk.name, level: 1 }] },
+            { id: 1, skills: [{ name: baseDefense_1.BaseDefensePerk.name, level: 3 }] },
         ],
     },
 };
