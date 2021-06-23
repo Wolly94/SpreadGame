@@ -796,24 +796,13 @@ export class SpreadGameImplementation implements SpreadGame {
                 const bubbleProps: VisualizeBubbleProps = visualizeBubbleUtils.collect(
                     this.fromAttachedProps({ type: "Bubble", id: bubble.id })
                 );
-                const hideProps =
-                    playerId !== null
-                        ? bubbleProps.hideProps.get(playerId)
-                        : undefined;
-                const bubbleData: BubbleData | null =
-                    hideProps === undefined || !hideProps.invisible
-                        ? {
-                              attackCombatAbilities:
-                                  bubbleProps.combatAbilityModifier,
-                              position: bubble.position,
-                              radius: bubble.radius,
-                              units: bubble.units,
-                          }
-                        : null;
                 return {
                     id: bubble.id,
                     playerId: bubble.playerId,
-                    data: bubbleData,
+                    attackCombatAbilities: bubbleProps.combatAbilityModifier,
+                    position: bubble.position,
+                    radius: bubble.radius,
+                    units: bubble.units,
                     infected: bubbleProps.infected,
                 };
             }),

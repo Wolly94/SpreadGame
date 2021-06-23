@@ -8,8 +8,7 @@ test("test rage", () => {
     game.runReplay(rep, 3000);
     var clientState = game.toClientGameState();
     let ragedBubbles = clientState.bubbles.filter(
-        (bubble) =>
-            bubble.data !== null && bubble.data.attackCombatAbilities > 0
+        (bubble) => bubble.attackCombatAbilities > 0
     );
     expect(ragedBubbles.length).toBe(1);
     game.runReplay(rep, 2000);
@@ -22,8 +21,7 @@ test("test rage", () => {
     clientState = game.toClientGameState();
     expect(clientState.bubbles.length).toBe(1);
     ragedBubbles = clientState.bubbles.filter(
-        (bubble) =>
-            bubble.data !== null && bubble.data.attackCombatAbilities > 0
+        (bubble) => bubble.attackCombatAbilities > 0
     );
     expect(ragedBubbles.length).toBe(0);
 });
@@ -34,8 +32,7 @@ test("test no rage", () => {
     game.runReplay(rep, 3000);
     var clientState = game.toClientGameState();
     const ragedBubbles = clientState.bubbles.filter(
-        (bubble) =>
-            bubble.data !== null && bubble.data.attackCombatAbilities > 1
+        (bubble) => bubble.attackCombatAbilities > 1
     );
     expect(ragedBubbles.length).toBe(0);
 });

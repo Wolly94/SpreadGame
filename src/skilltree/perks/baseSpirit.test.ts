@@ -11,7 +11,7 @@ test("test base spirit", () => {
     var cell0 = clientState.cells.find((c) => c.id === 0);
     var bubble1 = clientState.bubbles.find((b) => b.id === 1);
     expect(cell0?.data?.defenderCombatAbilities).toBe(1 * 6);
-    expect(bubble1?.data?.attackCombatAbilities).toBe(1 * 6);
+    expect(bubble1?.attackCombatAbilities).toBe(1 * 6);
 
     while (game.bubbles.length >= 2) {
         game.step(25);
@@ -21,7 +21,7 @@ test("test base spirit", () => {
     var cell1 = clientState.cells.find((c) => c.id === 1);
     expect(cell1?.playerId).toBe(0);
     var bubble2 = clientState.bubbles.find((b) => b.id === 2);
-    expect(bubble2?.data?.attackCombatAbilities).toBe(0);
+    expect(bubble2?.attackCombatAbilities).toBe(0);
     cell0 = clientState.cells.find((c) => c.id === 0);
     expect(cell0?.data?.defenderCombatAbilities).toBe(0 * 6);
     bubble1 = clientState.bubbles.find((b) => b.id === 1);

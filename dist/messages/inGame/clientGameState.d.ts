@@ -1,8 +1,4 @@
 export interface BubbleData {
-    units: number;
-    position: [number, number];
-    radius: number;
-    attackCombatAbilities: number;
 }
 export interface CellData {
     units: number;
@@ -13,7 +9,10 @@ export interface CellData {
 export interface ClientBubble {
     id: number;
     playerId: number;
-    data: BubbleData | null;
+    units: number;
+    position: [number, number];
+    radius: number;
+    attackCombatAbilities: number;
     infected: boolean;
 }
 export interface ClientCell {

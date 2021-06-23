@@ -604,21 +604,13 @@ var SpreadGameImplementation = /** @class */ (function () {
             }),
             bubbles: this.bubbles.map(function (bubble) {
                 var bubbleProps = visualizeBubbleProps_1.visualizeBubbleUtils.collect(_this.fromAttachedProps({ type: "Bubble", id: bubble.id }));
-                var hideProps = playerId !== null
-                    ? bubbleProps.hideProps.get(playerId)
-                    : undefined;
-                var bubbleData = hideProps === undefined || !hideProps.invisible
-                    ? {
-                        attackCombatAbilities: bubbleProps.combatAbilityModifier,
-                        position: bubble.position,
-                        radius: bubble.radius,
-                        units: bubble.units,
-                    }
-                    : null;
                 return {
                     id: bubble.id,
                     playerId: bubble.playerId,
-                    data: bubbleData,
+                    attackCombatAbilities: bubbleProps.combatAbilityModifier,
+                    position: bubble.position,
+                    radius: bubble.radius,
+                    units: bubble.units,
                     infected: bubbleProps.infected,
                 };
             }),

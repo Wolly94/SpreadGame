@@ -11,56 +11,35 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var visualizeBubbleProps_1 = require("../../spreadGame/mechanics/events/visualizeBubbleProps");
 var visualizeCellProps_1 = require("../../spreadGame/mechanics/events/visualizeCellProps");
 var perk_1 = require("./perk");
 var name = "Camouflage";
 var defaultValue = 0;
 var defaultValues = [1];
 var getResultVisualProps = function (entityId, props) {
-    if (props.type === "VisualizeBubbleProps") {
-        var result = {
-            entity: {
-                type: "Bubble",
-                id: entityId,
-            },
-            perkName: name,
-            triggerType: name,
-            props: {
-                expirationInMs: "Never",
-                value: props,
-            },
-        };
-        return result;
-    }
-    else {
-        var result = {
-            entity: {
-                type: "Cell",
-                id: entityId,
-            },
-            perkName: name,
-            triggerType: name,
-            props: {
-                expirationInMs: "Never",
-                value: props,
-            },
-        };
-        return result;
-    }
+    var result = {
+        entity: {
+            type: "Cell",
+            id: entityId,
+        },
+        perkName: name,
+        triggerType: name,
+        props: {
+            expirationInMs: "Never",
+            value: props,
+        },
+    };
+    return result;
 };
 var getVisualProps = function (playerId, players) {
     var cellHideProps = new Map();
-    var bubbleHideProps = new Map();
     players
         .filter(function (pl) { return pl.id !== playerId; })
         .forEach(function (pl) {
         cellHideProps.set(pl.id, __assign(__assign({}, visualizeCellProps_1.cellHideUtils.default), { showUnits: false }));
-        bubbleHideProps.set(pl.id, __assign(__assign({}, visualizeBubbleProps_1.bubbleHideUtils.default), { invisible: true }));
     });
     var cellProps = __assign(__assign({}, visualizeCellProps_1.visualizeCellUtils.default), { hideProps: cellHideProps });
-    var bubbleProps = __assign(__assign({}, visualizeBubbleProps_1.visualizeBubbleUtils.default), { hideProps: bubbleHideProps });
-    return [cellProps, bubbleProps];
+    return cellProps;
 };
 exports.CamouflagePerk = {
     name: name,
@@ -76,26 +55,13 @@ exports.CamouflagePerk = {
             },
             triggers: [
                 {
-                    type: "CreateBubble",
-                    getValue: function (trigger, game) {
-                        var playerId = trigger.after.bubble.playerId;
-                        var val = perk_1.getPerkValue(game, name, playerId, values, defaultValue);
-                        if (val === defaultValue)
-                            return [];
-                        var _a = getVisualProps(playerId, game.players), props = _a[1];
-                        return [
-                            getResultVisualProps(trigger.after.bubble.id, props),
-                        ];
-                    },
-                },
-                {
                     type: "ConquerCell",
                     getValue: function (trigger, game) {
                         var playerId = trigger.after.cell.playerId;
                         var val = perk_1.getPerkValue(game, name, playerId, values, defaultValue);
                         if (val === defaultValue)
                             return [];
-                        var props = getVisualProps(playerId, game.players)[0];
+                        var props = getVisualProps(playerId, game.players);
                         return [
                             getResultVisualProps(trigger.after.cell.id, props),
                         ];
@@ -109,7 +75,7 @@ exports.CamouflagePerk = {
                             var val = perk_1.getPerkValue(game, name, playerId, values, defaultValue);
                             if (val === defaultValue)
                                 return [];
-                            var props = getVisualProps(playerId, game.players)[0];
+                            var props = getVisualProps(playerId, game.players);
                             return game.cells.flatMap(function (cell) {
                                 if (cell.playerId === playerId)
                                     return [

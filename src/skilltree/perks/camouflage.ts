@@ -1,16 +1,9 @@
-import { idFromToken } from "../../communication/gameServerHandler/common";
 import { Player } from "../../spreadGame";
 import {
     AttachProps,
-    Entity,
     TimedProps,
 } from "../../spreadGame/mechanics/events/definitions";
-import {
-    bubbleHideUtils,
-    PlayerBubbleHideProps,
-    VisualizeBubbleProps,
-    visualizeBubbleUtils,
-} from "../../spreadGame/mechanics/events/visualizeBubbleProps";
+import { VisualizeBubbleProps } from "../../spreadGame/mechanics/events/visualizeBubbleProps";
 import {
     cellHideUtils,
     PlayerCellHideProps,
@@ -23,47 +16,27 @@ const name = "Camouflage";
 const defaultValue = 0;
 const defaultValues = [1];
 
-const getResultVisualProps = (
-    entityId: number,
-    props: VisualizeCellProps | VisualizeBubbleProps
-) => {
-    if (props.type === "VisualizeBubbleProps") {
-        const result: AttachProps<TimedProps<VisualizeBubbleProps>> = {
-            entity: {
-                type: "Bubble",
-                id: entityId,
-            },
-            perkName: name,
-            triggerType: name,
-            props: {
-                expirationInMs: "Never",
-                value: props,
-            },
-        };
-        return result;
-    } else {
-        const result: AttachProps<TimedProps<VisualizeCellProps>> = {
-            entity: {
-                type: "Cell",
-                id: entityId,
-            },
-            perkName: name,
-            triggerType: name,
-            props: {
-                expirationInMs: "Never",
-                value: props,
-            },
-        };
-        return result;
-    }
+const getResultVisualProps = (entityId: number, props: VisualizeCellProps) => {
+    const result: AttachProps<TimedProps<VisualizeCellProps>> = {
+        entity: {
+            type: "Cell",
+            id: entityId,
+        },
+        perkName: name,
+        triggerType: name,
+        props: {
+            expirationInMs: "Never",
+            value: props,
+        },
+    };
+    return result;
 };
 
 const getVisualProps = (
     playerId: number | null,
     players: Player[]
-): [VisualizeCellProps, VisualizeBubbleProps] => {
+): VisualizeCellProps => {
     const cellHideProps: PlayerCellHideProps = new Map();
-    const bubbleHideProps: PlayerBubbleHideProps = new Map();
     players
         .filter((pl) => pl.id !== playerId)
         .forEach((pl) => {
@@ -71,20 +44,12 @@ const getVisualProps = (
                 ...cellHideUtils.default,
                 showUnits: false,
             });
-            bubbleHideProps.set(pl.id, {
-                ...bubbleHideUtils.default,
-                invisible: true,
-            });
         });
     const cellProps: VisualizeCellProps = {
         ...visualizeCellUtils.default,
         hideProps: cellHideProps,
     };
-    const bubbleProps: VisualizeBubbleProps = {
-        ...visualizeBubbleUtils.default,
-        hideProps: bubbleHideProps,
-    };
-    return [cellProps, bubbleProps];
+    return cellProps;
 };
 
 export const CamouflagePerk: CreatePerk<number> = {
@@ -98,36 +63,6 @@ export const CamouflagePerk: CreatePerk<number> = {
             description: (lvl) =>
                 "The enemy can only see the cell capacity of your cells, but not population or bubble-size.",
             triggers: [
-                {
-                    type: "CreateBubble",
-                    getValue: (
-                        trigger,
-                        game
-                    ): AttachProps<
-                        TimedProps<VisualizeBubbleProps | VisualizeCellProps>
-                    >[] => {
-                        const playerId = trigger.after.bubble.playerId;
-                        const val = getPerkValue(
-                            game,
-                            name,
-                            playerId,
-                            values,
-                            defaultValue
-                        );
-                        if (val === defaultValue) return [];
-
-                        const [, props] = getVisualProps(
-                            playerId,
-                            game.players
-                        );
-                        return [
-                            getResultVisualProps(
-                                trigger.after.bubble.id,
-                                props
-                            ),
-                        ];
-                    },
-                },
                 {
                     type: "ConquerCell",
                     getValue: (
@@ -146,7 +81,7 @@ export const CamouflagePerk: CreatePerk<number> = {
                         );
                         if (val === defaultValue) return [];
 
-                        const [props] = getVisualProps(playerId, game.players);
+                        const props = getVisualProps(playerId, game.players);
                         return [
                             getResultVisualProps(trigger.after.cell.id, props),
                         ];
@@ -171,7 +106,7 @@ export const CamouflagePerk: CreatePerk<number> = {
                             );
                             if (val === defaultValue) return [];
 
-                            const [props] = getVisualProps(
+                            const props = getVisualProps(
                                 playerId,
                                 game.players
                             );
