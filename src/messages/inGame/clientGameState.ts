@@ -2,6 +2,8 @@ export interface BubbleData {}
 
 export interface CellData {
     units: number;
+    newBubbleRadius: number;
+    currentUnitsRadius: number;
     defenderCombatAbilities: number;
     attackerCombatAbilities: number;
     membraneValue: number;

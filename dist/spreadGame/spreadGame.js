@@ -16,9 +16,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var events_1 = require("../skilltree/events");
 var perk_1 = require("../skilltree/perks/perk");
+var common_1 = require("./common");
 var entites_1 = require("./entites");
 var basicMechanics_1 = __importDefault(require("./mechanics/basicMechanics"));
 var bounceMechanics_1 = __importDefault(require("./mechanics/bounceMechanics"));
+var commonMechanics_1 = require("./mechanics/commonMechanics");
 var conquerCell_1 = require("./mechanics/events/conquerCell");
 var defendCell_1 = require("./mechanics/events/defendCell");
 var fight_1 = require("./mechanics/events/fight");
@@ -581,7 +583,10 @@ var SpreadGameImplementation = /** @class */ (function () {
             deadlyEnvironment: gameProps.deadlyEnvironment,
             timePassedInMs: this.timePassed,
             cells: this.cells.map(function (cell) {
-                var cellProps = visualizeCellProps_1.visualizeCellUtils.collect(_this.fromAttachedProps({ type: "Cell", id: cell.id }));
+                var entity = { type: 'Cell', id: cell.id };
+                var cellProps = visualizeCellProps_1.visualizeCellUtils.collect(_this.fromAttachedProps(entity));
+                var sendUnitsProps = sendUnits_1.sendUnitsUtils.collect(_this.fromAttachedProps(entity));
+                var newBubbleRadius = common_1.unitsToRadius(commonMechanics_1.calculateBubbleUnits(cell, sendUnitsProps));
                 var hideProps = playerId !== null
                     ? cellProps.hideProps.get(playerId)
                     : undefined;
@@ -591,6 +596,8 @@ var SpreadGameImplementation = /** @class */ (function () {
                         defenderCombatAbilities: cellProps.combatAbilityModifier,
                         membraneValue: cellProps.membraneAbsorption,
                         units: cell.units,
+                        newBubbleRadius: newBubbleRadius,
+                        currentUnitsRadius: common_1.unitsToRadius(cell.units)
                     }
                     : null;
                 return {

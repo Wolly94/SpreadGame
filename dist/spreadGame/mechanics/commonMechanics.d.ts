@@ -16,6 +16,7 @@ export declare const entityDistance: (b: Bubble, e: Bubble | Cell) => number;
 export declare const centerOverlapDistance: (b: Bubble, e: Bubble | Cell) => number;
 export declare const isBubble: (val: any) => val is Bubble;
 export declare const approaching: (b: Bubble, e: Bubble | Cell) => boolean;
+export declare const calculateBubbleUnits: (sender: Cell, sendUnitsProps: SendUnitsProps) => number;
 export interface SpreadGameMechanics {
     collidesWithBubble: (bubble1: Bubble, bubble2: Bubble) => boolean;
     collidesWithCell: (bubble: Bubble, cell: Cell) => boolean;

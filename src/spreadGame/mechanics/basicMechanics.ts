@@ -2,6 +2,7 @@ import Bubble, { createBubble, getNewBubbleIndex, setUnits } from "../bubble";
 import Cell from "../cell";
 import { radiusToGrowth, radiusToUnits } from "../common";
 import {
+    calculateBubbleUnits,
     calculationAccuracy,
     centerOverlap,
     fight,
@@ -10,6 +11,7 @@ import {
     takeOverCell,
 } from "./commonMechanics";
 import { GrowthProps } from "./events/growth";
+import { SendUnitsProps } from "./events/sendUnits";
 
 export const defaultSpeed = 90;
 
@@ -86,7 +88,8 @@ const basicMechanics: SpreadGameMechanics = {
     sendBubble(
         sender: Cell,
         target: Cell,
-        timePassed: number
+        timePassed: number,
+        sendUnitsProps: SendUnitsProps
     ): [Cell, Bubble | null] {
         if (sender.playerId == null) return [{ ...sender }, null];
         var direction = [
@@ -95,7 +98,7 @@ const basicMechanics: SpreadGameMechanics = {
         ];
         const dist = Math.sqrt(direction[0] ** 2 + direction[1] ** 2);
         if (dist === 0) return [{ ...sender }, null];
-        const attacker = Math.floor(sender.units / 2);
+        const attacker = calculateBubbleUnits(sender, sendUnitsProps);
         const resSender = { ...sender, units: sender.units - attacker };
         const lambda = sender.radius / dist;
         const normedDirection: [number, number] = [

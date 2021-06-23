@@ -1,5 +1,4 @@
 import {
-    BubbleData,
     CellData,
     ClientGameState,
 } from "../messages/inGame/clientGameState";
@@ -25,11 +24,12 @@ import {
 } from "../skilltree/perks/perk";
 import Bubble from "./bubble";
 import Cell from "./cell";
+import { radiusToUnits, unitsToRadius } from "./common"
 import { distance } from "./entites";
 import { SpreadMap } from "./map/map";
 import basicMechanics from "./mechanics/basicMechanics";
 import bounceMechanics from "./mechanics/bounceMechanics";
-import { SpreadGameMechanics } from "./mechanics/commonMechanics";
+import { calculateBubbleUnits, SpreadGameMechanics } from "./mechanics/commonMechanics";
 import {
     ConquerCellEvent,
     conquerCellUtils,
@@ -766,9 +766,12 @@ export class SpreadGameImplementation implements SpreadGame {
             deadlyEnvironment: gameProps.deadlyEnvironment,
             timePassedInMs: this.timePassed,
             cells: this.cells.map((cell) => {
+                const entity: Entity = {type: 'Cell', id: cell.id}
                 const cellProps: VisualizeCellProps = visualizeCellUtils.collect(
-                    this.fromAttachedProps({ type: "Cell", id: cell.id })
+                    this.fromAttachedProps(entity)
                 );
+                const sendUnitsProps = sendUnitsUtils.collect(this.fromAttachedProps(entity))
+                const newBubbleRadius = unitsToRadius(calculateBubbleUnits(cell, sendUnitsProps))
                 const hideProps =
                     playerId !== null
                         ? cellProps.hideProps.get(playerId)
@@ -781,6 +784,8 @@ export class SpreadGameImplementation implements SpreadGame {
                                   cellProps.combatAbilityModifier,
                               membraneValue: cellProps.membraneAbsorption,
                               units: cell.units,
+                              newBubbleRadius: newBubbleRadius,
+                              currentUnitsRadius: unitsToRadius(cell.units)
                           }
                         : null;
                 return {

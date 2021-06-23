@@ -81,7 +81,7 @@ var basicMechanics = {
             : Math.max(cell.units - toReduce, saturatedUnitCount);
         return __assign(__assign({}, cell), { units: nextUnits });
     },
-    sendBubble: function (sender, target, timePassed) {
+    sendBubble: function (sender, target, timePassed, sendUnitsProps) {
         if (sender.playerId == null)
             return [__assign({}, sender), null];
         var direction = [
@@ -91,7 +91,7 @@ var basicMechanics = {
         var dist = Math.sqrt(Math.pow(direction[0], 2) + Math.pow(direction[1], 2));
         if (dist === 0)
             return [__assign({}, sender), null];
-        var attacker = Math.floor(sender.units / 2);
+        var attacker = commonMechanics_1.calculateBubbleUnits(sender, sendUnitsProps);
         var resSender = __assign(__assign({}, sender), { units: sender.units - attacker });
         var lambda = sender.radius / dist;
         var normedDirection = [

@@ -8,7 +8,7 @@ import {
     isCellFightProps,
 } from "./events/fight";
 import { GrowthProps } from "./events/growth";
-import { MoveProps } from "./events/move"
+import { MoveProps } from "./events/move";
 import { SendUnitsProps } from "./events/sendUnits";
 
 export const calculationAccuracy = 0.01;
@@ -118,6 +118,18 @@ export const approaching = (b: Bubble, e: Bubble | Cell) => {
     ];
     const res = direction[0] * relPosition[0] + direction[1] * relPosition[1];
     return res < 0;
+};
+
+export const calculateBubbleUnits = (
+    sender: Cell,
+    sendUnitsProps: SendUnitsProps
+) => {
+    const baseAttackers = Math.floor(sender.units / 2);
+    const res = Math.min(
+        sender.units,
+        baseAttackers + sendUnitsProps.additionalUnits
+    );
+    return res;
 };
 
 export interface SpreadGameMechanics {
