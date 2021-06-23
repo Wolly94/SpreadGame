@@ -583,7 +583,7 @@ var SpreadGameImplementation = /** @class */ (function () {
             deadlyEnvironment: gameProps.deadlyEnvironment,
             timePassedInMs: this.timePassed,
             cells: this.cells.map(function (cell) {
-                var entity = { type: 'Cell', id: cell.id };
+                var entity = { type: "Cell", id: cell.id };
                 var cellProps = visualizeCellProps_1.visualizeCellUtils.collect(_this.fromAttachedProps(entity));
                 var sendUnitsProps = sendUnits_1.sendUnitsUtils.collect(_this.fromAttachedProps(entity));
                 var newBubbleRadius = common_1.unitsToRadius(commonMechanics_1.calculateBubbleUnits(cell, sendUnitsProps));
@@ -597,7 +597,7 @@ var SpreadGameImplementation = /** @class */ (function () {
                         membraneValue: cellProps.membraneAbsorption,
                         units: cell.units,
                         newBubbleRadius: newBubbleRadius,
-                        currentUnitsRadius: Math.max(common_1.unitsToRadius(cell.units), cell.radius)
+                        currentUnitsRadius: Math.min(common_1.unitsToRadius(cell.units), cell.radius),
                     }
                     : null;
                 return {
