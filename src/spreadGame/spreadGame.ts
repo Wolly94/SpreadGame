@@ -785,7 +785,7 @@ export class SpreadGameImplementation implements SpreadGame {
                               membraneValue: cellProps.membraneAbsorption,
                               units: cell.units,
                               newBubbleRadius: newBubbleRadius,
-                              currentUnitsRadius: unitsToRadius(cell.units)
+                              currentUnitsRadius: Math.max(unitsToRadius(cell.units), cell.radius)
                           }
                         : null;
                 return {

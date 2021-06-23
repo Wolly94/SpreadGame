@@ -597,7 +597,7 @@ var SpreadGameImplementation = /** @class */ (function () {
                         membraneValue: cellProps.membraneAbsorption,
                         units: cell.units,
                         newBubbleRadius: newBubbleRadius,
-                        currentUnitsRadius: common_1.unitsToRadius(cell.units)
+                        currentUnitsRadius: Math.max(common_1.unitsToRadius(cell.units), cell.radius)
                     }
                     : null;
                 return {
