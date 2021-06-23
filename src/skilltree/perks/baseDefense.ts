@@ -1,3 +1,4 @@
+import { unitsToRadius } from "../../spreadGame/common";
 import {
     AttachProps,
     TimedProps,
@@ -118,7 +119,7 @@ export const BaseDefensePerk: CreatePerk<number> = {
                     id: 0,
                     playerId: 0,
                     position: [100, 100],
-                    radius: 50,
+                    radius: unitsToRadius(60),
                     units: 120,
                 },
                 {
@@ -134,7 +135,7 @@ export const BaseDefensePerk: CreatePerk<number> = {
         perks: [
             {
                 name: name,
-                data: { type: "number", val: [10, 20, 30] },
+                data: { type: "number", val: defaultValues },
             },
         ],
         players: [

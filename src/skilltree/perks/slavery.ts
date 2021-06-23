@@ -1,3 +1,4 @@
+import { unitsToRadius } from "../../spreadGame/common";
 import {
     ConquerCellProps,
     conquerCellUtils,
@@ -69,7 +70,7 @@ export const SlaveryPerk: CreatePerk<number> = {
                     id: 0,
                     playerId: 0,
                     position: [100, 100],
-                    radius: 50,
+                    radius: unitsToRadius(60),
                     units: 120,
                 },
                 {

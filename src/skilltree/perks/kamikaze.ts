@@ -1,3 +1,4 @@
+import { unitsToRadius } from "../../spreadGame/common";
 import {
     ConquerCellProps,
     conquerCellUtils,
@@ -77,7 +78,7 @@ export const KamikazePerk: CreatePerk<number> = {
                     id: 1,
                     playerId: 1,
                     position: [400, 100],
-                    radius: 50,
+                    radius: unitsToRadius(100),
                     units: 200,
                 },
             ],
