@@ -11,6 +11,7 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var common_1 = require("../../spreadGame/common");
 var conquerCell_1 = require("../../spreadGame/mechanics/events/conquerCell");
 var utils_1 = require("../utils");
 var perk_1 = require("./perk");
@@ -71,7 +72,7 @@ exports.KamikazePerk = {
                     id: 1,
                     playerId: 1,
                     position: [400, 100],
-                    radius: 50,
+                    radius: common_1.unitsToRadius(100),
                     units: 200,
                 },
             ],

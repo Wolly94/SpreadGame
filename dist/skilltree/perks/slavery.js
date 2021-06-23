@@ -11,6 +11,7 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var common_1 = require("../../spreadGame/common");
 var conquerCell_1 = require("../../spreadGame/mechanics/events/conquerCell");
 var utils_1 = require("../utils");
 var perk_1 = require("./perk");
@@ -63,7 +64,7 @@ exports.SlaveryPerk = {
                     id: 0,
                     playerId: 0,
                     position: [100, 100],
-                    radius: 50,
+                    radius: common_1.unitsToRadius(60),
                     units: 120,
                 },
                 {

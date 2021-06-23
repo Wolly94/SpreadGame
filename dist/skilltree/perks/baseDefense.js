@@ -11,6 +11,7 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var common_1 = require("../../spreadGame/common");
 var fight_1 = require("../../spreadGame/mechanics/events/fight");
 var visualizeCellProps_1 = require("../../spreadGame/mechanics/events/visualizeCellProps");
 var utils_1 = require("../utils");
@@ -83,7 +84,7 @@ exports.BaseDefensePerk = {
                     id: 0,
                     playerId: 0,
                     position: [100, 100],
-                    radius: 50,
+                    radius: common_1.unitsToRadius(60),
                     units: 120,
                 },
                 {
@@ -99,7 +100,7 @@ exports.BaseDefensePerk = {
         perks: [
             {
                 name: name,
-                data: { type: "number", val: [10, 20, 30] },
+                data: { type: "number", val: defaultValues },
             },
         ],
         players: [
