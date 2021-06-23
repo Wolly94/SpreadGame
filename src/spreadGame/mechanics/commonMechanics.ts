@@ -127,9 +127,10 @@ export const calculateBubbleUnits = (
     const baseAttackers = Math.floor(sender.units / 2);
     const res = Math.min(
         sender.units,
+        radiusToUnits(sender.radius),
         baseAttackers + sendUnitsProps.additionalUnits
     );
-    return res;
+    return res
 };
 
 export interface SpreadGameMechanics {

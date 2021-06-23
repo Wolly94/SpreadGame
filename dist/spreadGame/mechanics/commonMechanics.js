@@ -93,6 +93,6 @@ exports.approaching = function (b, e) {
 };
 exports.calculateBubbleUnits = function (sender, sendUnitsProps) {
     var baseAttackers = Math.floor(sender.units / 2);
-    var res = Math.min(sender.units, baseAttackers + sendUnitsProps.additionalUnits);
+    var res = Math.min(sender.units, common_1.radiusToUnits(sender.radius), baseAttackers + sendUnitsProps.additionalUnits);
     return res;
 };
