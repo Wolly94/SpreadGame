@@ -40,8 +40,8 @@ const scrapeOffMechanics: SpreadGameMechanics = {
         const [u1, u2] = fightBubblePartial(
             bubble1.units,
             bubble2.units,
-            f1.combatAbilityModifier,
-            f2.combatAbilityModifier,
+            1 + f1.combatAbilityModifier / 100,
+            1 + f2.combatAbilityModifier / 100,
             dist
         );
         var res1: Bubble | null = null;
