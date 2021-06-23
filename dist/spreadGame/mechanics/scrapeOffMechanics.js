@@ -36,7 +36,7 @@ var scrapeOffMechanics = {
         if (bubble1.playerId === bubble2.playerId)
             return [bubble1, bubble2];
         var dist = entites_1.distance(bubble1.position, bubble2.position);
-        var _a = commonMechanics_1.fightBubblePartial(bubble1.units, bubble2.units, f1.combatAbilityModifier, f2.combatAbilityModifier, dist), u1 = _a[0], u2 = _a[1];
+        var _a = commonMechanics_1.fightBubblePartial(bubble1.units, bubble2.units, 1 + f1.combatAbilityModifier / 100, 1 + f2.combatAbilityModifier / 100, dist), u1 = _a[0], u2 = _a[1];
         var res1 = null;
         var res2 = null;
         if (u1 !== null) {
