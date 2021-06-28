@@ -14,6 +14,7 @@ export interface SkillTree {
 }
 export declare const validSkillTree: (skillTree: SkillTree, skilledPerks: SkilledPerk[]) => boolean;
 export declare const skillTreeMethods: {
+    toPerks: (skillTree: SkillTree) => GeneralPerk[];
     toData: (skillTree: SkillTree) => SkillTreeData;
     fromData: (skillTreeData: SkillTreeData) => SkillTree;
     toSkilledPerks: (skilledPerkData: SkilledPerkData[]) => SkilledPerk[];

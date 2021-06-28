@@ -1,10 +1,10 @@
 import { SkilledPerkData } from "../messages/inGame/clientLobbyMessage";
 import { SkillTreeData } from "../messages/inGame/gameServerMessages";
-import { GeneralPerk, allPerks } from "./perks/perk"
-import { Agility } from "./skills/agility"
+import { GeneralPerk, allPerks } from "./perks/perk";
+import { Agility } from "./skills/agility";
 import { Attack } from "./skills/attack";
 import { Defense } from "./skills/defense";
-import { Infection } from "./skills/infection"
+import { Infection } from "./skills/infection";
 import { Population } from "./skills/population";
 import { Spirit } from "./skills/spirit";
 
@@ -30,6 +30,11 @@ export const validSkillTree = (
 };
 
 export const skillTreeMethods = {
+    toPerks: (skillTree: SkillTree): GeneralPerk[] => {
+        return skillTree.skills.flatMap((skill) => {
+            return skill.perks;
+        });
+    },
     toData: (skillTree: SkillTree): SkillTreeData => {
         return {
             skills: skillTree.skills.map((sk) => {

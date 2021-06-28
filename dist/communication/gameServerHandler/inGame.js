@@ -18,14 +18,15 @@ var InGameImplementation = /** @class */ (function () {
         var players = seatedPlayers.map(function (sp) {
             return { id: sp.playerId, skills: sp.skilledPerks };
         });
+        var perks = skilltree_1.skillTreeMethods.toPerks(skillTree);
         if (settings.mechanics === "basic") {
-            this.gameState = new spreadGame_1.SpreadGameImplementation(map, settings, players);
+            this.gameState = new spreadGame_1.SpreadGameImplementation(map, settings, players, perks);
         }
         else if (settings.mechanics === "scrapeoff") {
-            this.gameState = new spreadGame_1.SpreadGameImplementation(map, settings, players);
+            this.gameState = new spreadGame_1.SpreadGameImplementation(map, settings, players, perks);
         }
         else if (settings.mechanics === "bounce") {
-            this.gameState = new spreadGame_1.SpreadGameImplementation(map, settings, players);
+            this.gameState = new spreadGame_1.SpreadGameImplementation(map, settings, players, perks);
         }
         else
             throw Error("unregistered mechanics");
@@ -36,7 +37,7 @@ var InGameImplementation = /** @class */ (function () {
             return sp.type === "ai";
         })
             .map(function (sp) {
-            var ai = new ai_1.GreedyAi();
+            var ai = new ai_1.GreedyAi(settings, map, players, perks, sp.playerId);
             var aiClient = new aiClient_1.default(sp.playerId, ai);
             return aiClient;
         });
@@ -153,9 +154,9 @@ var InGameImplementation = /** @class */ (function () {
     };
     InGameImplementation.prototype.applyAiMoves = function () {
         var _this = this;
-        var data = this.gameState.toClientGameState(null);
+        //const data = this.gameState.toClientGameState(null);
         this.aiClients.forEach(function (aiCl) {
-            var move = aiCl.getMove(data);
+            var move = aiCl.getMove(_this.gameState);
             if (move != null) {
                 _this.gameState.applyMove(move);
             }

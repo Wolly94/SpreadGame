@@ -11,6 +11,11 @@ exports.validSkillTree = function (skillTree, skilledPerks) {
     return true;
 };
 exports.skillTreeMethods = {
+    toPerks: function (skillTree) {
+        return skillTree.skills.flatMap(function (skill) {
+            return skill.perks;
+        });
+    },
     toData: function (skillTree) {
         return {
             skills: skillTree.skills.map(function (sk) {

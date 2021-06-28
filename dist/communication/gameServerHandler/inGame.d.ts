@@ -6,6 +6,7 @@ import { GetReplayMessage } from "../../messages/replay/clientReplayMessages";
 import { HistoryEntry, Move } from "../../messages/replay/replay";
 import { SendReplayMessage } from "../../messages/replay/serverReplayMessages";
 import { SkillTree } from "../../skilltree/skilltree";
+import { SpreadGameImplementation } from "../../spreadGame";
 import { SpreadMap } from "../../spreadGame/map/map";
 import { SpreadGame } from "../../spreadGame/spreadGame";
 import { SeatedPlayer, PlayerData } from "./common";
@@ -31,7 +32,7 @@ declare class InGameImplementation implements InGame {
     gameSettings: GameSettings;
     seatedPlayers: SeatedPlayer[];
     aiClients: AiClient[];
-    gameState: SpreadGame;
+    gameState: SpreadGameImplementation;
     intervalId: NodeJS.Timeout | null;
     moveHistory: HistoryEntry<Move>[];
     skillTree: SkillTree;

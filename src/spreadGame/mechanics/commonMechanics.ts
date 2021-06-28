@@ -12,7 +12,7 @@ import { MoveProps } from "./events/move";
 import { SendUnitsProps } from "./events/sendUnits";
 
 export const calculationAccuracy = 0.01;
-export const minOverlap = 2;
+export const minOverlap = 0;
 
 // > 0 means attacker won, <= 0 means defender won
 export const fight = (
@@ -130,7 +130,7 @@ export const calculateBubbleUnits = (
         radiusToUnits(sender.radius),
         baseAttackers + sendUnitsProps.additionalUnits
     );
-    return res
+    return res;
 };
 
 export interface SpreadGameMechanics {

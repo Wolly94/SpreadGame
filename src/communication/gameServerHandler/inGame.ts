@@ -59,7 +59,7 @@ class InGameImplementation implements InGame {
     gameSettings: GameSettings;
     seatedPlayers: SeatedPlayer[];
     aiClients: AiClient[];
-    gameState: SpreadGame;
+    gameState: SpreadGameImplementation;
     intervalId: NodeJS.Timeout | null;
     moveHistory: HistoryEntry<Move>[];
     skillTree: SkillTree;
@@ -77,23 +77,27 @@ class InGameImplementation implements InGame {
         const players: Player[] = seatedPlayers.map((sp) => {
             return { id: sp.playerId, skills: sp.skilledPerks };
         });
+        const perks = skillTreeMethods.toPerks(skillTree);
         if (settings.mechanics === "basic") {
             this.gameState = new SpreadGameImplementation(
                 map,
                 settings,
-                players
+                players,
+                perks
             );
         } else if (settings.mechanics === "scrapeoff") {
             this.gameState = new SpreadGameImplementation(
                 map,
                 settings,
-                players
+                players,
+                perks
             );
         } else if (settings.mechanics === "bounce") {
             this.gameState = new SpreadGameImplementation(
                 map,
                 settings,
-                players
+                players,
+                perks
             );
         } else throw Error("unregistered mechanics");
         this.moveHistory = [];
@@ -104,7 +108,13 @@ class InGameImplementation implements InGame {
                 return sp.type === "ai";
             })
             .map((sp) => {
-                const ai = new GreedyAi();
+                const ai = new GreedyAi(
+                    settings,
+                    map,
+                    players,
+                    perks,
+                    sp.playerId
+                );
                 const aiClient = new AiClient(sp.playerId, ai);
                 return aiClient;
             });
@@ -142,16 +152,14 @@ class InGameImplementation implements InGame {
         }
 
         const clientSkillTree: SkillTreeData = {
-            skills: this.skillTree.skills.map(
-                (sk): SkillData => {
-                    return {
-                        name: sk.name,
-                        perks: sk.perks.map((p) => {
-                            return { name: p.name };
-                        }),
-                    };
-                }
-            ),
+            skills: this.skillTree.skills.map((sk): SkillData => {
+                return {
+                    name: sk.name,
+                    perks: sk.perks.map((p) => {
+                        return { name: p.name };
+                    }),
+                };
+            }),
         };
         const players: ClientLobbyPlayer[] = this.seatedPlayers.map((sp) => {
             const skilledPerks = skillTreeMethods.toSkilledPerkData(
@@ -235,9 +243,9 @@ class InGameImplementation implements InGame {
     }
 
     applyAiMoves() {
-        const data = this.gameState.toClientGameState(null);
+        //const data = this.gameState.toClientGameState(null);
         this.aiClients.forEach((aiCl) => {
-            const move = aiCl.getMove(data);
+            const move = aiCl.getMove(this.gameState);
             if (move != null) {
                 this.gameState.applyMove(move);
             }
