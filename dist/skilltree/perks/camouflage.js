@@ -31,12 +31,12 @@ var getResultVisualProps = function (entityId, props) {
     };
     return result;
 };
-var getVisualProps = function (playerId, players) {
+var getVisualProps = function (playerId, players, showUnits) {
     var cellHideProps = new Map();
     players
         .filter(function (pl) { return pl.id !== playerId; })
         .forEach(function (pl) {
-        cellHideProps.set(pl.id, __assign(__assign({}, visualizeCellProps_1.cellHideUtils.default), { showUnits: false }));
+        cellHideProps.set(pl.id, __assign(__assign({}, visualizeCellProps_1.cellHideUtils.default), { showUnits: showUnits }));
     });
     var cellProps = __assign(__assign({}, visualizeCellProps_1.visualizeCellUtils.default), { hideProps: cellHideProps });
     return cellProps;
@@ -59,9 +59,7 @@ exports.CamouflagePerk = {
                     getValue: function (trigger, game) {
                         var playerId = trigger.after.cell.playerId;
                         var val = perk_1.getPerkValue(game, name, playerId, values, defaultValue);
-                        if (val === defaultValue)
-                            return [];
-                        var props = getVisualProps(playerId, game.players);
+                        var props = getVisualProps(playerId, game.players, val === defaultValue);
                         return [
                             getResultVisualProps(trigger.after.cell.id, props),
                         ];
@@ -73,9 +71,7 @@ exports.CamouflagePerk = {
                         return game.players.flatMap(function (pl) {
                             var playerId = pl.id;
                             var val = perk_1.getPerkValue(game, name, playerId, values, defaultValue);
-                            if (val === defaultValue)
-                                return [];
-                            var props = getVisualProps(playerId, game.players);
+                            var props = getVisualProps(playerId, game.players, val === defaultValue);
                             return game.cells.flatMap(function (cell) {
                                 if (cell.playerId === playerId)
                                     return [

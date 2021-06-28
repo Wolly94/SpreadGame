@@ -79,15 +79,15 @@ var adjustedDirection = function (bubblePos, bubbleDir, targetPos) {
 };
 var bounceMechanics = {
     collidesWithBubble: scrapeOffMechanics_1.default.collidesWithBubble,
-    collidesWithCell: basicMechanics_1.default.collidesWithCell,
+    collidesWithCell: scrapeOffMechanics_1.default.collidesWithCell,
     collideBubble: scrapeOffMechanics_1.default.collideBubble,
     collideCell: function (bubble, cell, f1, f2) {
+        if (!bounceMechanics.collidesWithCell(bubble, cell))
+            return [__assign({}, bubble), __assign({}, cell)];
         // bubble reached its destiny?
         if (bubble.targetId === cell.id) {
             return basicMechanics_1.default.collideCell(bubble, cell, f1, f2);
         }
-        if (!bounceMechanics.collidesWithCell(bubble, cell))
-            return [__assign({}, bubble), __assign({}, cell)];
         var fighters = Math.min(minUnitsOnBounce, bubble.units, cell.units);
         var resBubble = bubble_1.setUnits(bubble, bubble.units - fighters);
         var resCell = __assign({}, cell);
