@@ -1,13 +1,14 @@
-import Bubble, { setUnits } from "../bubble"
-import Cell from "../cell"
-import { distance } from "../entites"
-import basicMechanics from "./basicMechanics"
+import Bubble, { setUnits } from "../bubble";
+import Cell from "../cell";
+import { distance } from "../entites";
+import basicMechanics from "./basicMechanics";
 import {
-    fight, reinforceCell,
+    fight,
+    reinforceCell,
     SpreadGameMechanics,
-    takeOverCell
-} from "./commonMechanics"
-import scrapeOffMechanics from "./scrapeOffMechanics"
+    takeOverCell,
+} from "./commonMechanics";
+import scrapeOffMechanics from "./scrapeOffMechanics";
 
 const minUnitsOnBounce = 1;
 
@@ -74,16 +75,17 @@ const adjustedDirection = (
 
 const bounceMechanics: SpreadGameMechanics = {
     collidesWithBubble: scrapeOffMechanics.collidesWithBubble,
-
-    collidesWithCell: basicMechanics.collidesWithCell,
+    collidesWithCell: scrapeOffMechanics.collidesWithCell,
     collideBubble: scrapeOffMechanics.collideBubble,
     collideCell: (bubble: Bubble, cell: Cell, f1, f2) => {
+        if (!bounceMechanics.collidesWithCell(bubble, cell))
+            return [{ ...bubble }, { ...cell }];
+
         // bubble reached its destiny?
         if (bubble.targetId === cell.id) {
             return basicMechanics.collideCell(bubble, cell, f1, f2);
         }
-        if (!bounceMechanics.collidesWithCell(bubble, cell))
-            return [{ ...bubble }, { ...cell }];
+
         const fighters = Math.min(minUnitsOnBounce, bubble.units, cell.units);
         const resBubble = setUnits(bubble, bubble.units - fighters);
         const resCell = { ...cell };
