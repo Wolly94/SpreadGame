@@ -34,7 +34,8 @@ const getResultVisualProps = (entityId: number, props: VisualizeCellProps) => {
 
 const getVisualProps = (
     playerId: number | null,
-    players: Player[]
+    players: Player[],
+    showUnits: boolean
 ): VisualizeCellProps => {
     const cellHideProps: PlayerCellHideProps = new Map();
     players
@@ -42,7 +43,7 @@ const getVisualProps = (
         .forEach((pl) => {
             cellHideProps.set(pl.id, {
                 ...cellHideUtils.default,
-                showUnits: false,
+                showUnits: showUnits,
             });
         });
     const cellProps: VisualizeCellProps = {
@@ -79,9 +80,11 @@ export const CamouflagePerk: CreatePerk<number> = {
                             values,
                             defaultValue
                         );
-                        if (val === defaultValue) return [];
-
-                        const props = getVisualProps(playerId, game.players);
+                        const props = getVisualProps(
+                            playerId,
+                            game.players,
+                            val === defaultValue
+                        );
                         return [
                             getResultVisualProps(trigger.after.cell.id, props),
                         ];
@@ -104,11 +107,10 @@ export const CamouflagePerk: CreatePerk<number> = {
                                 values,
                                 defaultValue
                             );
-                            if (val === defaultValue) return [];
-
                             const props = getVisualProps(
                                 playerId,
-                                game.players
+                                game.players,
+                                val === defaultValue
                             );
                             return game.cells.flatMap((cell) => {
                                 if (cell.playerId === playerId)
