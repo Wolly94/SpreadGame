@@ -74,7 +74,9 @@ exports.PreparationPerk = {
                     getValue: function (trigger, game) {
                         var res = game.players.flatMap(function (p) {
                             var val = perk_1.getPerkValue(game, name, p.id, values, defaultValue);
-                            return game.cells.flatMap(function (cell) {
+                            return game.cells
+                                .filter(function (cell) { return cell.playerId === p.id; })
+                                .flatMap(function (cell) {
                                 var idleInMs = game.timePassed -
                                     latestMoveTimeStamp(cell, game.eventHistory);
                                 var combatModifier = Math.min((val[0] * idleInMs) / 1000, val[1]);
