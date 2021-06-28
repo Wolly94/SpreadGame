@@ -47,3 +47,46 @@ test("test preparation cap", () => {
     cell2 = clientState.cells.find((c) => c.id === 1);
     expect(oldValue).toBe(cell2?.data?.defenderCombatAbilities);
 });
+
+test("no preparation on neutral cells", () => {
+    const game = new SpreadGameImplementation(
+        {
+            players: 2,
+            width: 500,
+            height: 500,
+            cells: [
+                {
+                    id: 0,
+                    playerId: 0,
+                    position: [100, 100],
+                    radius: 50,
+                    units: 50,
+                },
+                {
+                    id: 1,
+                    playerId: null,
+                    position: [400, 400],
+                    radius: 50,
+                    units: 50,
+                },
+            ],
+        },
+        { mechanics: "basic", updateFrequencyInMs: 25 },
+        [
+            {
+                id: 0,
+                skills: [
+                    { level: 2, perk: PreparationPerk.createFromValues() },
+                ],
+            },
+            { id: 1, skills: [] },
+        ],
+        [PreparationPerk.createFromValues()]
+    );
+    game.run(4000, 25);
+    var cstate = game.toClientGameState(null);
+    var cell0 = cstate.cells.find((c) => c.id === 0);
+    var cell1 = cstate.cells.find((c) => c.id === 1);
+    expect(cell0.data.defenderCombatAbilities).toBeGreaterThan(0);
+    expect(cell1.data.defenderCombatAbilities).toBe(0);
+});

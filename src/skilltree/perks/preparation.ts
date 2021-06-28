@@ -1,21 +1,21 @@
-import { HistoryEntry } from "../../messages/replay/replay"
-import Cell from "../../spreadGame/cell"
-import { unitsToRadius } from "../../spreadGame/common"
+import { HistoryEntry } from "../../messages/replay/replay";
+import Cell from "../../spreadGame/cell";
+import { unitsToRadius } from "../../spreadGame/common";
 import {
     AttachProps,
-    TimedProps
-} from "../../spreadGame/mechanics/events/definitions"
+    TimedProps,
+} from "../../spreadGame/mechanics/events/definitions";
 import {
     CellFightProps,
-    cellFightUtils
-} from "../../spreadGame/mechanics/events/fight"
+    cellFightUtils,
+} from "../../spreadGame/mechanics/events/fight";
 import {
     VisualizeCellProps,
-    visualizeCellUtils
-} from "../../spreadGame/mechanics/events/visualizeCellProps"
-import { SpreadGameEvent } from "../events"
-import { formatDescription } from "../utils"
-import { CreatePerk, getPerkValue } from "./perk"
+    visualizeCellUtils,
+} from "../../spreadGame/mechanics/events/visualizeCellProps";
+import { SpreadGameEvent } from "../events";
+import { formatDescription } from "../utils";
+import { CreatePerk, getPerkValue } from "./perk";
 
 const name = "Preparation";
 const defaultValues: [number, number][] = [
@@ -107,30 +107,32 @@ export const PreparationPerk: CreatePerk<[number, number]> = {
                                 values,
                                 defaultValue
                             );
-                            return game.cells.flatMap((cell) => {
-                                const idleInMs =
-                                    game.timePassed -
-                                    latestMoveTimeStamp(
-                                        cell,
-                                        game.eventHistory
+                            return game.cells
+                                .filter((cell) => cell.playerId === p.id)
+                                .flatMap((cell) => {
+                                    const idleInMs =
+                                        game.timePassed -
+                                        latestMoveTimeStamp(
+                                            cell,
+                                            game.eventHistory
+                                        );
+                                    const combatModifier = Math.min(
+                                        (val[0] * idleInMs) / 1000,
+                                        val[1]
                                     );
-                                const combatModifier = Math.min(
-                                    (val[0] * idleInMs) / 1000,
-                                    val[1]
-                                );
-                                const prop1: VisualizeCellProps = {
-                                    ...visualizeCellUtils.default,
-                                    combatAbilityModifier: combatModifier,
-                                };
-                                const prop2: CellFightProps = {
-                                    ...cellFightUtils.default,
-                                    combatAbilityModifier: combatModifier,
-                                };
-                                return [
-                                    attachPropTemplate(cell.id, prop1),
-                                    attachPropTemplate(cell.id, prop2),
-                                ];
-                            });
+                                    const prop1: VisualizeCellProps = {
+                                        ...visualizeCellUtils.default,
+                                        combatAbilityModifier: combatModifier,
+                                    };
+                                    const prop2: CellFightProps = {
+                                        ...cellFightUtils.default,
+                                        combatAbilityModifier: combatModifier,
+                                    };
+                                    return [
+                                        attachPropTemplate(cell.id, prop1),
+                                        attachPropTemplate(cell.id, prop2),
+                                    ];
+                                });
                         });
                         return res;
                     },
