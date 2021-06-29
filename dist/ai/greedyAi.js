@@ -102,6 +102,8 @@ var GreedyAi = /** @class */ (function () {
             currentDefenders: weakestUnownedCell.units,
             totalAttackers: 0,
         });
+        if (atts.totalAttackers < atts.currentDefenders)
+            return null;
         var result = {
             type: "sendunitsmove",
             data: {

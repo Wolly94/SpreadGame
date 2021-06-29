@@ -133,6 +133,7 @@ export class GreedyAi implements Ai {
                 totalAttackers: 0,
             }
         );
+        if (atts.totalAttackers < atts.currentDefenders) return null;
 
         const result: SendUnitsMove = {
             type: "sendunitsmove",
