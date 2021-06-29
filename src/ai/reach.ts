@@ -12,8 +12,7 @@ import { sendUnitsUtils } from "../spreadGame/mechanics/events/sendUnits";
 export type ReachType =
     | { type: "basic"; durationInMs: number; maxSendableUnits: number }
     | { type: "scratch"; durationInMs: number; maxReceivableUnits: number }
-    | { type: "bounce"; durationInMs: number; absoluteUnitLoss: number }
-    | null;
+    | { type: "bounce"; durationInMs: number; absoluteUnitLoss: number };
 
 const maxSendableUnits = (cell: Cell): number => {
     const dummyCell: Cell = {
@@ -94,7 +93,7 @@ export const reach = (
     skills: SkilledPerk[],
     senderId: number,
     receiverId: number
-): ReachType => {
+): ReachType | null => {
     const senderCell = map.cells.find((c) => c.id === senderId);
     if (senderCell === undefined) return null;
     const maxSendUnits = maxSendableUnits({ ...senderCell });

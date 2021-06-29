@@ -3,8 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var ai_1 = require("../../ai/ai");
 var aiClient_1 = __importDefault(require("../../ai/aiClient"));
+var greedyAi_1 = require("../../ai/greedyAi");
 var skilltree_1 = require("../../skilltree/skilltree");
 var spreadGame_1 = require("../../spreadGame");
 var common_1 = require("./common");
@@ -37,8 +37,8 @@ var InGameImplementation = /** @class */ (function () {
             return sp.type === "ai";
         })
             .map(function (sp) {
-            var ai = new ai_1.GreedyAi(settings, map, players, perks, sp.playerId);
-            var aiClient = new aiClient_1.default(sp.playerId, ai);
+            var ai = new greedyAi_1.GreedyAi(settings, map, players, sp.playerId);
+            var aiClient = new aiClient_1.default(ai);
             return aiClient;
         });
     }

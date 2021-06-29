@@ -1,5 +1,5 @@
-import { GreedyAi } from "../../ai/ai";
 import AiClient from "../../ai/aiClient";
+import { GreedyAi } from "../../ai/greedyAi";
 import { ClientInGameMessage } from "../../messages/inGame/clientInGameMessage";
 import { SkilledPerkData } from "../../messages/inGame/clientLobbyMessage";
 import {
@@ -108,14 +108,8 @@ class InGameImplementation implements InGame {
                 return sp.type === "ai";
             })
             .map((sp) => {
-                const ai = new GreedyAi(
-                    settings,
-                    map,
-                    players,
-                    perks,
-                    sp.playerId
-                );
-                const aiClient = new AiClient(sp.playerId, ai);
+                const ai = new GreedyAi(settings, map, players, sp.playerId);
+                const aiClient = new AiClient(ai);
                 return aiClient;
             });
     }

@@ -5,7 +5,7 @@ declare class AiClient {
     playerId: number;
     timeoutInterval: number;
     currentlyTimedOut: boolean;
-    constructor(playerId: number, ai: Ai);
+    constructor(ai: Ai);
     getMove(gameState: SpreadGameImplementation): import("../messages/replay/replay").SendUnitsMove | null;
 }
 export default AiClient;

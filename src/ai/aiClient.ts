@@ -7,8 +7,8 @@ class AiClient {
     timeoutInterval: number;
     currentlyTimedOut: boolean;
 
-    constructor(playerId: number, ai: Ai) {
-        this.playerId = playerId;
+    constructor(ai: Ai) {
+        this.playerId = ai.playerId;
         this.ai = ai;
         this.timeoutInterval = 500;
         this.currentlyTimedOut = false;
@@ -16,7 +16,7 @@ class AiClient {
 
     getMove(gameState: SpreadGameImplementation) {
         if (!this.currentlyTimedOut) {
-            const move = this.ai.getMove(gameState, this.playerId);
+            const move = this.ai.getMove(gameState);
             if (move !== null) {
                 this.currentlyTimedOut = true;
                 setTimeout(
