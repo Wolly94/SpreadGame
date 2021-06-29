@@ -53,7 +53,7 @@ const maxSendableUnits = (cell: Cell): number => {
         units: 50,
     };
     const [newCell, newBubble] = basicMechanics.sendBubble(
-        { ...cell, units: radiusToUnits(cell.radius) * 10 },
+        { ...cell, units: radiusToUnits(cell.radius) * 10, playerId: 0 },
         dummyCell,
         0,
         sendUnitsUtils.default

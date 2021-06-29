@@ -49,7 +49,7 @@ var maxSendableUnits = function (cell) {
         radius: 50,
         units: 50,
     };
-    var _a = basicMechanics_1.default.sendBubble(__assign(__assign({}, cell), { units: common_1.radiusToUnits(cell.radius) * 10 }), dummyCell, 0, sendUnits_1.sendUnitsUtils.default), newCell = _a[0], newBubble = _a[1];
+    var _a = basicMechanics_1.default.sendBubble(__assign(__assign({}, cell), { units: common_1.radiusToUnits(cell.radius) * 10, playerId: 0 }), dummyCell, 0, sendUnits_1.sendUnitsUtils.default), newCell = _a[0], newBubble = _a[1];
     return newBubble === null ? 0 : newBubble.units;
 };
 exports.reachByUnit = function (map, settings, skills, senderId, receiverId, unitsToSend) {
