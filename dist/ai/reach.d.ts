@@ -14,6 +14,23 @@ export declare type ReachType = {
     durationInMs: number;
     absoluteUnitLoss: number;
 };
+export interface AttackerData {
+    effectiveAttackers: number;
+    durationInMs: number;
+}
+export declare const getAttackerData: (attackers: number, reachType: {
+    type: "basic";
+    durationInMs: number;
+    maxSendableUnits: number;
+} | {
+    type: "scratch";
+    durationInMs: number;
+    maxReceivableUnits: number;
+} | {
+    type: "bounce";
+    durationInMs: number;
+    absoluteUnitLoss: number;
+} | null) => AttackerData;
 export declare const reachByUnit: (map: SpreadMap, settings: GameSettings, skills: SkilledPerk[], senderId: number, receiverId: number, unitsToSend: number) => {
     duration: number | "Infinity";
     receivedUnits: number;

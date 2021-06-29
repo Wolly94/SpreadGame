@@ -18,6 +18,29 @@ var spreadGame_1 = require("../spreadGame");
 var common_1 = require("../spreadGame/common");
 var basicMechanics_1 = __importDefault(require("../spreadGame/mechanics/basicMechanics"));
 var sendUnits_1 = require("../spreadGame/mechanics/events/sendUnits");
+exports.getAttackerData = function (attackers, reachType) {
+    var effectiveAttackers = 0;
+    if ((reachType === null || reachType === void 0 ? void 0 : reachType.type) === "scratch") {
+        effectiveAttackers = Math.max(attackers, reachType.maxReceivableUnits);
+    }
+    else if ((reachType === null || reachType === void 0 ? void 0 : reachType.type) === "basic") {
+        if (attackers >= reachType.maxSendableUnits)
+            effectiveAttackers = 0;
+        else
+            effectiveAttackers = attackers;
+    }
+    else if ((reachType === null || reachType === void 0 ? void 0 : reachType.type) === "bounce") {
+        effectiveAttackers = Math.max(0, attackers - reachType.absoluteUnitLoss);
+    }
+    if (reachType === null)
+        return { effectiveAttackers: 0, durationInMs: 0 };
+    else {
+        return {
+            effectiveAttackers: effectiveAttackers,
+            durationInMs: reachType.durationInMs,
+        };
+    }
+};
 var maxSendableUnits = function (cell) {
     var dummyCell = {
         id: -1,

@@ -14,6 +14,36 @@ export type ReachType =
     | { type: "scratch"; durationInMs: number; maxReceivableUnits: number }
     | { type: "bounce"; durationInMs: number; absoluteUnitLoss: number };
 
+export interface AttackerData {
+    effectiveAttackers: number;
+    durationInMs: number;
+}
+
+export const getAttackerData = (
+    attackers: number,
+    reachType: ReachType | null
+): AttackerData => {
+    var effectiveAttackers: number = 0;
+    if (reachType?.type === "scratch") {
+        effectiveAttackers = Math.max(attackers, reachType.maxReceivableUnits);
+    } else if (reachType?.type === "basic") {
+        if (attackers >= reachType.maxSendableUnits) effectiveAttackers = 0;
+        else effectiveAttackers = attackers;
+    } else if (reachType?.type === "bounce") {
+        effectiveAttackers = Math.max(
+            0,
+            attackers - reachType.absoluteUnitLoss
+        );
+    }
+    if (reachType === null) return { effectiveAttackers: 0, durationInMs: 0 };
+    else {
+        return {
+            effectiveAttackers: effectiveAttackers,
+            durationInMs: reachType.durationInMs,
+        };
+    }
+};
+
 const maxSendableUnits = (cell: Cell): number => {
     const dummyCell: Cell = {
         id: -1,
