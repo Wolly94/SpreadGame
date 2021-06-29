@@ -21,6 +21,9 @@ var GreedyAi = /** @class */ (function () {
             var analyzed = aiHelper_1.analyzeCapturePlan(myCells, c, _this.reachable);
             return { targetCell: c, analyze: analyzed };
         })
+            .filter(function (data) {
+            return data.analyze.senderIds.length !== 0;
+        })
             .sort(function (c1, c2) {
             if (c1.analyze.durationInMs === c2.analyze.durationInMs) {
                 // cells surrounded by stronger cells first

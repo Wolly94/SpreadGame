@@ -42,6 +42,9 @@ export class GreedyAi implements Ai {
                 const analyzed = analyzeCapturePlan(myCells, c, this.reachable);
                 return { targetCell: c, analyze: analyzed };
             })
+            .filter(data => {
+                return data.analyze.senderIds.length !== 0
+            })
             .sort((c1, c2) => {
                 if (c1.analyze.durationInMs === c2.analyze.durationInMs) {
                     // cells surrounded by stronger cells first
