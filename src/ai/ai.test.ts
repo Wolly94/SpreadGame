@@ -23,14 +23,14 @@ test("greedy ai", () => {
                 playerId: null,
                 position: [400, 400],
                 radius: 50,
-                units: 20,
+                units: 10,
             },
             {
                 id: 2,
                 playerId: null,
                 position: [100, 400],
                 radius: 50,
-                units: 20,
+                units: 10,
             },
         ],
     };
@@ -51,4 +51,7 @@ test("greedy ai", () => {
     const move2 = ai.getMove(game);
     expect(move2.data.senderIds.length).toBe(1);
     expect(move2.data.receiverId).toBe(1);
+    game.applyMove(move2);
+    const move3 = ai.getMove(game);
+    expect(move3).toBe(null);
 });
