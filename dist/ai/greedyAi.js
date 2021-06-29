@@ -25,7 +25,7 @@ var GreedyAi = /** @class */ (function () {
         if (weakestUnownedCells.length === 0)
             return null;
         var weakestUnownedCellData = weakestUnownedCells[0];
-        if (weakestUnownedCellData.analyze.overshot < 0) {
+        if (weakestUnownedCellData.analyze.overshot <= 0) {
             // only attack from saturated cells
             var saturatedCells = myCells.filter(function (c) {
                 var grow = basicMechanics_1.default.grow(c, 25, growth_1.growthUtils.default);

@@ -48,7 +48,7 @@ export class GreedyAi implements Ai {
         if (weakestUnownedCells.length === 0) return null;
         var weakestUnownedCellData = weakestUnownedCells[0];
 
-        if (weakestUnownedCellData.analyze.overshot < 0) {
+        if (weakestUnownedCellData.analyze.overshot <= 0) {
             // only attack from saturated cells
             const saturatedCells = myCells.filter((c) => {
                 const grow = basicMechanics.grow(c, 25, growthUtils.default);
