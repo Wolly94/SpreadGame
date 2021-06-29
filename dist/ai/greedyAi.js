@@ -9,6 +9,7 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var entites_1 = require("../spreadGame/entites");
 var ai_1 = require("./ai");
+var aiHelper_1 = require("./aiHelper");
 var reachableMap_1 = require("./reachableMap");
 var realAttackerCount = function (attackers, reachType) {
     if ((reachType === null || reachType === void 0 ? void 0 : reachType.type) === "scratch") {
@@ -37,15 +38,24 @@ var weightedDistance = function (receiver, senders, reachable) {
 };
 var GreedyAi = /** @class */ (function () {
     function GreedyAi(settings, map, players, playerId) {
-        this.playerId = playerId;
         var player = players.find(function (pl) { return pl.id === playerId; });
         var skills = player === undefined ? [] : player.skills;
         this.reachable = new reachableMap_1.ReachableImplementation(settings, map, skills);
+        this.playerId = playerId;
+        this.targetedCellId = null;
     }
     GreedyAi.prototype.getMove = function (state) {
         var _this = this;
         var myCells = state.cells.filter(function (c) { return c.playerId === _this.playerId; });
-        var weakestUnownedCells = state.cells
+        var cellsToTarget = state.cells;
+        if (this.targetedCellId !== null &&
+            aiHelper_1.isTarget(state, this.targetedCellId, this.playerId)) {
+            cellsToTarget = cellsToTarget.filter(function (c) { return c.id !== _this.targetedCellId; });
+        }
+        else {
+            this.targetedCellId = null;
+        }
+        var weakestUnownedCells = cellsToTarget
             .filter(function (c) { return c.playerId !== _this.playerId; })
             // closer cells first
             // weakest cells first
@@ -100,6 +110,7 @@ var GreedyAi = /** @class */ (function () {
                 playerId: this.playerId,
             },
         };
+        this.targetedCellId = weakestUnownedCell.id;
         return result;
     };
     return GreedyAi;

@@ -47,4 +47,8 @@ test("greedy ai", () => {
     const move = ai.getMove(game);
     expect(move.data.senderIds.length).toBe(1);
     expect(move.data.receiverId).toBe(2);
+    game.applyMove(move);
+    const move2 = ai.getMove(game);
+    expect(move2.data.senderIds.length).toBe(1);
+    expect(move2.data.receiverId).toBe(1);
 });

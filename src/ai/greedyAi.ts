@@ -5,6 +5,7 @@ import Cell from "../spreadGame/cell";
 import { distance } from "../spreadGame/entites";
 import { SpreadMap } from "../spreadGame/map/map";
 import { Ai, availableAttackers, estimatedDefenders } from "./ai";
+import { isTarget } from "./aiHelper";
 import { ReachType } from "./reach";
 import { ReachableImplementation, ReachableMap } from "./reachableMap";
 
@@ -45,20 +46,33 @@ const weightedDistance = (
 export class GreedyAi implements Ai {
     playerId: number;
     reachable: ReachableMap;
+    targetedCellId: number | null;
     constructor(
         settings: GameSettings,
         map: SpreadMap,
         players: Player[],
         playerId: number
     ) {
-        this.playerId = playerId;
         const player = players.find((pl) => pl.id === playerId);
         const skills = player === undefined ? [] : player.skills;
         this.reachable = new ReachableImplementation(settings, map, skills);
+        this.playerId = playerId;
+        this.targetedCellId = null;
     }
     getMove(state: SpreadGameImplementation) {
         const myCells = state.cells.filter((c) => c.playerId === this.playerId);
-        const weakestUnownedCells = state.cells
+        var cellsToTarget = state.cells;
+        if (
+            this.targetedCellId !== null &&
+            isTarget(state, this.targetedCellId, this.playerId)
+        ) {
+            cellsToTarget = cellsToTarget.filter(
+                (c) => c.id !== this.targetedCellId
+            );
+        } else {
+            this.targetedCellId = null;
+        }
+        const weakestUnownedCells = cellsToTarget
             .filter((c) => c.playerId !== this.playerId)
             // closer cells first
             // weakest cells first
@@ -128,6 +142,7 @@ export class GreedyAi implements Ai {
                 playerId: this.playerId,
             },
         };
+        this.targetedCellId = weakestUnownedCell.id;
 
         return result;
     }

@@ -7,6 +7,7 @@ import { ReachableMap } from "./reachableMap";
 export declare class GreedyAi implements Ai {
     playerId: number;
     reachable: ReachableMap;
+    targetedCellId: number | null;
     constructor(settings: GameSettings, map: SpreadMap, players: Player[], playerId: number);
     getMove(state: SpreadGameImplementation): SendUnitsMove | null;
 }
