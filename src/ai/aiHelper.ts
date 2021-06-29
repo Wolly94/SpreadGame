@@ -109,6 +109,16 @@ export const sortByWeakestCells = (
         .filter((data) => {
             return data.analyze.senderIds.length !== 0;
         })
+        // [-5, 2, 4, 1, -3] --> [1, 2, 4, -3, -5]
+        .sort((c1, c2) => {
+            if (c1.analyze.overshot === c2.analyze.overshot) {
+                return c1.analyze.overshot > 0
+                    ? c1.analyze.overshot - c2.analyze.overshot
+                    : c2.analyze.overshot - c1.analyze.overshot;
+            } else {
+                return c1.analyze.overshot > 0 ? -1 : 1;
+            }
+        })
         .sort((c1, c2) => {
             if (c1.analyze.durationInMs === c2.analyze.durationInMs) {
                 // cells surrounded by stronger cells first
