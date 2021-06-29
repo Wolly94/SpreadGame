@@ -1,5 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var basicMechanics_1 = __importDefault(require("../spreadGame/mechanics/basicMechanics"));
+var growth_1 = require("../spreadGame/mechanics/events/growth");
 var aiHelper_1 = require("./aiHelper");
 var reachableMap_1 = require("./reachableMap");
 var GreedyAi = /** @class */ (function () {
@@ -16,32 +21,29 @@ var GreedyAi = /** @class */ (function () {
             return cell.playerId !== _this.playerId &&
                 !aiHelper_1.isTarget(state, cell.id, _this.playerId);
         });
-        var weakestUnownedCells = cellsToTarget
-            .map(function (c) {
-            var analyzed = aiHelper_1.analyzeCapturePlan(myCells, c, _this.reachable);
-            return { targetCell: c, analyze: analyzed };
-        })
-            .filter(function (data) {
-            return data.analyze.senderIds.length !== 0;
-        })
-            .sort(function (c1, c2) {
-            if (c1.analyze.durationInMs === c2.analyze.durationInMs) {
-                // cells surrounded by stronger cells first
-                return (c2.analyze.maximalPossibleAttackers -
-                    c1.analyze.maximalPossibleAttackers);
-            }
-            else {
-                // closer cells first
-                return c1.analyze.durationInMs - c2.analyze.durationInMs;
-            }
-        });
+        var weakestUnownedCells = aiHelper_1.sortByWeakestCells(cellsToTarget, myCells, this.reachable);
         if (weakestUnownedCells.length === 0)
             return null;
         var weakestUnownedCellData = weakestUnownedCells[0];
-        if (weakestUnownedCellData.analyze.overshot < 0 &&
-            state.bubbles.filter(function (b) { return b.playerId === _this.playerId; }).length !==
-                0)
+        if (weakestUnownedCellData.analyze.overshot < 0) {
+            // only attack from saturated cells
+            var saturatedCells = myCells.filter(function (c) {
+                var grow = basicMechanics_1.default.grow(c, 25, growth_1.growthUtils.default);
+                return grow.units <= c.units;
+            });
+            if (saturatedCells.length > 0) {
+                weakestUnownedCells = aiHelper_1.sortByWeakestCells(cellsToTarget, saturatedCells, this.reachable);
+                if (weakestUnownedCells.length === 0)
+                    return null;
+                // this is where you should transfer to other friendly cells
+                else {
+                    weakestUnownedCellData = weakestUnownedCells[0];
+                    weakestUnownedCellData.analyze.senderIds =
+                        saturatedCells.map(function (c) { return c.id; });
+                }
+            }
             return null;
+        }
         var result = {
             type: "sendunitsmove",
             data: {

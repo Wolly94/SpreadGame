@@ -14,3 +14,7 @@ export interface AnalyzeResult {
     durationInMs: number;
 }
 export declare const analyzeCapturePlan: (cells: Cell[], targetCell: Cell, reachMap: ReachableMap) => AnalyzeResult;
+export declare const sortByWeakestCells: (cellsToTarget: Cell[], cellsToSend: Cell[], reach: ReachableMap) => {
+    targetCell: Cell;
+    analyze: AnalyzeResult;
+}[];

@@ -66,3 +66,25 @@ exports.analyzeCapturePlan = function (cells, targetCell, reachMap) {
         overshot: overshot,
     };
 };
+exports.sortByWeakestCells = function (cellsToTarget, cellsToSend, reach) {
+    var weakestUnownedCells = cellsToTarget
+        .map(function (c) {
+        var analyzed = exports.analyzeCapturePlan(cellsToSend, c, reach);
+        return { targetCell: c, analyze: analyzed };
+    })
+        .filter(function (data) {
+        return data.analyze.senderIds.length !== 0;
+    })
+        .sort(function (c1, c2) {
+        if (c1.analyze.durationInMs === c2.analyze.durationInMs) {
+            // cells surrounded by stronger cells first
+            return (c2.analyze.maximalPossibleAttackers -
+                c1.analyze.maximalPossibleAttackers);
+        }
+        else {
+            // closer cells first
+            return c1.analyze.durationInMs - c2.analyze.durationInMs;
+        }
+    });
+    return weakestUnownedCells;
+};
