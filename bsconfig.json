@@ -1,0 +1,26 @@
+{
+    "name": "your-project-name",
+    "sources": [
+        {
+            "dir": "src",
+            "subdirs": true
+        }
+    ],
+    "package-specs": [
+        {
+            "module": "es6",
+            "in-source": true
+        }
+    ],
+    "suffix": ".bs.js",
+    "bs-dependencies": [],
+    "gentypeconfig": {
+        "language": "typescript",
+        "shims": {},
+        "generatedFileExtension": ".gen.tsx",
+        "debug": {
+            "all": false,
+            "basic": false
+        }
+    }
+}

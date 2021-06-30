@@ -1,0 +1,8 @@
+####{BSB GENERATED: NO EDIT
+FLG -ppx '/home/wolly/sandbox/node/spread_current/spread_game/node_modules/rescript/linux/bsc.exe -as-ppx '
+S /home/wolly/sandbox/node/spread_current/spread_game/node_modules/rescript/lib/ocaml
+B /home/wolly/sandbox/node/spread_current/spread_game/node_modules/rescript/lib/ocaml
+FLG -w +a-4-9-20-40-41-42-50-61-102
+S src/rescriptSpreadGame
+B lib/bs/src/rescriptSpreadGame
+####BSB GENERATED: NO EDIT}

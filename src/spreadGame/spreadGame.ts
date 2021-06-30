@@ -130,6 +130,34 @@ export class SpreadGameImplementation implements SpreadGame {
     perks: GeneralPerk[];
     attachedProps: AttachProps<TimedProps<SpreadGameProps>>[];
 
+    copy() {
+        //const rep = this.getReplay();
+        //const copiedGame = SpreadGameImplementation.fromReplay(rep);
+        //copiedGame.runReplay(rep, rep.lengthInMs);
+        //return copiedGame;
+        const newGame = new SpreadGameImplementation(
+            this.map,
+            this.gameSettings,
+            this.players,
+            this.perks
+        );
+        newGame.eventHistory = [...this.eventHistory];
+        newGame.attachedProps = [...this.attachedProps];
+        newGame.pastMoves = [...this.pastMoves];
+        newGame.timePassed = this.timePassed;
+        newGame.cells = [
+            ...this.cells.map((c) => {
+                return { ...c };
+            }),
+        ];
+        newGame.bubbles = [
+            ...this.bubbles.map((b) => {
+                return { ...b };
+            }),
+        ];
+        return newGame;
+    }
+
     constructor(
         map: SpreadMap,
         gameSettings: GameSettings,
@@ -420,18 +448,20 @@ export class SpreadGameImplementation implements SpreadGame {
                         before: beforeFight,
                     };
                     const props = this.handleEvent(beforeEvent);
-                    const bubbleFightProps: BubbleFightProps = bubbleFightUtils.collect(
-                        this.fromAttachedProps({
-                            type: "Bubble",
-                            id: currentBubble.id,
-                        }).concat(props)
-                    );
-                    const bubble2FightProps: BubbleFightProps = bubbleFightUtils.collect(
-                        this.fromAttachedProps({
-                            type: "Bubble",
-                            id: bubble2.id,
-                        }).concat(props)
-                    );
+                    const bubbleFightProps: BubbleFightProps =
+                        bubbleFightUtils.collect(
+                            this.fromAttachedProps({
+                                type: "Bubble",
+                                id: currentBubble.id,
+                            }).concat(props)
+                        );
+                    const bubble2FightProps: BubbleFightProps =
+                        bubbleFightUtils.collect(
+                            this.fromAttachedProps({
+                                type: "Bubble",
+                                id: bubble2.id,
+                            }).concat(props)
+                        );
 
                     const [rem1, rem2] = this.mechanics.collideBubble(
                         bubble2,
@@ -519,16 +549,15 @@ export class SpreadGameImplementation implements SpreadGame {
                 defender: { type: "Bubble", val: after.attacker },
             });
         }
-        const existingPartialFightEvent:
-            | FightEvent
-            | undefined = this.eventHistory.find(
-            (ev): ev is HistoryEntry<FightEvent> =>
-                ev.data.type === "FightEvent" &&
-                !ev.data.finished &&
-                ev.data.before.attacker.id === before.attacker.id &&
-                ev.data.before.defender.type === before.defender.type &&
-                ev.data.before.defender.val.id === before.defender.val.id
-        )?.data;
+        const existingPartialFightEvent: FightEvent | undefined =
+            this.eventHistory.find(
+                (ev): ev is HistoryEntry<FightEvent> =>
+                    ev.data.type === "FightEvent" &&
+                    !ev.data.finished &&
+                    ev.data.before.attacker.id === before.attacker.id &&
+                    ev.data.before.defender.type === before.defender.type &&
+                    ev.data.before.defender.val.id === before.defender.val.id
+            )?.data;
         if (
             existingPartialFightEvent !== undefined &&
             combinedFightEvents(
@@ -580,27 +609,27 @@ export class SpreadGameImplementation implements SpreadGame {
                         before: beforeFight,
                     };
                     const props = this.handleEvent(beforeEvent);
-                    const bubbleFightProps: BubbleFightProps = bubbleFightUtils.collect(
-                        this.fromAttachedProps({
-                            type: "Bubble",
-                            id: currentBubble.id,
-                        }).concat(props)
-                    );
-                    const cellFightProps: CellFightProps = cellFightUtils.collect(
-                        this.fromAttachedProps({
-                            type: "Cell",
-                            id: cell.id,
-                        }).concat(props)
-                    );
-                    let [
-                        newCurrentBubble,
-                        newCell,
-                    ] = this.mechanics.collideCell(
-                        currentBubble,
-                        cell,
-                        bubbleFightProps,
-                        cellFightProps
-                    );
+                    const bubbleFightProps: BubbleFightProps =
+                        bubbleFightUtils.collect(
+                            this.fromAttachedProps({
+                                type: "Bubble",
+                                id: currentBubble.id,
+                            }).concat(props)
+                        );
+                    const cellFightProps: CellFightProps =
+                        cellFightUtils.collect(
+                            this.fromAttachedProps({
+                                type: "Cell",
+                                id: cell.id,
+                            }).concat(props)
+                        );
+                    let [newCurrentBubble, newCell] =
+                        this.mechanics.collideCell(
+                            currentBubble,
+                            cell,
+                            bubbleFightProps,
+                            cellFightProps
+                        );
                     const afterFight: AfterFightState = {
                         attacker:
                             newCurrentBubble !== null
@@ -767,9 +796,8 @@ export class SpreadGameImplementation implements SpreadGame {
             timePassedInMs: this.timePassed,
             cells: this.cells.map((cell) => {
                 const entity: Entity = { type: "Cell", id: cell.id };
-                const cellProps: VisualizeCellProps = visualizeCellUtils.collect(
-                    this.fromAttachedProps(entity)
-                );
+                const cellProps: VisualizeCellProps =
+                    visualizeCellUtils.collect(this.fromAttachedProps(entity));
                 const sendUnitsProps = sendUnitsUtils.collect(
                     this.fromAttachedProps(entity)
                 );
@@ -805,9 +833,13 @@ export class SpreadGameImplementation implements SpreadGame {
                 };
             }),
             bubbles: this.bubbles.map((bubble) => {
-                const bubbleProps: VisualizeBubbleProps = visualizeBubbleUtils.collect(
-                    this.fromAttachedProps({ type: "Bubble", id: bubble.id })
-                );
+                const bubbleProps: VisualizeBubbleProps =
+                    visualizeBubbleUtils.collect(
+                        this.fromAttachedProps({
+                            type: "Bubble",
+                            id: bubble.id,
+                        })
+                    );
                 return {
                     id: bubble.id,
                     playerId: bubble.playerId,

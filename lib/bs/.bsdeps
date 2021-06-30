@@ -1,0 +1,24 @@
+9.1.4
+/home/wolly/sandbox/node/spread_current/spread_game
+0
+bsconfig.json	0x1.837062b9ad605p+30
+src	0x1.8370583aa2ce7p+30
+src/messages	0x1.827a3a38c37p+30
+src/messages/inGame	0x1.834cd22a86052p+30
+src/messages/replay	0x1.833d89049fc63p+30
+src/messages/findGame	0x1.827a3c0233b6bp+30
+src/messages/general	0x1.827a3c6f4e401p+30
+src/sockets	0x1.829399707cec6p+30
+src/ai	0x1.836c0954f48d8p+30
+src/communication	0x1.82945f34e5b2ep+30
+src/communication/gameServerHandler	0x1.833d89049fc63p+30
+src/spreadGame	0x1.834cd22a8a1dbp+30
+src/spreadGame/map	0x1.827a44af9e233p+30
+src/spreadGame/mechanics	0x1.834cd22a8a1dbp+30
+src/spreadGame/mechanics/events	0x1.834cd22a8a1dbp+30
+src/rescriptSpreadGame	0x1.8370657dbcacep+30
+src/skilltree	0x1.833d8904b0287p+30
+src/skilltree/perks	0x1.834cd22a8a1dbp+30
+src/skilltree/skills	0x1.8340b6d7aa6ffp+30
+===
+/home/wolly/sandbox/node/spread_current/spread_game/node_modules/rescript/linux/rescript.exe	0x1.83705dd34cccdp+30
