@@ -1,7 +1,6 @@
-@genType
-type cell = {
+type bubble = {
     id: int,
-    ownerId: option<int>,
+    ownerId: int,
     units: float,
     radius: float,
     position: Vector2D.vector
