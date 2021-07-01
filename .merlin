@@ -5,4 +5,14 @@ B /home/wolly/sandbox/node/spread_current/spread_game/node_modules/rescript/lib/
 FLG -w +a-4-9-20-40-41-42-50-61-102
 S src/rescriptSpreadGame
 B lib/bs/src/rescriptSpreadGame
+S src/rescriptSpreadGame/mechanics
+B lib/bs/src/rescriptSpreadGame/mechanics
+S src/rescriptSpreadGame/spreadGame
+B lib/bs/src/rescriptSpreadGame/spreadGame
+S src/rescriptSpreadGame/common
+B lib/bs/src/rescriptSpreadGame/common
+S src/rescriptSpreadGame/helperFunctions
+B lib/bs/src/rescriptSpreadGame/helperFunctions
+S src/rescriptSpreadGame/events
+B lib/bs/src/rescriptSpreadGame/events
 ####BSB GENERATED: NO EDIT}

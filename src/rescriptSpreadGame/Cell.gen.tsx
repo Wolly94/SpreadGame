@@ -2,7 +2,7 @@
 /* eslint-disable import/first */
 
 
-import type {vector as Vector2D_vector} from './Vector2D.gen';
+import type {vector as Vector2D_vector} from '../../src/rescriptSpreadGame/common/Vector2D.gen';
 
 // tslint:disable-next-line:interface-over-type-literal
 export type cell = {

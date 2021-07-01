@@ -1,3 +1,7 @@
 {
-    "jest.jestCommandLine": "node --experimental-vm-modules node_modules/.bin/jest"
+    "jest.jestCommandLine": "node --experimental-vm-modules node_modules/.bin/jest",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[rescript]": {
+        "editor.defaultFormatter": "chenglou92.rescript-vscode"
+    }
 }
