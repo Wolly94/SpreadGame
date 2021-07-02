@@ -12,7 +12,7 @@ import {
     VisualizeCellProps,
     visualizeCellUtils,
 } from "../../spreadGame/mechanics/events/visualizeCellProps";
-import { FightEvent } from "../events";
+import { CollisionEvent } from "../events";
 import { formatDescription } from "../utils";
 import { CreatePerk, getPerkValue } from "./perk";
 
@@ -20,11 +20,11 @@ const name = "Membrane";
 const defaultValues = [10];
 const defaultValue = 0;
 
-const alreadyAbsorbed = (event: FightEvent): number => {
+const alreadyAbsorbed = (event: CollisionEvent): number => {
     if (event.finished) return 0;
     else {
-        return event.partialFights.reduce(
-            (prev, curr) => prev + curr.data.attacker.unitsLost,
+        return event.partialCollisions.reduce(
+            (prev, curr) => prev + curr.data.bubble.unitsLost,
             0
         );
     }
@@ -62,7 +62,7 @@ export const MembranePerk: CreatePerk<number> = {
                         trigger,
                         game
                     ): AttachProps<TimedProps<CellFightProps>>[] => {
-                        const playerId = trigger.before.defender.val.playerId;
+                        const playerId = trigger.before.other.val.playerId;
                         const val = getPerkValue(
                             game,
                             name,
@@ -71,21 +71,21 @@ export const MembranePerk: CreatePerk<number> = {
                             defaultValue
                         );
                         if (
-                            trigger.before.defender.type !== "Cell" ||
+                            trigger.before.other.type !== "Cell" ||
                             val === defaultValue
                         )
                             return [];
 
                         const existingFightEvent = game.eventHistory.find(
-                            (ev): ev is HistoryEntry<FightEvent> =>
-                                ev.data.type === "FightEvent" &&
+                            (ev): ev is HistoryEntry<CollisionEvent> =>
+                                ev.data.type === "CollisionEvent" &&
                                 !ev.data.finished &&
-                                ev.data.before.attacker.id ===
-                                    trigger.before.attacker.id &&
-                                ev.data.before.defender.type ===
-                                    trigger.before.defender.type &&
-                                ev.data.before.defender.val.id ===
-                                    trigger.before.defender.val.id
+                                ev.data.before.bubble.id ===
+                                    trigger.before.bubble.id &&
+                                ev.data.before.other.type ===
+                                    trigger.before.other.type &&
+                                ev.data.before.other.val.id ===
+                                    trigger.before.other.val.id
                         );
                         const absorbed =
                             existingFightEvent === undefined

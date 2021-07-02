@@ -1,6 +1,6 @@
 import { SpreadGameImplementation } from ".";
 import { HistoryEntry } from "../messages/replay/replay";
-import { FightEvent } from "../skilltree/events";
+import { CollisionEvent } from "../skilltree/events";
 import { BaseAttackPerk } from "../skilltree/perks/baseAttack";
 import { getPerkByName, SkilledPerk } from "../skilltree/skilltree";
 import Bubble from "./bubble";
@@ -48,8 +48,9 @@ test("cell collision", () => {
     const sendUnitsEvent = gameState.eventHistory.find(
         (ev) => ev.data.type === "SendBubbleEvent"
     );
-    const fightEvent: FightEvent | undefined = gameState.eventHistory.find(
-        (ev): ev is HistoryEntry<FightEvent> => ev.data.type === "FightEvent"
+    const fightEvent: CollisionEvent | undefined = gameState.eventHistory.find(
+        (ev): ev is HistoryEntry<CollisionEvent> =>
+            ev.data.type === "CollisionEvent"
     )?.data;
     const defeatBubbleEvent = gameState.eventHistory.find(
         (ev) => ev.data.type === "DefeatedBubble"
@@ -87,14 +88,15 @@ test("bubble collision", () => {
     const sendUnitsEvent = gameState.eventHistory.find(
         (ev) => ev.data.type === "SendBubbleEvent"
     );
-    const fightEvent: FightEvent | undefined = gameState.eventHistory.find(
-        (ev): ev is HistoryEntry<FightEvent> => ev.data.type === "FightEvent"
+    const fightEvent: CollisionEvent | undefined = gameState.eventHistory.find(
+        (ev): ev is HistoryEntry<CollisionEvent> =>
+            ev.data.type === "CollisionEvent"
     )?.data;
     const defeatBubbleEvent = gameState.eventHistory.find(
         (ev) => ev.data.type === "DefeatedBubble"
     );
     const fightEvents = gameState.eventHistory.filter(
-        (ev) => ev.data.type === "FightEvent"
+        (ev) => ev.data.type === "CollisionEvent"
     );
     expect(
         gameState.eventHistory.filter(
@@ -102,7 +104,7 @@ test("bubble collision", () => {
         ).length
     ).toBe(2);
     expect(
-        gameState.eventHistory.filter((ev) => ev.data.type === "FightEvent")
+        gameState.eventHistory.filter((ev) => ev.data.type === "CollisionEvent")
             .length
     ).toBe(1);
     expect(

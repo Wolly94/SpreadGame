@@ -69,20 +69,20 @@ exports.reachByUnit = function (map, settings, skills, senderId, receiverId, uni
     }
     var expectedEvent = game.eventHistory
         .filter(function (ev) {
-        return ev.data.type === "FightEvent";
+        return ev.data.type === "CollisionEvent";
     })
         .find(function (ev) {
-        return ev.data.before.attacker.id === bubbleId &&
-            ev.data.before.defender.type === "Cell" &&
-            ev.data.before.defender.val.id === receiverId;
+        return ev.data.before.bubble.id === bubbleId &&
+            ev.data.before.other.type === "Cell" &&
+            ev.data.before.other.val.id === receiverId;
     });
     if (expectedEvent === undefined)
         return { duration: "Infinity", receivedUnits: 0 };
     else {
-        var afterUnits = expectedEvent.data.after.defender.type === "Cell"
-            ? expectedEvent.data.after.defender.val.units
+        var afterUnits = expectedEvent.data.after.other.type === "Cell"
+            ? expectedEvent.data.after.other.val.units
             : 0;
-        var unitDiff = expectedEvent.data.before.defender.val.units - afterUnits;
+        var unitDiff = expectedEvent.data.before.other.val.units - afterUnits;
         return { duration: game.timePassed, receivedUnits: unitDiff };
     }
 };

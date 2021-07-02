@@ -1,7 +1,7 @@
 import { ClientGameState } from "../messages/inGame/clientGameState";
 import { GameSettings } from "../messages/inGame/gameServerMessages";
 import SpreadReplay, { HistoryEntry, Move } from "../messages/replay/replay";
-import { AfterFightState, BeforeFightState, SpreadGameEvent } from "../skilltree/events";
+import { AfterCollisionState, BeforeCollisionState, SpreadGameEvent } from "../skilltree/events";
 import { GeneralPerk } from "../skilltree/perks/perk";
 import Bubble from "./bubble";
 import Cell from "./cell";
@@ -37,6 +37,7 @@ export declare class SpreadGameImplementation implements SpreadGame {
     perks: GeneralPerk[];
     attachedProps: AttachProps<TimedProps<SpreadGameProps>>[];
     constructor(map: SpreadMap, gameSettings: GameSettings, players: Player[], perks?: GeneralPerk[]);
+    copy(): SpreadGameImplementation;
     triggerStart(): void;
     static fromReplay(replay: SpreadReplay): SpreadGameImplementation;
     attachProps(props: AttachProps<TimedProps<SpreadGameProps>>[]): SpreadGameProps[];
@@ -48,7 +49,7 @@ export declare class SpreadGameImplementation implements SpreadGame {
     step(ms: number): void;
     collideBubblesWithBubbles(): void;
     checkForFinishedFights(): void;
-    processFight(before: BeforeFightState, after: AfterFightState): void;
+    processFight(before: BeforeCollisionState, after: AfterCollisionState): void;
     collideBubblesWithCells(): void;
     fromAttachedProps(entity: Entity): SpreadGameProps[];
     sendUnits(playerId: number, senderIds: number[], receiverId: number): false | undefined;

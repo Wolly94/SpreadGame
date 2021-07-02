@@ -23,7 +23,7 @@ var alreadyAbsorbed = function (event) {
     if (event.finished)
         return 0;
     else {
-        return event.partialFights.reduce(function (prev, curr) { return prev + curr.data.attacker.unitsLost; }, 0);
+        return event.partialCollisions.reduce(function (prev, curr) { return prev + curr.data.bubble.unitsLost; }, 0);
     }
 };
 var attachPropTemplate = function (cellId, prop) {
@@ -56,20 +56,20 @@ exports.MembranePerk = {
                 {
                     type: "BeforeFightEvent",
                     getValue: function (trigger, game) {
-                        var playerId = trigger.before.defender.val.playerId;
+                        var playerId = trigger.before.other.val.playerId;
                         var val = perk_1.getPerkValue(game, name, playerId, values, defaultValue);
-                        if (trigger.before.defender.type !== "Cell" ||
+                        if (trigger.before.other.type !== "Cell" ||
                             val === defaultValue)
                             return [];
                         var existingFightEvent = game.eventHistory.find(function (ev) {
-                            return ev.data.type === "FightEvent" &&
+                            return ev.data.type === "CollisionEvent" &&
                                 !ev.data.finished &&
-                                ev.data.before.attacker.id ===
-                                    trigger.before.attacker.id &&
-                                ev.data.before.defender.type ===
-                                    trigger.before.defender.type &&
-                                ev.data.before.defender.val.id ===
-                                    trigger.before.defender.val.id;
+                                ev.data.before.bubble.id ===
+                                    trigger.before.bubble.id &&
+                                ev.data.before.other.type ===
+                                    trigger.before.other.type &&
+                                ev.data.before.other.val.id ===
+                                    trigger.before.other.val.id;
                         });
                         var absorbed = existingFightEvent === undefined
                             ? 0

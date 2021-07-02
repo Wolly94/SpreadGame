@@ -2,135 +2,142 @@ import { HistoryEntry } from "../messages/replay/replay";
 import Bubble from "../spreadGame/bubble";
 import Cell from "../spreadGame/cell";
 import { distance } from "../spreadGame/entites";
-import { Effect } from "../spreadGame/mechanics/events/definitions";
 
-export interface FightData {
+export interface CollisionData {
     unitsLost: number;
     position: [number, number];
-    currentPlayerId: number | null;
+    beforePlayerId: number | null;
+    afterPlayerId: number | null;
 }
 
-export interface PartialFight {
-    attacker: FightData;
-    defender: FightData;
+export interface PartialCollision {
+    bubble: CollisionData;
+    other: CollisionData;
 }
 
-const fromFightStates = (
-    before: BeforeFightState,
-    after: AfterFightState
-): PartialFight => {
-    const attacker: FightData = {
-        currentPlayerId: before.attacker.playerId,
-        position: before.attacker.position,
+const fromCollisionStates = (
+    before: BeforeCollisionState,
+    after: AfterCollisionState
+): PartialCollision => {
+    const attacker: CollisionData = {
+        beforePlayerId: before.bubble.playerId,
+        afterPlayerId: after.bubble === null ? null : after.bubble.playerId,
+        position: before.bubble.position,
         unitsLost:
-            before.attacker.units -
-            (after.attacker !== null ? after.attacker.units : 0),
+            before.bubble.units -
+            (after.bubble !== null ? after.bubble.units : 0),
     };
 
-    const defender: FightData = {
-        currentPlayerId: before.defender.val.playerId,
-        position: before.defender.val.position,
+    const defender: CollisionData = {
+        beforePlayerId: before.other.val.playerId,
+        afterPlayerId:
+            after.other.val === null ? null : after.other.val.playerId,
+        position: before.other.val.position,
         unitsLost:
-            before.defender.val.units -
-            (after.defender.val !== null ? after.defender.val.units : 0),
+            before.other.val.units -
+            (after.other.val !== null ? after.other.val.units : 0),
     };
-    return { attacker: attacker, defender: defender };
+    return { bubble: attacker, other: defender };
 };
 
-export interface BeforeFightState {
-    attacker: Bubble;
-    defender: { type: "Bubble"; val: Bubble } | { type: "Cell"; val: Cell };
+export type BeforeCollisionOtherState =
+    | { type: "Bubble"; val: Bubble }
+    | { type: "Cell"; val: Cell };
+
+export interface BeforeCollisionState {
+    bubble: Bubble;
+    other: BeforeCollisionOtherState;
 }
 
-export type AfterFightDefenderState =
+export type AfterCollisionOtherState =
     | { type: "Bubble"; val: Bubble | null }
     | { type: "Cell"; val: Cell };
 
-export interface AfterFightState {
-    attacker: Bubble | null;
-    defender: AfterFightDefenderState;
+export interface AfterCollisionState {
+    bubble: Bubble | null;
+    other: AfterCollisionOtherState;
 }
 
-export interface FightEvent {
-    type: "FightEvent";
-    before: BeforeFightState;
-    after: AfterFightState; // if !finished, then this holds data of current state
+export interface CollisionEvent {
+    type: "CollisionEvent";
+    before: BeforeCollisionState;
+    after: AfterCollisionState; // if !finished, then this holds data of current state
     finished: boolean;
-    partialFights: HistoryEntry<PartialFight>[];
+    partialCollisions: HistoryEntry<PartialCollision>[];
 }
 
-export const latestDistance = (event: FightEvent): number => {
-    const latestState = event.partialFights.slice(-1)[0].data;
-    return distance(
-        latestState.attacker.position,
-        latestState.defender.position
-    );
+export const latestDistance = (event: CollisionEvent): number => {
+    const latestState = event.partialCollisions.slice(-1)[0].data;
+    return distance(latestState.bubble.position, latestState.other.position);
 };
 
-export const fightEventFinished = (event: FightEvent) => {
+export const collisionEventFinished = (event: CollisionEvent) => {
     return event.finished;
 };
 
-export const finishFightEvent = (event: FightEvent) => {
+export const finishCollisionEvent = (event: CollisionEvent) => {
     event.finished = true;
     return event;
 };
 
 export const entitiesApproached = (
-    before: PartialFight,
-    after: PartialFight
+    before: PartialCollision,
+    after: PartialCollision
 ): boolean => {
-    const newDist = distance(after.attacker.position, after.defender.position);
-    const latestDist = distance(
-        before.attacker.position,
-        before.defender.position
-    );
+    const newDist = distance(after.bubble.position, after.other.position);
+    const latestDist = distance(before.bubble.position, before.other.position);
     return latestDist > newDist;
 };
 
-export const createFightEvent = (
-    beforeFight: BeforeFightState,
-    afterFight: AfterFightState,
+export const createCollisionEvent = (
+    beforeFight: BeforeCollisionState,
+    afterFight: AfterCollisionState,
     timePassed: number
-): FightEvent => {
-    const partialFight = fromFightStates(beforeFight, afterFight);
+): CollisionEvent => {
+    const partialFight = fromCollisionStates(beforeFight, afterFight);
+    const finished =
+        afterFight.bubble === null ||
+        (afterFight.other.type === "Bubble" && afterFight.other.val === null);
     return {
-        type: "FightEvent",
-        partialFights: [{ timestamp: timePassed, data: partialFight }],
+        type: "CollisionEvent",
+        partialCollisions: [{ timestamp: timePassed, data: partialFight }],
         after: afterFight,
         before: beforeFight,
-        finished: false,
+        finished: finished,
     };
 };
 
 // either modifies FightEvent in place or creates a new one
-export const combinedFightEvents = (
-    e1: FightEvent,
-    beforeFight: BeforeFightState,
-    afterFight: AfterFightState,
+export const combinedCollisionEvents = (
+    collisionEvent: CollisionEvent,
+    beforeCollision: BeforeCollisionState,
+    afterCollision: AfterCollisionState,
     timePassed: number
 ): boolean => {
-    const partialFight = fromFightStates(beforeFight, afterFight);
-    const latestState = e1.partialFights.slice(-1)[0].data;
+    const partialCollision = fromCollisionStates(
+        beforeCollision,
+        afterCollision
+    );
+    const latestState = collisionEvent.partialCollisions.slice(-1)[0].data;
     if (
-        entitiesApproached(latestState, partialFight) &&
-        !fightEventFinished(e1)
+        entitiesApproached(latestState, partialCollision) &&
+        !collisionEventFinished(collisionEvent)
     ) {
-        e1.partialFights.push({ timestamp: timePassed, data: partialFight });
-        e1.after = afterFight;
+        collisionEvent.partialCollisions.push({
+            timestamp: timePassed,
+            data: partialCollision,
+        });
+        collisionEvent.after = afterCollision;
         if (
-            afterFight.attacker === null ||
-            (afterFight.defender.type === "Bubble" &&
-                afterFight.defender.val === null) ||
-            (afterFight.defender.type === "Cell" &&
-                partialFight.defender.currentPlayerId !==
-                    beforeFight.defender.val.playerId)
+            afterCollision.bubble === null ||
+            (afterCollision.other.type === "Bubble" &&
+                afterCollision.other.val === null)
         ) {
-            finishFightEvent(e1);
+            finishCollisionEvent(collisionEvent);
         }
         return true;
     } else {
-        finishFightEvent(e1);
+        finishCollisionEvent(collisionEvent);
         return false;
     }
 };
@@ -141,6 +148,7 @@ export interface SendBubbleEvent {
     receiver: Cell;
 }
 
+// this is an intermediate event that can happen any time during a collision event
 export interface CapturedCellEvent {
     type: "CapturedCell";
     cellId: number;
@@ -148,13 +156,182 @@ export interface CapturedCellEvent {
     afterPlayerId: number;
 }
 
-export interface DefeatedBubbleEvent {
-    type: "DefeatedBubble";
-    defender: AfterFightDefenderState;
+export const getCapturedCellEvent = (
+    beforeCollision: BeforeCollisionState,
+    afterCollision: AfterCollisionState
+): CapturedCellEvent | null => {
+    if (
+        beforeCollision.other.type === "Cell" &&
+        afterCollision.other.type === "Cell" &&
+        afterCollision.other.val.playerId !== null &&
+        beforeCollision.other.val.playerId !== afterCollision.other.val.playerId
+    ) {
+        return {
+            afterPlayerId: afterCollision.other.val.playerId,
+            beforePlayerId: beforeCollision.other.val.playerId,
+            cellId: beforeCollision.other.val.id,
+            type: "CapturedCell",
+        };
+    } else return null;
+};
+
+export interface ReinforcedCellEvent {
+    type: "ReinforcedCell";
+    bubbleId: number;
+    cellId: number;
+    playerId: number;
+    unitsTransferred: number;
+    collisionEvent: CollisionEvent;
 }
 
+export interface DefendedCellEvent {
+    type: "DefendedCell";
+    bubbleId: number;
+    cellId: number;
+    defenderPlayerId: number | null;
+    attackerPlayerId: number;
+    unitsDefeated: number;
+    collisionEvent: CollisionEvent;
+}
+
+export interface DefeatedBubbleEvent {
+    type: "DefeatedBubble";
+    unitsDefeated: number;
+    defeaterPlayerId: number | null;
+    other: AfterCollisionOtherState;
+    collisionEvent: CollisionEvent;
+}
+
+export const getDefendedCellEvent = (
+    event: CollisionEvent
+): HistoryEntry<DefendedCellEvent> | null => {
+    if (!event.finished) return null;
+    if (event.after.other.type !== "Cell") return null;
+
+    const bubbleId = event.before.bubble.id;
+    const cellId = event.before.other.val.id;
+    const attackerPlayerId = event.before.bubble.playerId;
+    const defenderPlayerId = event.after.other.val.playerId;
+    if (defenderPlayerId === attackerPlayerId) return null;
+
+    if (event.partialCollisions.length === 0) return null;
+    var index = event.partialCollisions.length - 1;
+    const timestamp = event.partialCollisions[index].timestamp;
+    while (
+        index >= 0 &&
+        event.partialCollisions[index].data.other.beforePlayerId ===
+            defenderPlayerId &&
+        event.partialCollisions[index].data.other.afterPlayerId ===
+            defenderPlayerId
+    ) {
+        index -= 1;
+    }
+    const defenderPartialCollisions = event.partialCollisions.slice(index + 1);
+    const unitsDefeated = defenderPartialCollisions.reduce(
+        (prev, curr) => prev + curr.data.bubble.unitsLost,
+        0
+    );
+
+    if (defenderPartialCollisions.length === 0 || unitsDefeated === 0)
+        return null;
+
+    return {
+        timestamp: timestamp,
+        data: {
+            type: "DefendedCell",
+            cellId: cellId,
+            bubbleId: bubbleId,
+            defenderPlayerId: defenderPlayerId,
+            attackerPlayerId: attackerPlayerId,
+            unitsDefeated: unitsDefeated,
+            collisionEvent: event,
+        },
+    };
+};
+
+export const getReinforcedCellEvent = (
+    event: CollisionEvent
+): HistoryEntry<ReinforcedCellEvent> | null => {
+    if (event.before.other.type !== "Cell") return null;
+
+    const bubbleId = event.before.bubble.id;
+    const cellId = event.before.other.val.id;
+    const fromPlayerId = event.before.bubble.playerId;
+    const reinforceCollisions = event.partialCollisions.filter(
+        (pc) =>
+            pc.data.other.beforePlayerId === fromPlayerId &&
+            pc.data.other.beforePlayerId === pc.data.other.afterPlayerId
+    );
+    if (reinforceCollisions.length === 0) return null;
+    const timestamp = reinforceCollisions.slice(-1)[0].timestamp;
+    const transferredUnits = reinforceCollisions.reduce(
+        (prev, curr) => prev + curr.data.bubble.unitsLost,
+        0
+    );
+    if (transferredUnits === 0) return null;
+
+    return {
+        timestamp: timestamp,
+        data: {
+            type: "ReinforcedCell",
+            bubbleId: bubbleId,
+            cellId: cellId,
+            playerId: fromPlayerId,
+            unitsTransferred: transferredUnits,
+            collisionEvent: event,
+        },
+    };
+};
+
+export const getDefeatedBubbleEvents = (
+    event: CollisionEvent
+): DefeatedBubbleEvent[] => {
+    if (!event.finished) return [];
+    if (event.after.bubble !== null && event.after.other.val !== null)
+        return [];
+
+    const res: [number, number] = [0, 0];
+    const [defUnits1, defUnits2] = event.partialCollisions.reduce(
+        (prev, curr) => {
+            return [
+                prev[0] + curr.data.bubble.unitsLost,
+                prev[1] + curr.data.other.unitsLost,
+            ];
+        },
+        res
+    );
+
+    const defeatedBubbleEvents: DefeatedBubbleEvent[] = [];
+    const after = event.after;
+    if (after.bubble === null) {
+        defeatedBubbleEvents.push({
+            type: "DefeatedBubble",
+            defeaterPlayerId: event.before.other.val.playerId,
+            unitsDefeated: defUnits1,
+            other: after.other,
+            collisionEvent: event,
+        });
+    }
+    if (after.other.type === "Bubble" && after.other.val === null) {
+        defeatedBubbleEvents.push({
+            type: "DefeatedBubble",
+            defeaterPlayerId: event.before.bubble.playerId,
+            unitsDefeated: defUnits2,
+            other: { type: "Bubble", val: after.bubble },
+            collisionEvent: event,
+        });
+    }
+    return defeatedBubbleEvents;
+};
+
 export type SpreadGameEvent =
-    | FightEvent
+    | CollisionEvent
     | SendBubbleEvent
     | CapturedCellEvent
+    | ReinforcedCellEvent
     | DefeatedBubbleEvent;
+
+export type CollisionEnd =
+    | DefeatedBubbleEvent
+    | ReinforcedCellEvent
+    | DefendedCellEvent;

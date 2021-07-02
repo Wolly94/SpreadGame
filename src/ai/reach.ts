@@ -1,6 +1,6 @@
 import { GameSettings } from "../messages/inGame/gameServerMessages";
 import { HistoryEntry } from "../messages/replay/replay";
-import { FightEvent } from "../skilltree/events";
+import { CollisionEvent } from "../skilltree/events";
 import { SkilledPerk } from "../skilltree/skilltree";
 import { SpreadGameImplementation } from "../spreadGame";
 import Cell from "../spreadGame/cell";
@@ -95,24 +95,23 @@ export const reachByUnit = (
     }
     const expectedEvent = game.eventHistory
         .filter(
-            (ev): ev is HistoryEntry<FightEvent> =>
-                ev.data.type === "FightEvent"
+            (ev): ev is HistoryEntry<CollisionEvent> =>
+                ev.data.type === "CollisionEvent"
         )
         .find(
             (ev) =>
-                ev.data.before.attacker.id === bubbleId &&
-                ev.data.before.defender.type === "Cell" &&
-                ev.data.before.defender.val.id === receiverId
+                ev.data.before.bubble.id === bubbleId &&
+                ev.data.before.other.type === "Cell" &&
+                ev.data.before.other.val.id === receiverId
         );
     if (expectedEvent === undefined)
         return { duration: "Infinity", receivedUnits: 0 };
     else {
         const afterUnits =
-            expectedEvent.data.after.defender.type === "Cell"
-                ? expectedEvent.data.after.defender.val.units
+            expectedEvent.data.after.other.type === "Cell"
+                ? expectedEvent.data.after.other.val.units
                 : 0;
-        const unitDiff =
-            expectedEvent.data.before.defender.val.units - afterUnits;
+        const unitDiff = expectedEvent.data.before.other.val.units - afterUnits;
         return { duration: game.timePassed, receivedUnits: unitDiff };
     }
 };
