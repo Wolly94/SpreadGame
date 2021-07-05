@@ -46,11 +46,12 @@ exports.BasePopulationPerk = {
             },
             triggers: [
                 {
-                    type: "ConquerCell",
+                    type: "CapturedCell",
                     getValue: function (trigger, game) {
-                        var cell = trigger.before.cell;
-                        var val = perk_1.getPerkValue(game, name, cell.playerId, values, defaultValue);
-                        return [getReturnValue(cell.id, val)];
+                        var playerId = trigger.beforePlayerId;
+                        var cellId = trigger.cellId;
+                        var val = perk_1.getPerkValue(game, name, playerId, values, defaultValue);
+                        return [getReturnValue(cellId, val)];
                     },
                 },
                 {

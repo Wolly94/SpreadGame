@@ -55,14 +55,12 @@ exports.CamouflagePerk = {
             },
             triggers: [
                 {
-                    type: "ConquerCell",
+                    type: "CapturedCell",
                     getValue: function (trigger, game) {
-                        var playerId = trigger.after.cell.playerId;
+                        var playerId = trigger.afterPlayerId;
                         var val = perk_1.getPerkValue(game, name, playerId, values, defaultValue);
                         var props = getVisualProps(playerId, game.players, val === defaultValue);
-                        return [
-                            getResultVisualProps(trigger.after.cell.id, props),
-                        ];
+                        return [getResultVisualProps(trigger.cellId, props)];
                     },
                 },
                 {

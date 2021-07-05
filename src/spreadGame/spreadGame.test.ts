@@ -55,10 +55,14 @@ test("cell collision", () => {
     const defeatBubbleEvent = gameState.eventHistory.find(
         (ev) => ev.data.type === "DefeatedBubble"
     );
+    const collisionEvent = gameState.eventHistory.find(
+        (ev) => ev.data.type === "CollisionEvent"
+    );
     expect(sendUnitsEvent?.timestamp).not.toBe(undefined);
     expect(fightEvent?.finished).toBe(true);
     expect(defeatBubbleEvent?.timestamp).not.toBe(undefined);
-    expect(gameState.eventHistory.length).toBe(3);
+    expect(collisionEvent).not.toBe(undefined);
+    expect(gameState.eventHistory.length).toBe(4);
 });
 
 test("bubble collision", () => {

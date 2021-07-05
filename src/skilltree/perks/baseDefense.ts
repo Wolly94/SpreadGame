@@ -28,7 +28,7 @@ const attachProps = (
             id: cellId,
         },
         perkName: name,
-        triggerType: "ConquerCell",
+        triggerType: "CapturedCell",
         props: {
             expirationInMs: "Never",
             value: {
@@ -64,14 +64,14 @@ export const BaseDefensePerk: CreatePerk<number> = {
                 ".",
             triggers: [
                 {
-                    type: "ConquerCell",
+                    type: "CapturedCell",
                     getValue: (
                         trigger,
                         game
                     ): AttachProps<
                         TimedProps<CellFightProps | VisualizeCellProps>
                     >[] => {
-                        const playerId = trigger.after.cell.playerId;
+                        const playerId = trigger.afterPlayerId;
                         const val = getPerkValue(
                             game,
                             name,
@@ -79,7 +79,7 @@ export const BaseDefensePerk: CreatePerk<number> = {
                             values,
                             defaultValue
                         );
-                        return attachProps(val, trigger.after.cell.id);
+                        return attachProps(val, trigger.cellId);
                     },
                 },
                 {

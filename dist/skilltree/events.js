@@ -84,10 +84,14 @@ exports.getCapturedCellEvent = function (beforeCollision, afterCollision) {
     else
         return null;
 };
+// After collision ended and bubble is defeated from this event and the owner of the cell after collision is
+// not the same as the owner of the bubble, then there is an "DefendedCellEvent"
 exports.getDefendedCellEvent = function (event) {
     if (!event.finished)
         return null;
     if (event.after.other.type !== "Cell")
+        return null;
+    if (event.after.bubble !== null)
         return null;
     var bubbleId = event.before.bubble.id;
     var cellId = event.before.other.val.id;
@@ -98,7 +102,6 @@ exports.getDefendedCellEvent = function (event) {
     if (event.partialCollisions.length === 0)
         return null;
     var index = event.partialCollisions.length - 1;
-    var timestamp = event.partialCollisions[index].timestamp;
     while (index >= 0 &&
         event.partialCollisions[index].data.other.beforePlayerId ===
             defenderPlayerId &&
@@ -111,20 +114,21 @@ exports.getDefendedCellEvent = function (event) {
     if (defenderPartialCollisions.length === 0 || unitsDefeated === 0)
         return null;
     return {
-        timestamp: timestamp,
-        data: {
-            type: "DefendedCell",
-            cellId: cellId,
-            bubbleId: bubbleId,
-            defenderPlayerId: defenderPlayerId,
-            attackerPlayerId: attackerPlayerId,
-            unitsDefeated: unitsDefeated,
-            collisionEvent: event,
-        },
+        type: "DefendedCell",
+        cellId: cellId,
+        bubbleId: bubbleId,
+        defenderPlayerId: defenderPlayerId,
+        attackerPlayerId: attackerPlayerId,
+        unitsDefeated: unitsDefeated,
+        collisionEvent: event,
     };
 };
 exports.getReinforcedCellEvent = function (event) {
+    if (!event.finished)
+        return null;
     if (event.before.other.type !== "Cell")
+        return null;
+    if (event.after.bubble !== null)
         return null;
     var bubbleId = event.before.bubble.id;
     var cellId = event.before.other.val.id;
@@ -140,15 +144,12 @@ exports.getReinforcedCellEvent = function (event) {
     if (transferredUnits === 0)
         return null;
     return {
-        timestamp: timestamp,
-        data: {
-            type: "ReinforcedCell",
-            bubbleId: bubbleId,
-            cellId: cellId,
-            playerId: fromPlayerId,
-            unitsTransferred: transferredUnits,
-            collisionEvent: event,
-        },
+        type: "ReinforcedCell",
+        bubbleId: bubbleId,
+        cellId: cellId,
+        playerId: fromPlayerId,
+        unitsTransferred: transferredUnits,
+        collisionEvent: event,
     };
 };
 exports.getDefeatedBubbleEvents = function (event) {
@@ -184,4 +185,17 @@ exports.getDefeatedBubbleEvents = function (event) {
         });
     }
     return defeatedBubbleEvents;
+};
+exports.processFinishedCollisionEvent = function (event) {
+    if (!event.finished)
+        return [];
+    var reinf = exports.getReinforcedCellEvent(event);
+    var defend = exports.getDefendedCellEvent(event);
+    var defeat = exports.getDefeatedBubbleEvents(event);
+    var result = [];
+    if (reinf !== null)
+        result.push(reinf);
+    if (defend !== null)
+        result.push(defend);
+    return result.concat(defeat);
 };

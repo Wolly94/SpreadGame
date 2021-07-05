@@ -1,14 +1,14 @@
-import { unitsToRadius } from "../../spreadGame/common"
+import { unitsToRadius } from "../../spreadGame/common";
 import {
     DefendCellProps,
-    defendCellUtils
-} from "../../spreadGame/mechanics/events/defendCell"
+    defendCellUtils,
+} from "../../spreadGame/mechanics/events/defendCell";
 import {
     AttachProps,
-    TimedProps
-} from "../../spreadGame/mechanics/events/definitions"
-import { formatDescription } from "../utils"
-import { CreatePerk, getPerkValue } from "./perk"
+    TimedProps,
+} from "../../spreadGame/mechanics/events/definitions";
+import { formatDescription } from "../utils";
+import { CreatePerk, getPerkValue } from "./perk";
 
 const name = "Loots of Victory";
 const defaultValues: number[] = [5, 10];
@@ -27,7 +27,7 @@ export const LootsOfVictoryPerk: CreatePerk<number> = {
                 " population.",
             triggers: [
                 {
-                    type: "DefendCell",
+                    type: "DefendedCell",
                     getValue: (
                         trigger,
                         game
@@ -35,7 +35,7 @@ export const LootsOfVictoryPerk: CreatePerk<number> = {
                         const val = getPerkValue(
                             game,
                             name,
-                            trigger.before.cell.playerId,
+                            trigger.defenderPlayerId,
                             values,
                             defaultValue
                         );
@@ -47,7 +47,7 @@ export const LootsOfVictoryPerk: CreatePerk<number> = {
                             {
                                 entity: null,
                                 perkName: name,
-                                triggerType: "DefendCell",
+                                triggerType: "DefendedCell",
                                 props: {
                                     expirationInMs: "Never",
                                     value: props,

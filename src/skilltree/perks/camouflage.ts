@@ -65,14 +65,14 @@ export const CamouflagePerk: CreatePerk<number> = {
                 "The enemy can only see the cell capacity of your cells, but not population or bubble-size.",
             triggers: [
                 {
-                    type: "ConquerCell",
+                    type: "CapturedCell",
                     getValue: (
                         trigger,
                         game
                     ): AttachProps<
                         TimedProps<VisualizeBubbleProps | VisualizeCellProps>
                     >[] => {
-                        const playerId = trigger.after.cell.playerId;
+                        const playerId = trigger.afterPlayerId;
                         const val = getPerkValue(
                             game,
                             name,
@@ -85,9 +85,7 @@ export const CamouflagePerk: CreatePerk<number> = {
                             game.players,
                             val === defaultValue
                         );
-                        return [
-                            getResultVisualProps(trigger.after.cell.id, props),
-                        ];
+                        return [getResultVisualProps(trigger.cellId, props)];
                     },
                 },
                 {

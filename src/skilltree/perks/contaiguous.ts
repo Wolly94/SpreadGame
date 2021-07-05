@@ -54,17 +54,17 @@ export const ContaiguousPerk: CreatePerk<number> = {
                 "Enemy cells infect each other when transferring.",
             triggers: [
                 {
-                    type: "ReinforceCell",
+                    type: "ReinforcedCell",
                     getValue: (
                         trigger,
                         game
                     ): AttachProps<TimedProps<RaiseEventProps>>[] => {
                         // check wether this was the target
-                        if (trigger.after.bubble !== null) return [];
+                        //if (trigger.after.bubble !== null) return [];
                         const infections = infectBubbleUtils.collect(
                             game.fromAttachedProps({
                                 type: "Bubble",
-                                id: trigger.before.bubble.id,
+                                id: trigger.bubbleId,
                             })
                         );
                         const res = Array.from(
@@ -79,7 +79,7 @@ export const ContaiguousPerk: CreatePerk<number> = {
                                         type: "Infect",
                                         entityToInfect: {
                                             type: "Cell",
-                                            id: trigger.after.cell.id,
+                                            id: trigger.cellId,
                                         },
                                         causerPlayerId: entry[0],
                                         duration:
@@ -89,7 +89,7 @@ export const ContaiguousPerk: CreatePerk<number> = {
                                 return {
                                     entity: null,
                                     perkName: name,
-                                    triggerType: "ReinforceCell",
+                                    triggerType: "ReinforcedCell",
                                     props: {
                                         expirationInMs: "Never",
                                         value: props,
@@ -125,11 +125,12 @@ export const ContaiguousPerk: CreatePerk<number> = {
                                 );
                                 if (val === defaultValue) return;
 
-                                const remInfectionTime = getRemainingInfectionTime(
-                                    game,
-                                    cellId,
-                                    infectedByPlayerId
-                                );
+                                const remInfectionTime =
+                                    getRemainingInfectionTime(
+                                        game,
+                                        cellId,
+                                        infectedByPlayerId
+                                    );
                                 bubbleInf.set(infectedByPlayerId, {
                                     infectionTimeLeftInMs: remInfectionTime,
                                 });

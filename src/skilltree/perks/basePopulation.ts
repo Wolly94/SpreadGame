@@ -45,21 +45,22 @@ export const BasePopulationPerk: CreatePerk<number> = {
                 ".",
             triggers: [
                 {
-                    type: "ConquerCell",
+                    type: "CapturedCell",
                     getValue: (
                         trigger,
                         game
                     ): AttachProps<TimedProps<GrowthProps>>[] => {
-                        const cell = trigger.before.cell;
+                        const playerId = trigger.beforePlayerId;
+                        const cellId = trigger.cellId;
                         const val = getPerkValue(
                             game,
                             name,
-                            cell.playerId,
+                            playerId,
                             values,
                             defaultValue
                         );
 
-                        return [getReturnValue(cell.id, val)];
+                        return [getReturnValue(cellId, val)];
                     },
                 },
                 {

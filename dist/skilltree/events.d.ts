@@ -82,8 +82,8 @@ export interface DefeatedBubbleEvent {
     other: AfterCollisionOtherState;
     collisionEvent: CollisionEvent;
 }
-export declare const getDefendedCellEvent: (event: CollisionEvent) => HistoryEntry<DefendedCellEvent> | null;
-export declare const getReinforcedCellEvent: (event: CollisionEvent) => HistoryEntry<ReinforcedCellEvent> | null;
+export declare const getDefendedCellEvent: (event: CollisionEvent) => DefendedCellEvent | null;
+export declare const getReinforcedCellEvent: (event: CollisionEvent) => ReinforcedCellEvent | null;
 export declare const getDefeatedBubbleEvents: (event: CollisionEvent) => DefeatedBubbleEvent[];
-export declare type SpreadGameEvent = CollisionEvent | SendBubbleEvent | CapturedCellEvent | ReinforcedCellEvent | DefeatedBubbleEvent;
-export declare type CollisionEnd = DefeatedBubbleEvent | ReinforcedCellEvent | DefendedCellEvent;
+export declare const processFinishedCollisionEvent: (event: CollisionEvent) => (ReinforcedCellEvent | DefendedCellEvent | DefeatedBubbleEvent)[];
+export declare type SpreadGameEvent = CollisionEvent | SendBubbleEvent | CapturedCellEvent | ReinforcedCellEvent | DefendedCellEvent | DefeatedBubbleEvent;

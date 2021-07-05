@@ -79,15 +79,14 @@ export const BaseInfectionPerk: CreatePerk<number> = {
                                 ...visualizeCellUtils.default,
                                 infected: true,
                             };
-                            const groRes: AttachProps<
-                                TimedProps<GrowthProps>
-                            > = {
-                                ...infRes,
-                                props: {
-                                    ...infRes.props,
-                                    value: growthProps,
-                                },
-                            };
+                            const groRes: AttachProps<TimedProps<GrowthProps>> =
+                                {
+                                    ...infRes,
+                                    props: {
+                                        ...infRes.props,
+                                        value: growthProps,
+                                    },
+                                };
                             const visRes: AttachProps<
                                 TimedProps<VisualizeCellProps>
                             > = {
@@ -101,12 +100,12 @@ export const BaseInfectionPerk: CreatePerk<number> = {
                     },
                 },
                 {
-                    type: "DefendCell",
+                    type: "DefendedCell",
                     getValue: (
                         trigger,
                         game
                     ): AttachProps<TimedProps<RaiseEventProps>>[] => {
-                        const playerId = trigger.before.bubble.playerId;
+                        const playerId = trigger.attackerPlayerId;
                         const val = getPerkValue(
                             game,
                             name,
@@ -115,21 +114,21 @@ export const BaseInfectionPerk: CreatePerk<number> = {
                             defaultValue
                         );
                         const timeToInfectInMs =
-                            val * trigger.before.bubble.units * 1000;
+                            val * trigger.unitsDefeated * 1000;
                         const infectEvent: InfectEvent = {
                             type: "Infect",
                             causerPlayerId: playerId,
                             duration: timeToInfectInMs,
                             entityToInfect: {
                                 type: "Cell",
-                                id: trigger.after.cell.id,
+                                id: trigger.cellId,
                             },
                         };
                         return [
                             {
                                 entity: null,
                                 perkName: name,
-                                triggerType: "DefendCell",
+                                triggerType: "DefendedCell",
                                 props: {
                                     expirationInMs: "Never",
                                     value: {

@@ -34,7 +34,7 @@ const attachPropTemplate = (cellId: number, prop: VisualizeCellProps) => {
     const res: AttachProps<TimedProps<VisualizeCellProps>> = {
         entity: { type: "Cell", id: cellId },
         perkName: name,
-        triggerType: "ConquerCell",
+        triggerType: "CapturedCell",
         props: {
             expirationInMs: "Never",
             value: prop,
@@ -139,12 +139,12 @@ export const MembranePerk: CreatePerk<number> = {
                     },
                 },
                 {
-                    type: "ConquerCell",
+                    type: "CapturedCell",
                     getValue: (
                         trigger,
                         game
                     ): AttachProps<TimedProps<VisualizeCellProps>>[] => {
-                        const playerId = trigger.after.cell.playerId;
+                        const playerId = trigger.afterPlayerId;
                         const val = getPerkValue(
                             game,
                             name,
@@ -157,9 +157,7 @@ export const MembranePerk: CreatePerk<number> = {
                             ...visualizeCellUtils.default,
                             membraneAbsorption: val,
                         };
-                        return [
-                            attachPropTemplate(trigger.after.cell.id, props),
-                        ];
+                        return [attachPropTemplate(trigger.cellId, props)];
                     },
                 },
             ],

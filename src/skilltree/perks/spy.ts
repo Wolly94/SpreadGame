@@ -58,14 +58,14 @@ export const SpyPerk: CreatePerk<number> = {
                     },
                 },
                 {
-                    type: "ConquerCell",
+                    type: "CapturedCell",
                     getValue: (
                         trigger,
                         game
                     ): AttachProps<
                         TimedProps<StolenPerksProps | RaiseEventProps>
                     >[] => {
-                        const playerId = trigger.after.cell.playerId;
+                        const playerId = trigger.afterPlayerId;
                         const val = getPerkValue(
                             game,
                             name,
@@ -80,7 +80,7 @@ export const SpyPerk: CreatePerk<number> = {
 
                         const ownPerks = game.getSkilledPerks(playerId);
                         const availablePerks = game
-                            .getSkilledPerks(trigger.before.cell.playerId)
+                            .getSkilledPerks(trigger.beforePlayerId)
                             .filter(
                                 (sp) =>
                                     !ownPerks.some(
@@ -105,7 +105,7 @@ export const SpyPerk: CreatePerk<number> = {
                             {
                                 entity: null,
                                 perkName: name,
-                                triggerType: "ConquerCell",
+                                triggerType: "CapturedCell",
                                 props: {
                                     expirationInMs: "Never",
                                     value: raiseProps,

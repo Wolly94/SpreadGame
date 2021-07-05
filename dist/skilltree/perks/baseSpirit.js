@@ -28,10 +28,8 @@ var name = "BaseSpirit";
 var defaultValues = [2, 4, 6];
 var defaultValue = 0;
 var getCellDiff = function (cells, enemyPlayerId, ownPlayerId) {
-    var attackerBubbles = cells.filter(function (b) { return b.playerId === enemyPlayerId; })
-        .length;
-    var defenderBubbles = cells.filter(function (b) { return b.playerId === ownPlayerId; })
-        .length;
+    var attackerBubbles = cells.filter(function (b) { return b.playerId === enemyPlayerId; }).length;
+    var defenderBubbles = cells.filter(function (b) { return b.playerId === ownPlayerId; }).length;
     return attackerBubbles - defenderBubbles;
 };
 var getProps = function (game, ownplayerId, incValue) {
@@ -94,7 +92,7 @@ exports.BaseSpiritPerk = {
             },
             triggers: [
                 {
-                    type: "ConquerCell",
+                    type: "CapturedCell",
                     getValue: function (trigger, game) {
                         var res = game.players.flatMap(function (pl) {
                             var val = perk_1.getPerkValue(game, name, pl.id, values, defaultValue);

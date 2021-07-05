@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var type = "ConquerCell";
+var type = "CapturedCell";
 exports.conquerCellUtils = {
     combine: function (a, b) {
         return {

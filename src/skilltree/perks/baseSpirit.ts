@@ -31,10 +31,12 @@ const getCellDiff = (
     enemyPlayerId: number,
     ownPlayerId: number | null
 ) => {
-    const attackerBubbles = cells.filter((b) => b.playerId === enemyPlayerId)
-        .length;
-    const defenderBubbles = cells.filter((b) => b.playerId === ownPlayerId)
-        .length;
+    const attackerBubbles = cells.filter(
+        (b) => b.playerId === enemyPlayerId
+    ).length;
+    const defenderBubbles = cells.filter(
+        (b) => b.playerId === ownPlayerId
+    ).length;
     return attackerBubbles - defenderBubbles;
 };
 
@@ -127,7 +129,7 @@ export const BaseSpiritPerk: CreatePerk<number> = {
                 " for every cell the enemy has more than you.",
             triggers: [
                 {
-                    type: "ConquerCell",
+                    type: "CapturedCell",
                     getValue: (trigger, game) => {
                         const res = game.players.flatMap((pl) => {
                             const val = getPerkValue(

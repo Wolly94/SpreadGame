@@ -61,25 +61,25 @@ exports.BaseInfectionPerk = {
                     },
                 },
                 {
-                    type: "DefendCell",
+                    type: "DefendedCell",
                     getValue: function (trigger, game) {
-                        var playerId = trigger.before.bubble.playerId;
+                        var playerId = trigger.attackerPlayerId;
                         var val = perk_1.getPerkValue(game, name, playerId, values, defaultValue);
-                        var timeToInfectInMs = val * trigger.before.bubble.units * 1000;
+                        var timeToInfectInMs = val * trigger.unitsDefeated * 1000;
                         var infectEvent = {
                             type: "Infect",
                             causerPlayerId: playerId,
                             duration: timeToInfectInMs,
                             entityToInfect: {
                                 type: "Cell",
-                                id: trigger.after.cell.id,
+                                id: trigger.cellId,
                             },
                         };
                         return [
                             {
                                 entity: null,
                                 perkName: name,
-                                triggerType: "DefendCell",
+                                triggerType: "DefendedCell",
                                 props: {
                                     expirationInMs: "Never",
                                     value: {

@@ -53,9 +53,9 @@ exports.SpyPerk = {
                     },
                 },
                 {
-                    type: "ConquerCell",
+                    type: "CapturedCell",
                     getValue: function (trigger, game) {
-                        var playerId = trigger.after.cell.playerId;
+                        var playerId = trigger.afterPlayerId;
                         var val = perk_1.getPerkValue(game, name, playerId, values, defaultValue);
                         if (val === defaultValue)
                             return [];
@@ -65,7 +65,7 @@ exports.SpyPerk = {
                             return [];
                         var ownPerks = game.getSkilledPerks(playerId);
                         var availablePerks = game
-                            .getSkilledPerks(trigger.before.cell.playerId)
+                            .getSkilledPerks(trigger.beforePlayerId)
                             .filter(function (sp) {
                             return !ownPerks.some(function (ownSp) {
                                 return ownSp.perk.name === sp.perk.name;
@@ -85,7 +85,7 @@ exports.SpyPerk = {
                             {
                                 entity: null,
                                 perkName: name,
-                                triggerType: "ConquerCell",
+                                triggerType: "CapturedCell",
                                 props: {
                                     expirationInMs: "Never",
                                     value: raiseProps,

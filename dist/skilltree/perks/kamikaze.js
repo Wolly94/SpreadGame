@@ -34,9 +34,9 @@ exports.KamikazePerk = {
             },
             triggers: [
                 {
-                    type: "ConquerCell",
+                    type: "CapturedCell",
                     getValue: function (trigger, game) {
-                        var val = perk_1.getPerkValue(game, name, trigger.before.cell.playerId, values, defaultValue);
+                        var val = perk_1.getPerkValue(game, name, trigger.beforePlayerId, values, defaultValue);
                         var props = __assign(__assign({}, conquerCell_1.conquerCellUtils.default), { unitsInPercentToRemain: val });
                         return [
                             {

@@ -53,14 +53,13 @@ exports.ContaiguousPerk = {
             },
             triggers: [
                 {
-                    type: "ReinforceCell",
+                    type: "ReinforcedCell",
                     getValue: function (trigger, game) {
                         // check wether this was the target
-                        if (trigger.after.bubble !== null)
-                            return [];
+                        //if (trigger.after.bubble !== null) return [];
                         var infections = infectBubble_1.infectBubbleUtils.collect(game.fromAttachedProps({
                             type: "Bubble",
-                            id: trigger.before.bubble.id,
+                            id: trigger.bubbleId,
                         }));
                         var res = Array.from(infections.infectedBy.entries()).map(function (entry) {
                             var props = {
@@ -69,7 +68,7 @@ exports.ContaiguousPerk = {
                                     type: "Infect",
                                     entityToInfect: {
                                         type: "Cell",
-                                        id: trigger.after.cell.id,
+                                        id: trigger.cellId,
                                     },
                                     causerPlayerId: entry[0],
                                     duration: entry[1].infectionTimeLeftInMs,
@@ -78,7 +77,7 @@ exports.ContaiguousPerk = {
                             return {
                                 entity: null,
                                 perkName: name,
-                                triggerType: "ReinforceCell",
+                                triggerType: "ReinforcedCell",
                                 props: {
                                     expirationInMs: "Never",
                                     value: props,

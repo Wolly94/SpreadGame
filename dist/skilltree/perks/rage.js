@@ -45,14 +45,14 @@ exports.RagePerk = {
             },
             triggers: [
                 {
-                    type: "ConquerCell",
+                    type: "CapturedCell",
                     getValue: function (trigger, game) {
-                        var playerId = trigger.before.cell.playerId;
+                        var playerId = trigger.beforePlayerId;
                         var val = perk_1.getPerkValue(game, name, playerId, values, defaultValue);
                         var resPropsTemplate = {
                             entity: null,
                             perkName: name,
-                            triggerType: "ConquerCell",
+                            triggerType: "CapturedCell",
                             props: {
                                 expirationInMs: val[0] + game.timePassed,
                                 value: {
@@ -93,7 +93,7 @@ exports.RagePerk = {
                                 ap.entity.id === playerId &&
                                 ap.perkName === name &&
                                 ap.props.value.type === "BubbleFightProps" &&
-                                ap.triggerType === "ConquerCell";
+                                ap.triggerType === "CapturedCell";
                         } // this is unnecessary
                         );
                         return prop === undefined

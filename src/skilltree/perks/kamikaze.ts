@@ -28,7 +28,7 @@ export const KamikazePerk: CreatePerk<number> = {
                 " of the conquering army remains.",
             triggers: [
                 {
-                    type: "ConquerCell",
+                    type: "CapturedCell",
                     getValue: (
                         trigger,
                         game
@@ -36,7 +36,7 @@ export const KamikazePerk: CreatePerk<number> = {
                         const val = getPerkValue(
                             game,
                             name,
-                            trigger.before.cell.playerId,
+                            trigger.beforePlayerId,
                             values,
                             defaultValue
                         );

@@ -28,7 +28,7 @@ export const SlaveryPerk: CreatePerk<number> = {
                 " population.",
             triggers: [
                 {
-                    type: "ConquerCell",
+                    type: "CapturedCell",
                     getValue: (
                         trigger,
                         game
@@ -36,7 +36,7 @@ export const SlaveryPerk: CreatePerk<number> = {
                         const val = getPerkValue(
                             game,
                             name,
-                            trigger.after.cell.playerId,
+                            trigger.afterPlayerId,
                             values,
                             defaultValue
                         );
@@ -44,7 +44,7 @@ export const SlaveryPerk: CreatePerk<number> = {
                             {
                                 entity: null,
                                 perkName: name,
-                                triggerType: "ConquerCell",
+                                triggerType: "CapturedCell",
                                 props: {
                                     expirationInMs: "Never",
                                     value: {

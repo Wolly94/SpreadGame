@@ -166,14 +166,14 @@ var SpreadGameImplementation = /** @class */ (function () {
                 else if (tr.type === "Move" && event.type === "Move") {
                     return tr.getValue(event, _this);
                 }
-                else if (tr.type === "ConquerCell" &&
-                    event.type === "ConquerCell")
+                else if (tr.type === "CapturedCell" &&
+                    event.type === "CapturedCell")
                     return tr.getValue(event, _this);
-                else if (tr.type === "DefendCell" &&
-                    event.type === "DefendCell")
+                else if (tr.type === "DefendedCell" &&
+                    event.type === "DefendedCell")
                     return tr.getValue(event, _this);
-                else if (tr.type === "ReinforceCell" &&
-                    event.type === "ReinforceCell")
+                else if (tr.type === "ReinforcedCell" &&
+                    event.type === "ReinforcedCell")
                     return tr.getValue(event, _this);
                 else if (tr.type === "SendUnits" && event.type === "SendUnits")
                     return tr.getValue(event, _this);
@@ -192,24 +192,24 @@ var SpreadGameImplementation = /** @class */ (function () {
         remProps
             .filter(function (prop) { return prop.type === "RaiseEvent"; })
             .map(function (raiseProp) { return _this.handleEvent(raiseProp.event); });
-        if (event.type === "DefendCell") {
+        if (event.type === "DefendedCell") {
             var fromAttachedProps = this.fromAttachedProps({
                 type: "Cell",
-                id: event.after.cell.id,
+                id: event.cellId,
             });
             var defendProps = defendCell_1.defendCellUtils.collect(fromAttachedProps.concat(remProps));
-            var index = this.cells.findIndex(function (c) { return c.id === event.after.cell.id; });
+            var index = this.cells.findIndex(function (c) { return c.id === event.cellId; });
             if (index < 0)
                 throw new Error("Cell not found");
             this.cells[index] = __assign(__assign({}, this.cells[index]), { units: this.cells[index].units + defendProps.additionalUnits });
         }
-        else if (event.type === "ConquerCell") {
+        else if (event.type === "CapturedCell") {
             var fromAttachedProps = this.fromAttachedProps({
                 type: "Cell",
-                id: event.after.cell.id,
+                id: event.cellId,
             });
             var conquerProps = conquerCell_1.conquerCellUtils.collect(fromAttachedProps.concat(remProps));
-            var index = this.cells.findIndex(function (c) { return c.id === event.after.cell.id; });
+            var index = this.cells.findIndex(function (c) { return c.id === event.cellId; });
             if (index < 0)
                 throw new Error("Cell not found");
             this.cells[index] = __assign(__assign({}, this.cells[index]), { units: this.cells[index].units *
@@ -371,8 +371,7 @@ var SpreadGameImplementation = /** @class */ (function () {
     SpreadGameImplementation.prototype.processFight = function (before, after) {
         var _this = this;
         var _a;
-        var capturedCellEvent = events_1.getCapturedCellEvent(before, after);
-        var defeatedBubbleEvents = [];
+        var eventsToAdd = [];
         var existingPartialCollisionEvent = (_a = this.eventHistory.find(function (ev) {
             return ev.data.type === "CollisionEvent" &&
                 !ev.data.finished &&
@@ -382,29 +381,29 @@ var SpreadGameImplementation = /** @class */ (function () {
         })) === null || _a === void 0 ? void 0 : _a.data;
         if (existingPartialCollisionEvent !== undefined &&
             events_1.combinedCollisionEvents(existingPartialCollisionEvent, before, after, this.timePassed)) {
-            defeatedBubbleEvents = events_1.getDefeatedBubbleEvents(existingPartialCollisionEvent);
         }
         else {
             var newEvent = events_1.createCollisionEvent(before, after, this.timePassed);
-            defeatedBubbleEvents = events_1.getDefeatedBubbleEvents(newEvent);
-            this.eventHistory.push({
-                timestamp: this.timePassed,
-                data: newEvent,
-            });
+            existingPartialCollisionEvent = newEvent;
+            eventsToAdd.push(newEvent);
         }
-        if (capturedCellEvent !== null)
-            this.eventHistory.push({
-                timestamp: this.timePassed,
-                data: capturedCellEvent,
-            });
-        defeatedBubbleEvents.forEach(function (ev) {
-            return _this.eventHistory.push({ timestamp: _this.timePassed, data: ev });
+        var newEvents = events_1.processFinishedCollisionEvent(existingPartialCollisionEvent);
+        newEvents.forEach(function (ev) {
+            _this.handleEvent(ev);
+            eventsToAdd.push(ev);
+        });
+        var capturedCellEvent = events_1.getCapturedCellEvent(before, after);
+        if (capturedCellEvent !== null) {
+            this.handleEvent(capturedCellEvent);
+            eventsToAdd.push(capturedCellEvent);
+        }
+        eventsToAdd.forEach(function (ev) {
+            return _this.eventHistory.push({ data: ev, timestamp: _this.timePassed });
         });
     };
     SpreadGameImplementation.prototype.collideBubblesWithCells = function () {
         var _this = this;
         var fightResults = [];
-        var eventsToProcess = [];
         var remainingBubbles = [];
         this.bubbles.forEach(function (bubble) {
             var currentBubble = bubble;
@@ -437,45 +436,47 @@ var SpreadGameImplementation = /** @class */ (function () {
                         other: { type: "Cell", val: __assign({}, newCell) },
                     };
                     fightResults.push([beforeFight, afterFight]);
-                    if (cell.playerId === currentBubble.playerId) {
-                        var reinforceEvent = {
-                            type: "ReinforceCell",
-                            before: {
-                                cell: __assign({}, beforeFight.other.val),
-                                bubble: __assign({}, beforeFight.bubble),
-                            },
-                            after: {
-                                cell: __assign({}, newCell),
-                                bubble: afterFight.bubble !== null
-                                    ? __assign({}, afterFight.bubble) : null,
-                            },
-                        };
-                        eventsToProcess.push(reinforceEvent);
-                    }
-                    else if (newCell.playerId !== cell.playerId) {
-                        var conquerEvent = {
-                            type: "ConquerCell",
-                            before: { cell: __assign({}, cell) },
-                            after: { cell: __assign({}, newCell) },
-                        };
-                        eventsToProcess.push(conquerEvent);
-                    }
-                    else {
-                        /* if (newCell.playerId === cell.playerId) { */
-                        var defendEvent = {
-                            type: "DefendCell",
-                            before: {
-                                cell: __assign({}, beforeFight.other.val),
-                                bubble: __assign({}, beforeFight.bubble),
-                            },
-                            after: {
-                                cell: __assign({}, newCell),
-                                bubble: afterFight.bubble !== null
-                                    ? __assign({}, afterFight.bubble) : null,
-                            },
-                        };
-                        eventsToProcess.push(defendEvent);
-                    }
+                    //if (cell.playerId === currentBubble.playerId) {
+                    //    const reinforceEvent: ReinforceCellEvent = {
+                    //        type: "ReinforcedCell",
+                    //        before: {
+                    //            cell: { ...beforeFight.other.val },
+                    //            bubble: { ...beforeFight.bubble },
+                    //        },
+                    //        after: {
+                    //            cell: { ...newCell },
+                    //            bubble:
+                    //                afterFight.bubble !== null
+                    //                    ? { ...afterFight.bubble }
+                    //                    : null,
+                    //        },
+                    //    };
+                    //    eventsToProcess.push(reinforceEvent);
+                    //} else if (newCell.playerId !== cell.playerId) {
+                    //    const conquerEvent: ConquerCellEvent = {
+                    //        type: "CapturedCell",
+                    //        before: { cell: { ...cell } },
+                    //        after: { cell: { ...newCell } },
+                    //    };
+                    //    eventsToProcess.push(conquerEvent);
+                    //} else {
+                    //    /* if (newCell.playerId === cell.playerId) { */
+                    //    const defendEvent: DefendedCellEvent = {
+                    //        type: "DefendedCell",
+                    //        before: {
+                    //            cell: { ...beforeFight.other.val },
+                    //            bubble: { ...beforeFight.bubble },
+                    //        },
+                    //        after: {
+                    //            cell: { ...newCell },
+                    //            bubble:
+                    //                afterFight.bubble !== null
+                    //                    ? { ...afterFight.bubble }
+                    //                    : null,
+                    //        },
+                    //    };
+                    //    eventsToProcess.push(defendEvent);
+                    //}
                     currentBubble = newCurrentBubble;
                     //if (event !== null) eventsToAdd.push(event);
                     return newCell;
@@ -493,7 +494,6 @@ var SpreadGameImplementation = /** @class */ (function () {
             var before = _a[0], after = _a[1];
             return _this.processFight(before, after);
         });
-        eventsToProcess.forEach(function (ev) { return _this.handleEvent(ev); });
     };
     SpreadGameImplementation.prototype.fromAttachedProps = function (entity) {
         var _this = this;

@@ -30,7 +30,7 @@ var attachPropTemplate = function (cellId, prop) {
     var res = {
         entity: { type: "Cell", id: cellId },
         perkName: name,
-        triggerType: "ConquerCell",
+        triggerType: "CapturedCell",
         props: {
             expirationInMs: "Never",
             value: prop,
@@ -105,14 +105,12 @@ exports.MembranePerk = {
                     },
                 },
                 {
-                    type: "ConquerCell",
+                    type: "CapturedCell",
                     getValue: function (trigger, game) {
-                        var playerId = trigger.after.cell.playerId;
+                        var playerId = trigger.afterPlayerId;
                         var val = perk_1.getPerkValue(game, name, playerId, values, defaultValue);
                         var props = __assign(__assign({}, visualizeCellProps_1.visualizeCellUtils.default), { membraneAbsorption: val });
-                        return [
-                            attachPropTemplate(trigger.after.cell.id, props),
-                        ];
+                        return [attachPropTemplate(trigger.cellId, props)];
                     },
                 },
             ],

@@ -1,14 +1,7 @@
-import Bubble from "../../bubble"
-import Cell from "../../cell"
-import { Effect, PropUtils } from "./definitions"
+import { ReinforcedCellEvent } from "../../../skilltree/events";
+import { Effect } from "./definitions";
 
-const type = "ReinforceCell";
-
-export interface ReinforceCellEvent {
-    type: "ReinforceCell";
-    before: { cell: Cell, bubble: Bubble };
-    after: { cell: Cell, bubble: Bubble | null };
-}
+const type = "ReinforcedCell";
 
 //export interface ReinforceCellProps {
 //    type: ReinforceCellEvent["type"];
@@ -16,8 +9,8 @@ export interface ReinforceCellEvent {
 //    unitsInPercentToRemain: number;
 //}
 
-export interface ReinforceCellEffect extends Effect<ReinforceCellEvent> {
-    type: ReinforceCellEvent["type"];
+export interface ReinforceCellEffect extends Effect<ReinforcedCellEvent> {
+    type: ReinforcedCellEvent["type"];
 }
 
 //export const reinforceCellUtils: PropUtils<ReinforceCellProps> = {

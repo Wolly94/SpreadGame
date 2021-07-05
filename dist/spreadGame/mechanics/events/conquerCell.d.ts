@@ -1,20 +1,11 @@
-import Cell from "../../cell";
+import { CapturedCellEvent } from "../../../skilltree/events";
 import { Effect, PropUtils } from "./definitions";
-export interface ConquerCellEvent {
-    type: "ConquerCell";
-    before: {
-        cell: Cell;
-    };
-    after: {
-        cell: Cell;
-    };
-}
 export interface ConquerCellProps {
-    type: ConquerCellEvent["type"];
+    type: CapturedCellEvent["type"];
     additionalUnits: number;
     unitsInPercentToRemain: number;
 }
-export interface ConquerCellEffect extends Effect<ConquerCellEvent> {
-    type: ConquerCellEvent["type"];
+export interface ConquerCellEffect extends Effect<CapturedCellEvent> {
+    type: CapturedCellEvent["type"];
 }
 export declare const conquerCellUtils: PropUtils<ConquerCellProps>;

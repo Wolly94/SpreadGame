@@ -34,14 +34,14 @@ exports.SlaveryPerk = {
             },
             triggers: [
                 {
-                    type: "ConquerCell",
+                    type: "CapturedCell",
                     getValue: function (trigger, game) {
-                        var val = perk_1.getPerkValue(game, name, trigger.after.cell.playerId, values, defaultValue);
+                        var val = perk_1.getPerkValue(game, name, trigger.afterPlayerId, values, defaultValue);
                         return [
                             {
                                 entity: null,
                                 perkName: name,
-                                triggerType: "ConquerCell",
+                                triggerType: "CapturedCell",
                                 props: {
                                     expirationInMs: "Never",
                                     value: __assign(__assign({}, conquerCell_1.conquerCellUtils.default), { additionalUnits: val }),

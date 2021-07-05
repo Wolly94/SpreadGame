@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var type = "DefendCell";
+var type = "DefendedCell";
 exports.defendCellUtils = {
     combine: function (a, b) {
         return {

@@ -26,7 +26,7 @@ var attachProps = function (val, cellId) {
             id: cellId,
         },
         perkName: name,
-        triggerType: "ConquerCell",
+        triggerType: "CapturedCell",
         props: {
             expirationInMs: "Never",
             value: __assign(__assign({}, fight_1.cellFightUtils.default), { combatAbilityModifier: val }),
@@ -51,11 +51,11 @@ exports.BaseDefensePerk = {
             },
             triggers: [
                 {
-                    type: "ConquerCell",
+                    type: "CapturedCell",
                     getValue: function (trigger, game) {
-                        var playerId = trigger.after.cell.playerId;
+                        var playerId = trigger.afterPlayerId;
                         var val = perk_1.getPerkValue(game, name, playerId, values, defaultValue);
-                        return attachProps(val, trigger.after.cell.id);
+                        return attachProps(val, trigger.cellId);
                     },
                 },
                 {

@@ -1,42 +1,37 @@
-import Bubble from "../../bubble";
-import Cell from "../../cell";
-import { SpreadMap } from "../../map/map";
-import Player from "../../player";
-import { SpreadGameImplementation } from "../../spreadGame";
+import { CapturedCellEvent, DefeatedBubbleEvent, DefendedCellEvent, ReinforcedCellEvent } from "../../../skilltree/events"
+import { SpreadGameImplementation } from "../../spreadGame"
 import {
     ConquerCellEffect,
-    ConquerCellEvent,
-    ConquerCellProps,
-} from "./conquerCell";
-import { CreateBubbleEffect, CreateBubbleEvent } from "./createBubble";
+    ConquerCellProps
+} from "./conquerCell"
+import { CreateBubbleEffect, CreateBubbleEvent } from "./createBubble"
 import {
     DefendCellEffect,
-    DefendCellEvent,
-    DefendCellProps,
-} from "./defendCell";
+    DefendCellProps
+} from "./defendCell"
 import {
     BeforeFightEffect,
     BeforeFightEvent,
     BubbleFightProps,
-    CellFightProps,
-} from "./fight";
-import { GrowthEffect, GrowthEvent, GrowthProps } from "./growth";
-import { InfectBubbleProps } from "./infectBubble";
-import { InfectCellProps } from "./infectCell";
-import { MoveEffect, MoveEvent, MoveProps } from "./move";
-import { RaisableEvent, RaiseEventEffect, RaiseEventProps } from "./raiseEvent";
-import { ReinforceCellEffect, ReinforceCellEvent } from "./reinforceCell";
-import { SendUnitsEffect, SendUnitsEvent, SendUnitsProps } from "./sendUnits";
+    CellFightProps
+} from "./fight"
+import { GrowthEffect, GrowthEvent, GrowthProps } from "./growth"
+import { InfectBubbleProps } from "./infectBubble"
+import { InfectCellProps } from "./infectCell"
+import { MoveEffect, MoveEvent, MoveProps } from "./move"
+import { RaisableEvent, RaiseEventEffect, RaiseEventProps } from "./raiseEvent"
+import { ReinforceCellEffect } from "./reinforceCell"
+import { SendUnitsEffect, SendUnitsEvent, SendUnitsProps } from "./sendUnits"
 import {
     StartGameCellProps,
     StartGameEffect,
-    StartGameEvent,
-} from "./startGame";
-import { StolenPerksProps } from "./stolenPerk";
-import { TimeStepEffect, TimeStepEvent } from "./timeStep";
-import { VisualizeBubbleProps } from "./visualizeBubbleProps";
-import { VisualizeCellProps } from "./visualizeCellProps";
-import { VisualizeGameProps } from "./visualizeGameProps";
+    StartGameEvent
+} from "./startGame"
+import { StolenPerksProps } from "./stolenPerk"
+import { TimeStepEffect, TimeStepEvent } from "./timeStep"
+import { VisualizeBubbleProps } from "./visualizeBubbleProps"
+import { VisualizeCellProps } from "./visualizeCellProps"
+import { VisualizeGameProps } from "./visualizeGameProps"
 
 export type PropUtils<TProps> = {
     combine: (a: TProps, b: TProps) => TProps;
@@ -49,13 +44,14 @@ export type NewSpreadGameEvent =
     | StartGameEvent
     | CreateBubbleEvent
     | SendUnitsEvent
-    | ConquerCellEvent
-    | DefendCellEvent
+    | CapturedCellEvent
+    | DefendedCellEvent
+    | DefeatedBubbleEvent
     | BeforeFightEvent
     | GrowthEvent
     | MoveEvent
     | RaisableEvent
-    | ReinforceCellEvent;
+    | ReinforcedCellEvent;
 
 export type SpreadGameProps =
     | StartGameCellProps

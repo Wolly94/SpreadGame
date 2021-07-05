@@ -4,7 +4,6 @@ import SpreadReplay, { HistoryEntry, Move } from "../messages/replay/replay";
 import {
     AfterCollisionState,
     BeforeCollisionState,
-    CapturedCellEvent,
     combinedCollisionEvents,
     createCollisionEvent,
     DefeatedBubbleEvent,
@@ -14,6 +13,11 @@ import {
     SpreadGameEvent,
     getCapturedCellEvent,
     getDefeatedBubbleEvents,
+    CapturedCellEvent,
+    ReinforcedCellEvent,
+    getReinforcedCellEvent,
+    DefendedCellEvent,
+    processFinishedCollisionEvent,
 } from "../skilltree/events";
 import {
     allPerks,
@@ -32,15 +36,9 @@ import {
     calculateBubbleUnits,
     SpreadGameMechanics,
 } from "./mechanics/commonMechanics";
-import {
-    ConquerCellEvent,
-    conquerCellUtils,
-} from "./mechanics/events/conquerCell";
+import { conquerCellUtils } from "./mechanics/events/conquerCell";
 import { CreateBubbleEvent } from "./mechanics/events/createBubble";
-import {
-    DefendCellEvent,
-    defendCellUtils,
-} from "./mechanics/events/defendCell";
+import { defendCellUtils } from "./mechanics/events/defendCell";
 import {
     AttachProps,
     Entity,
@@ -62,10 +60,7 @@ import {
     isRaisableEvent,
     RaiseEventProps,
 } from "./mechanics/events/raiseEvent";
-import {
-    ReinforceCellEffect,
-    ReinforceCellEvent,
-} from "./mechanics/events/reinforceCell";
+import {} from "./mechanics/events/reinforceCell";
 import { SendUnitsEvent, sendUnitsUtils } from "./mechanics/events/sendUnits";
 import {
     startGameCellUtils,
@@ -262,18 +257,18 @@ export class SpreadGameImplementation implements SpreadGame {
                 } else if (tr.type === "Move" && event.type === "Move") {
                     return tr.getValue(event, this);
                 } else if (
-                    tr.type === "ConquerCell" &&
-                    event.type === "ConquerCell"
+                    tr.type === "CapturedCell" &&
+                    event.type === "CapturedCell"
                 )
                     return tr.getValue(event, this);
                 else if (
-                    tr.type === "DefendCell" &&
-                    event.type === "DefendCell"
+                    tr.type === "DefendedCell" &&
+                    event.type === "DefendedCell"
                 )
                     return tr.getValue(event, this);
                 else if (
-                    tr.type === "ReinforceCell" &&
-                    event.type === "ReinforceCell"
+                    tr.type === "ReinforcedCell" &&
+                    event.type === "ReinforcedCell"
                 )
                     return tr.getValue(event, this);
                 else if (tr.type === "SendUnits" && event.type === "SendUnits")
@@ -297,33 +292,29 @@ export class SpreadGameImplementation implements SpreadGame {
                 (prop): prop is RaiseEventProps => prop.type === "RaiseEvent"
             )
             .map((raiseProp) => this.handleEvent(raiseProp.event));
-        if (event.type === "DefendCell") {
+        if (event.type === "DefendedCell") {
             const fromAttachedProps = this.fromAttachedProps({
                 type: "Cell",
-                id: event.after.cell.id,
+                id: event.cellId,
             });
             const defendProps = defendCellUtils.collect(
                 fromAttachedProps.concat(remProps)
             );
-            const index = this.cells.findIndex(
-                (c) => c.id === event.after.cell.id
-            );
+            const index = this.cells.findIndex((c) => c.id === event.cellId);
             if (index < 0) throw new Error("Cell not found");
             this.cells[index] = {
                 ...this.cells[index],
                 units: this.cells[index].units + defendProps.additionalUnits,
             };
-        } else if (event.type === "ConquerCell") {
+        } else if (event.type === "CapturedCell") {
             const fromAttachedProps = this.fromAttachedProps({
                 type: "Cell",
-                id: event.after.cell.id,
+                id: event.cellId,
             });
             const conquerProps = conquerCellUtils.collect(
                 fromAttachedProps.concat(remProps)
             );
-            const index = this.cells.findIndex(
-                (c) => c.id === event.after.cell.id
-            );
+            const index = this.cells.findIndex((c) => c.id === event.cellId);
             if (index < 0) throw new Error("Cell not found");
             this.cells[index] = {
                 ...this.cells[index],
@@ -518,10 +509,8 @@ export class SpreadGameImplementation implements SpreadGame {
     }
     // this either adds a FightEvent or a PartialFightEvent or modifies a PartialFightEvent in the event history
     processFight(before: BeforeCollisionState, after: AfterCollisionState) {
-        const capturedCellEvent: CapturedCellEvent | null =
-            getCapturedCellEvent(before, after);
-        let defeatedBubbleEvents: DefeatedBubbleEvent[] = [];
-        const existingPartialCollisionEvent: CollisionEvent | undefined =
+        const eventsToAdd: SpreadGameEvent[] = [];
+        let existingPartialCollisionEvent: CollisionEvent | undefined =
             this.eventHistory.find(
                 (ev): ev is HistoryEntry<CollisionEvent> =>
                     ev.data.type === "CollisionEvent" &&
@@ -539,37 +528,36 @@ export class SpreadGameImplementation implements SpreadGame {
                 this.timePassed
             )
         ) {
-            defeatedBubbleEvents = getDefeatedBubbleEvents(
-                existingPartialCollisionEvent
-            );
         } else {
             const newEvent = createCollisionEvent(
                 before,
                 after,
                 this.timePassed
             );
-            defeatedBubbleEvents = getDefeatedBubbleEvents(newEvent);
-            this.eventHistory.push({
-                timestamp: this.timePassed,
-                data: newEvent,
-            });
+            existingPartialCollisionEvent = newEvent;
+            eventsToAdd.push(newEvent);
         }
-        if (capturedCellEvent !== null)
-            this.eventHistory.push({
-                timestamp: this.timePassed,
-                data: capturedCellEvent,
-            });
-        defeatedBubbleEvents.forEach((ev) =>
-            this.eventHistory.push({ timestamp: this.timePassed, data: ev })
+
+        const newEvents = processFinishedCollisionEvent(
+            existingPartialCollisionEvent
+        );
+        newEvents.forEach((ev) => {
+            this.handleEvent(ev);
+            eventsToAdd.push(ev);
+        });
+        const capturedCellEvent: CapturedCellEvent | null =
+            getCapturedCellEvent(before, after);
+        if (capturedCellEvent !== null) {
+            this.handleEvent(capturedCellEvent);
+            eventsToAdd.push(capturedCellEvent);
+        }
+
+        eventsToAdd.forEach((ev) =>
+            this.eventHistory.push({ data: ev, timestamp: this.timePassed })
         );
     }
     collideBubblesWithCells() {
         const fightResults: [BeforeCollisionState, AfterCollisionState][] = [];
-        const eventsToProcess: (
-            | ConquerCellEvent
-            | DefendCellEvent
-            | ReinforceCellEvent
-        )[] = [];
         var remainingBubbles: Bubble[] = [];
         this.bubbles.forEach((bubble) => {
             var currentBubble: Bubble | null = bubble;
@@ -619,47 +607,47 @@ export class SpreadGameImplementation implements SpreadGame {
                     };
                     fightResults.push([beforeFight, afterFight]);
 
-                    if (cell.playerId === currentBubble.playerId) {
-                        const reinforceEvent: ReinforceCellEvent = {
-                            type: "ReinforceCell",
-                            before: {
-                                cell: { ...beforeFight.other.val },
-                                bubble: { ...beforeFight.bubble },
-                            },
-                            after: {
-                                cell: { ...newCell },
-                                bubble:
-                                    afterFight.bubble !== null
-                                        ? { ...afterFight.bubble }
-                                        : null,
-                            },
-                        };
-                        eventsToProcess.push(reinforceEvent);
-                    } else if (newCell.playerId !== cell.playerId) {
-                        const conquerEvent: ConquerCellEvent = {
-                            type: "ConquerCell",
-                            before: { cell: { ...cell } },
-                            after: { cell: { ...newCell } },
-                        };
-                        eventsToProcess.push(conquerEvent);
-                    } else {
-                        /* if (newCell.playerId === cell.playerId) { */
-                        const defendEvent: DefendCellEvent = {
-                            type: "DefendCell",
-                            before: {
-                                cell: { ...beforeFight.other.val },
-                                bubble: { ...beforeFight.bubble },
-                            },
-                            after: {
-                                cell: { ...newCell },
-                                bubble:
-                                    afterFight.bubble !== null
-                                        ? { ...afterFight.bubble }
-                                        : null,
-                            },
-                        };
-                        eventsToProcess.push(defendEvent);
-                    }
+                    //if (cell.playerId === currentBubble.playerId) {
+                    //    const reinforceEvent: ReinforceCellEvent = {
+                    //        type: "ReinforcedCell",
+                    //        before: {
+                    //            cell: { ...beforeFight.other.val },
+                    //            bubble: { ...beforeFight.bubble },
+                    //        },
+                    //        after: {
+                    //            cell: { ...newCell },
+                    //            bubble:
+                    //                afterFight.bubble !== null
+                    //                    ? { ...afterFight.bubble }
+                    //                    : null,
+                    //        },
+                    //    };
+                    //    eventsToProcess.push(reinforceEvent);
+                    //} else if (newCell.playerId !== cell.playerId) {
+                    //    const conquerEvent: ConquerCellEvent = {
+                    //        type: "CapturedCell",
+                    //        before: { cell: { ...cell } },
+                    //        after: { cell: { ...newCell } },
+                    //    };
+                    //    eventsToProcess.push(conquerEvent);
+                    //} else {
+                    //    /* if (newCell.playerId === cell.playerId) { */
+                    //    const defendEvent: DefendedCellEvent = {
+                    //        type: "DefendedCell",
+                    //        before: {
+                    //            cell: { ...beforeFight.other.val },
+                    //            bubble: { ...beforeFight.bubble },
+                    //        },
+                    //        after: {
+                    //            cell: { ...newCell },
+                    //            bubble:
+                    //                afterFight.bubble !== null
+                    //                    ? { ...afterFight.bubble }
+                    //                    : null,
+                    //        },
+                    //    };
+                    //    eventsToProcess.push(defendEvent);
+                    //}
                     currentBubble = newCurrentBubble;
                     //if (event !== null) eventsToAdd.push(event);
                     return newCell;
@@ -675,7 +663,6 @@ export class SpreadGameImplementation implements SpreadGame {
         fightResults.forEach(([before, after]) =>
             this.processFight(before, after)
         );
-        eventsToProcess.forEach((ev) => this.handleEvent(ev));
     }
     fromAttachedProps(entity: Entity) {
         const result = this.attachedProps

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var type = "ReinforceCell";
+var type = "ReinforcedCell";
 //export const reinforceCellUtils: PropUtils<ReinforceCellProps> = {
 //    combine: (a, b) => {
 //        return {

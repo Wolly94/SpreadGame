@@ -1,8 +1,14 @@
-import { AttachProps, TimedProps } from "../../spreadGame/mechanics/events/definitions"
-import { BubbleFightProps } from "../../spreadGame/mechanics/events/fight"
-import { VisualizeBubbleProps, visualizeBubbleUtils } from "../../spreadGame/mechanics/events/visualizeBubbleProps"
-import { formatDescription } from "../utils"
-import { CreatePerk, getPerkValue } from "./perk"
+import {
+    AttachProps,
+    TimedProps,
+} from "../../spreadGame/mechanics/events/definitions";
+import { BubbleFightProps } from "../../spreadGame/mechanics/events/fight";
+import {
+    VisualizeBubbleProps,
+    visualizeBubbleUtils,
+} from "../../spreadGame/mechanics/events/visualizeBubbleProps";
+import { formatDescription } from "../utils";
+import { CreatePerk, getPerkValue } from "./perk";
 
 const name = "Rage";
 const defaultValue: [number, number] = [0, 0];
@@ -35,14 +41,14 @@ export const RagePerk: CreatePerk<[number, number]> = {
                 " seconds.",
             triggers: [
                 {
-                    type: "ConquerCell",
+                    type: "CapturedCell",
                     getValue: (
                         trigger,
                         game
                     ): AttachProps<
                         TimedProps<BubbleFightProps | VisualizeBubbleProps>
                     >[] => {
-                        const playerId = trigger.before.cell.playerId;
+                        const playerId = trigger.beforePlayerId;
                         const val = getPerkValue(
                             game,
                             name,
@@ -55,7 +61,7 @@ export const RagePerk: CreatePerk<[number, number]> = {
                         > = {
                             entity: null,
                             perkName: name,
-                            triggerType: "ConquerCell",
+                            triggerType: "CapturedCell",
                             props: {
                                 expirationInMs: val[0] + game.timePassed,
                                 value: {
@@ -75,35 +81,40 @@ export const RagePerk: CreatePerk<[number, number]> = {
                         };
                         const bubbleProps = game.bubbles
                             .filter((b) => b.playerId === playerId)
-                            .flatMap((b): AttachProps<
-                                TimedProps<
-                                    BubbleFightProps | VisualizeBubbleProps
-                                >
-                            >[] => {
-                                return [
-                                    {
-                                        ...resPropsTemplate,
-                                        entity: {
-                                            type: "Bubble",
-                                            id: b.id,
-                                        },
-                                    },
-                                    {
-                                        ...resPropsTemplate,
-                                        entity: {
-                                            type: "Bubble",
-                                            id: b.id,
-                                        },
-                                        props: {
-                                            ...resPropsTemplate.props,
-                                            value: {
-                                                ...visualizeBubbleUtils.default,
-                                                combatAbilityModifier: val[1],
+                            .flatMap(
+                                (
+                                    b
+                                ): AttachProps<
+                                    TimedProps<
+                                        BubbleFightProps | VisualizeBubbleProps
+                                    >
+                                >[] => {
+                                    return [
+                                        {
+                                            ...resPropsTemplate,
+                                            entity: {
+                                                type: "Bubble",
+                                                id: b.id,
                                             },
                                         },
-                                    },
-                                ];
-                            });
+                                        {
+                                            ...resPropsTemplate,
+                                            entity: {
+                                                type: "Bubble",
+                                                id: b.id,
+                                            },
+                                            props: {
+                                                ...resPropsTemplate.props,
+                                                value: {
+                                                    ...visualizeBubbleUtils.default,
+                                                    combatAbilityModifier:
+                                                        val[1],
+                                                },
+                                            },
+                                        },
+                                    ];
+                                }
+                            );
                         return [playerProps, ...bubbleProps];
                     },
                 },
@@ -129,7 +140,7 @@ export const RagePerk: CreatePerk<[number, number]> = {
                                 ap.entity.id === playerId &&
                                 ap.perkName === name &&
                                 ap.props.value.type === "BubbleFightProps" &&
-                                ap.triggerType === "ConquerCell" // this is unnecessary
+                                ap.triggerType === "CapturedCell" // this is unnecessary
                         );
                         return prop === undefined
                             ? []

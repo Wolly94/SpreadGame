@@ -202,11 +202,14 @@ export interface DefeatedBubbleEvent {
     collisionEvent: CollisionEvent;
 }
 
+// After collision ended and bubble is defeated from this event and the owner of the cell after collision is
+// not the same as the owner of the bubble, then there is an "DefendedCellEvent"
 export const getDefendedCellEvent = (
     event: CollisionEvent
-): HistoryEntry<DefendedCellEvent> | null => {
+): DefendedCellEvent | null => {
     if (!event.finished) return null;
     if (event.after.other.type !== "Cell") return null;
+    if (event.after.bubble !== null) return null;
 
     const bubbleId = event.before.bubble.id;
     const cellId = event.before.other.val.id;
@@ -216,7 +219,6 @@ export const getDefendedCellEvent = (
 
     if (event.partialCollisions.length === 0) return null;
     var index = event.partialCollisions.length - 1;
-    const timestamp = event.partialCollisions[index].timestamp;
     while (
         index >= 0 &&
         event.partialCollisions[index].data.other.beforePlayerId ===
@@ -236,23 +238,22 @@ export const getDefendedCellEvent = (
         return null;
 
     return {
-        timestamp: timestamp,
-        data: {
-            type: "DefendedCell",
-            cellId: cellId,
-            bubbleId: bubbleId,
-            defenderPlayerId: defenderPlayerId,
-            attackerPlayerId: attackerPlayerId,
-            unitsDefeated: unitsDefeated,
-            collisionEvent: event,
-        },
+        type: "DefendedCell",
+        cellId: cellId,
+        bubbleId: bubbleId,
+        defenderPlayerId: defenderPlayerId,
+        attackerPlayerId: attackerPlayerId,
+        unitsDefeated: unitsDefeated,
+        collisionEvent: event,
     };
 };
 
 export const getReinforcedCellEvent = (
     event: CollisionEvent
-): HistoryEntry<ReinforcedCellEvent> | null => {
+): ReinforcedCellEvent | null => {
+    if (!event.finished) return null;
     if (event.before.other.type !== "Cell") return null;
+    if (event.after.bubble !== null) return null;
 
     const bubbleId = event.before.bubble.id;
     const cellId = event.before.other.val.id;
@@ -271,15 +272,12 @@ export const getReinforcedCellEvent = (
     if (transferredUnits === 0) return null;
 
     return {
-        timestamp: timestamp,
-        data: {
-            type: "ReinforcedCell",
-            bubbleId: bubbleId,
-            cellId: cellId,
-            playerId: fromPlayerId,
-            unitsTransferred: transferredUnits,
-            collisionEvent: event,
-        },
+        type: "ReinforcedCell",
+        bubbleId: bubbleId,
+        cellId: cellId,
+        playerId: fromPlayerId,
+        unitsTransferred: transferredUnits,
+        collisionEvent: event,
     };
 };
 
@@ -324,14 +322,27 @@ export const getDefeatedBubbleEvents = (
     return defeatedBubbleEvents;
 };
 
+export const processFinishedCollisionEvent = (
+    event: CollisionEvent
+): (ReinforcedCellEvent | DefendedCellEvent | DefeatedBubbleEvent)[] => {
+    if (!event.finished) return [];
+    const reinf = getReinforcedCellEvent(event);
+    const defend = getDefendedCellEvent(event);
+    const defeat = getDefeatedBubbleEvents(event);
+    const result: (
+        | ReinforcedCellEvent
+        | DefendedCellEvent
+        | DefeatedBubbleEvent
+    )[] = [];
+    if (reinf !== null) result.push(reinf);
+    if (defend !== null) result.push(defend);
+    return result.concat(defeat);
+};
+
 export type SpreadGameEvent =
     | CollisionEvent
     | SendBubbleEvent
     | CapturedCellEvent
     | ReinforcedCellEvent
+    | DefendedCellEvent
     | DefeatedBubbleEvent;
-
-export type CollisionEnd =
-    | DefeatedBubbleEvent
-    | ReinforcedCellEvent
-    | DefendedCellEvent;
