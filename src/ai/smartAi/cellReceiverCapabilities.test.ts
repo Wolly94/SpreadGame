@@ -4,6 +4,8 @@ import { playersWithoutSkills } from "../../skilltree/perks/testHelper";
 import { SpreadGameImplementation } from "../../spreadGame";
 import { SpreadMap } from "../../spreadGame/map/map";
 import { playerFromData } from "../../spreadGame/player";
+import { ReachableImplementation } from "./../reachableMap";
+import { CellReceiverCapabilityImplementation } from "./cellReceiverCapabilites";
 import { CellSenderCapabilityImplementation } from "./cellSenderCapabilities";
 
 const simpleMap: SpreadMap = {
@@ -23,7 +25,7 @@ const simpleMap: SpreadMap = {
             playerId: null,
             position: [400, 400],
             radius: 50,
-            units: 30,
+            units: 10,
         },
         {
             id: 2,
@@ -39,20 +41,29 @@ const gameSettings: GameSettings = {
     updateFrequencyInMs: 25,
 };
 
-test("cell sender caps with no collisions", () => {
+test("rec caps with no collisions", () => {
+    const map = simpleMap;
     const game = new SpreadGameImplementation(
         simpleMap,
         gameSettings,
         playersWithoutSkills(2).map((data) => playerFromData(data))
     );
     const senderCaps = CellSenderCapabilityImplementation.fromGame(game);
-    const cap1 = senderCaps.get(0);
-    const cap2 = senderCaps.get(1);
-    expect(cap1.timeline.length).toBe(1);
-    expect(cap2.timeline.length).toBe(0);
+    const reach = new ReachableImplementation(gameSettings, map, []);
+    const recCaps = new CellReceiverCapabilityImplementation(
+        reach,
+        map.cells.map((c) => c.id),
+        senderCaps
+    );
+    const receive0 = recCaps.get(0);
+    const receive1 = recCaps.get(1);
+    const receive2 = recCaps.get(2);
+    expect(receive0.timeline.length).toBe(1);
+    expect(receive1.timeline.length).toBe(2);
+    expect(receive2.timeline.length).toBe(1);
 });
 
-test("cell sender caps with collisions", () => {
+test("rec caps with collisions and cell capture", () => {
     const rep: SpreadReplay = {
         gameSettings: gameSettings,
         lengthInMs: 10000,
@@ -87,10 +98,16 @@ test("cell sender caps with collisions", () => {
     const game = SpreadGameImplementation.fromReplay(rep);
     game.runReplay(rep, 1000);
     const senderCaps = CellSenderCapabilityImplementation.fromGame(game);
-    const cap0 = senderCaps.get(0);
-    const cap1 = senderCaps.get(1);
-    const cap2 = senderCaps.get(2);
-    expect(cap0.timeline.length).toBe(1);
-    expect(cap1.timeline.length).toBe(0);
-    expect(cap2.timeline.length).toBe(2);
+    const reach = new ReachableImplementation(gameSettings, game.map, []);
+    const recCaps = new CellReceiverCapabilityImplementation(
+        reach,
+        game.cells.map((c) => c.id),
+        senderCaps
+    );
+    const receive0 = recCaps.get(0);
+    const receive1 = recCaps.get(1);
+    const receive2 = recCaps.get(2);
+    expect(receive0.timeline.length).toBe(3);
+    expect(receive1.timeline.length).toBe(3);
+    expect(receive2.timeline.length).toBe(2);
 });
