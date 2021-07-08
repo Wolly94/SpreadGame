@@ -18,6 +18,12 @@ var fromCollisionStates = function (before, after) {
     };
     return { bubble: attacker, other: defender };
 };
+exports.getFinishTime = function (ev) {
+    if (!ev.finished || ev.partialCollisions.length === 0)
+        return null;
+    var latestColl = ev.partialCollisions.slice(-1)[0];
+    return latestColl.timestamp;
+};
 exports.latestDistance = function (event) {
     var latestState = event.partialCollisions.slice(-1)[0].data;
     return entites_1.distance(latestState.bubble.position, latestState.other.position);

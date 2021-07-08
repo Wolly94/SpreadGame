@@ -156,7 +156,8 @@ var InGameImplementation = /** @class */ (function () {
         var _this = this;
         //const data = this.gameState.toClientGameState(null);
         this.aiClients.forEach(function (aiCl) {
-            var move = aiCl.getMove(_this.gameState);
+            var copied = _this.gameState.copy();
+            var move = aiCl.getMove(copied);
             if (move != null) {
                 _this.gameState.applyMove(move);
             }

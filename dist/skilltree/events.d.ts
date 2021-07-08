@@ -40,6 +40,7 @@ export interface CollisionEvent {
     finished: boolean;
     partialCollisions: HistoryEntry<PartialCollision>[];
 }
+export declare const getFinishTime: (ev: CollisionEvent) => number | null;
 export declare const latestDistance: (event: CollisionEvent) => number;
 export declare const collisionEventFinished: (event: CollisionEvent) => boolean;
 export declare const finishCollisionEvent: (event: CollisionEvent) => CollisionEvent;
