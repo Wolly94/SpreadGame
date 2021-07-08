@@ -1,59 +1,39 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var events_1 = require("../../skilltree/events");
-var ai_1 = require("../ai");
+var futureCells_1 = require("./futureCells");
 var CellSenderCapabilityImplementation = /** @class */ (function () {
-    function CellSenderCapabilityImplementation(collisionEvents, cells, timePassedInMs) {
+    function CellSenderCapabilityImplementation(futCells) {
         var _this = this;
         this.store = [];
-        cells.forEach(function (sender) {
-            var timeline = [];
-            if (sender.playerId !== null) {
-                timeline.push({
-                    senderCellId: sender.id,
-                    senderPlayerId: sender.playerId,
-                    earliestPossibleTimeInMs: timePassedInMs,
-                    latestPossibleTimeInMs: null,
-                    availableAttackers: ai_1.availableAttackers(sender),
-                });
-            }
-            collisionEvents.forEach(function (ev) {
-                if (ev.data.after.other.type !== "Cell" ||
-                    ev.data.after.other.val.id !== sender.id)
-                    return;
-                var newOwnerId = ev.data.after.other.val.playerId;
-                if (newOwnerId === null)
-                    return;
-                var finishTime = events_1.getFinishTime(ev.data);
-                if (finishTime === null)
-                    return;
-                var sendableUnits = ai_1.availableAttackers(ev.data.after.other.val);
-                if (timeline.length > 0) {
-                    // set latest possible time to the starting time of the event
-                    timeline[timeline.length - 1].latestPossibleTimeInMs =
-                        ev.timestamp;
-                }
-                timeline.push({
-                    availableAttackers: sendableUnits,
-                    senderCellId: sender.id,
-                    senderPlayerId: newOwnerId,
-                    earliestPossibleTimeInMs: finishTime,
-                    latestPossibleTimeInMs: null,
-                });
+        futCells.forEach(function (futCell) {
+            var currentTimePassed = 0;
+            var timeline = futCell.history.flatMap(function (ch) {
+                if (ch.data.playerId === null)
+                    return [];
+                currentTimePassed = ch.timestamp;
+                return [
+                    {
+                        availableAttackers: ch.data.sendableUnits,
+                        senderCellId: futCell.cellId,
+                        senderPlayerId: ch.data.playerId,
+                        earliestPossibleTimeInMs: ch.timestamp,
+                        // this is used as a placeholder for the loop below:
+                        latestPossibleTimeInMs: ch.data.immobilizedBeforeDurationInMs,
+                    },
+                ];
             });
-            _this.set(sender.id, { timeline: timeline });
+            timeline.forEach(function (tl, index, arr) {
+                if (index !== 0 && tl.latestPossibleTimeInMs !== null)
+                    arr[index - 1].latestPossibleTimeInMs =
+                        tl.earliestPossibleTimeInMs - tl.latestPossibleTimeInMs;
+                tl.latestPossibleTimeInMs = null;
+            });
+            _this.set(futCell.cellId, { timeline: timeline });
         });
     }
     CellSenderCapabilityImplementation.fromGame = function (game) {
-        var copied = game.copy();
-        while (copied.bubbles.length > 0) {
-            copied.step(game.gameSettings.updateFrequencyInMs);
-        }
-        var collisionEvents = copied.eventHistory.filter(function (ev) {
-            return ev.data.type === "CollisionEvent";
-        });
-        var senderCaps = new CellSenderCapabilityImplementation(collisionEvents, game.cells, game.timePassed);
-        return senderCaps;
+        var futureCells = futureCells_1.futureCellsFromGame(game);
+        return new CellSenderCapabilityImplementation(futureCells);
     };
     CellSenderCapabilityImplementation.prototype.get = function (senderId) {
         var res = this.store.find(function (val) { return val.senderId === senderId; });

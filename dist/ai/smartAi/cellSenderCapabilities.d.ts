@@ -1,7 +1,5 @@
-import { HistoryEntry } from "../../messages/replay/replay";
-import { CollisionEvent } from "../../skilltree/events";
 import { SpreadGameImplementation } from "../../spreadGame";
-import Cell from "../../spreadGame/cell";
+import { FutureCells } from "./futureCells";
 export interface UnitsSent {
     senderPlayerId: number;
     senderCellId: number;
@@ -22,7 +20,7 @@ export declare class CellSenderCapabilityImplementation implements CellSenderCap
         impact: CellImpactData;
     }[];
     static fromGame(game: SpreadGameImplementation): CellSenderCapabilities;
-    constructor(collisionEvents: HistoryEntry<CollisionEvent>[], cells: Cell[], timePassedInMs: number);
+    constructor(futCells: FutureCells);
     get(senderId: number): CellImpactData | null;
     set(senderId: number, imp: CellImpactData): void;
 }

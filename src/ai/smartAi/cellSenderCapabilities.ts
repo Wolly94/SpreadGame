@@ -3,6 +3,7 @@ import { CollisionEvent, getFinishTime } from "../../skilltree/events";
 import { SpreadGameImplementation } from "../../spreadGame";
 import Cell from "../../spreadGame/cell";
 import { availableAttackers } from "../ai";
+import { FutureCells, futureCellsFromGame } from "./futureCells";
 
 export interface UnitsSent {
     senderPlayerId: number;
@@ -26,65 +27,35 @@ export class CellSenderCapabilityImplementation
 {
     store: { senderId: number; impact: CellImpactData }[];
     static fromGame(game: SpreadGameImplementation): CellSenderCapabilities {
-        const copied = game.copy();
-        while (copied.bubbles.length > 0) {
-            copied.step(game.gameSettings.updateFrequencyInMs);
-        }
-        const collisionEvents = copied.eventHistory.filter(
-            (ev): ev is HistoryEntry<CollisionEvent> =>
-                ev.data.type === "CollisionEvent"
-        );
-        const senderCaps = new CellSenderCapabilityImplementation(
-            collisionEvents,
-            game.cells,
-            game.timePassed
-        );
-        return senderCaps;
+        const futureCells = futureCellsFromGame(game);
+        return new CellSenderCapabilityImplementation(futureCells);
     }
-    constructor(
-        collisionEvents: HistoryEntry<CollisionEvent>[],
-        cells: Cell[],
-        timePassedInMs: number
-    ) {
+    constructor(futCells: FutureCells) {
         this.store = [];
-        cells.forEach((sender) => {
-            const timeline: UnitsSent[] = [];
-            if (sender.playerId !== null) {
-                timeline.push({
-                    senderCellId: sender.id,
-                    senderPlayerId: sender.playerId,
-                    earliestPossibleTimeInMs: timePassedInMs,
-                    latestPossibleTimeInMs: null,
-                    availableAttackers: availableAttackers(sender),
-                });
-            }
-            collisionEvents.forEach((ev) => {
-                if (
-                    ev.data.after.other.type !== "Cell" ||
-                    ev.data.after.other.val.id !== sender.id
-                )
-                    return;
-                const newOwnerId = ev.data.after.other.val.playerId;
-                if (newOwnerId === null) return;
-                const finishTime = getFinishTime(ev.data);
-                if (finishTime === null) return;
-                const sendableUnits = availableAttackers(
-                    ev.data.after.other.val
-                );
-                if (timeline.length > 0) {
-                    // set latest possible time to the starting time of the event
-                    timeline[timeline.length - 1].latestPossibleTimeInMs =
-                        ev.timestamp;
-                }
-                timeline.push({
-                    availableAttackers: sendableUnits,
-                    senderCellId: sender.id,
-                    senderPlayerId: newOwnerId,
-                    earliestPossibleTimeInMs: finishTime,
-                    latestPossibleTimeInMs: null,
-                });
+        futCells.forEach((futCell) => {
+            let currentTimePassed = 0;
+            const timeline: UnitsSent[] = futCell.history.flatMap((ch) => {
+                if (ch.data.playerId === null) return [];
+                currentTimePassed = ch.timestamp;
+                return [
+                    {
+                        availableAttackers: ch.data.sendableUnits,
+                        senderCellId: futCell.cellId,
+                        senderPlayerId: ch.data.playerId,
+                        earliestPossibleTimeInMs: ch.timestamp,
+                        // this is used as a placeholder for the loop below:
+                        latestPossibleTimeInMs:
+                            ch.data.immobilizedBeforeDurationInMs,
+                    },
+                ];
             });
-            this.set(sender.id, { timeline: timeline });
+            timeline.forEach((tl, index, arr) => {
+                if (index !== 0 && tl.latestPossibleTimeInMs !== null)
+                    arr[index - 1].latestPossibleTimeInMs =
+                        tl.earliestPossibleTimeInMs - tl.latestPossibleTimeInMs;
+                tl.latestPossibleTimeInMs = null;
+            });
+            this.set(futCell.cellId, { timeline: timeline });
         });
     }
     get(senderId: number) {

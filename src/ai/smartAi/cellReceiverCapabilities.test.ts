@@ -52,6 +52,12 @@ test("rec caps with no collisions", () => {
         playersWithoutSkills(2).map((data) => playerFromData(data))
     );
     const senderCaps = CellSenderCapabilityImplementation.fromGame(game);
+    const cap0 = senderCaps.get(0);
+    const cap1 = senderCaps.get(1);
+    const cap2 = senderCaps.get(2);
+    expect(cap0.timeline.length).toBe(1);
+    expect(cap1.timeline.length).toBe(0);
+    expect(cap2.timeline.length).toBe(1);
     const reach = new ReachableImplementation(gameSettings, map, []);
     const recCaps = new CellReceiverCapabilityImplementation(
         reach,
@@ -108,6 +114,12 @@ test("rec caps with collisions and cell capture", () => {
     const game = SpreadGameImplementation.fromReplay(rep);
     game.runReplay(rep, 1000);
     const senderCaps = CellSenderCapabilityImplementation.fromGame(game);
+    const cap0 = senderCaps.get(0);
+    const cap1 = senderCaps.get(1);
+    const cap2 = senderCaps.get(2);
+    expect(cap0.timeline.length).toBe(1);
+    expect(cap1.timeline.length).toBe(1);
+    expect(cap2.timeline.length).toBe(2);
     const reach = new ReachableImplementation(gameSettings, game.map, []);
     const recCaps = new CellReceiverCapabilityImplementation(
         reach,

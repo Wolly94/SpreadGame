@@ -1,90 +1,67 @@
 import { HistoryEntry } from "../../messages/replay/replay";
+import { CollisionEvent, getFinishTime } from "../../skilltree/events";
 import { SpreadGameImplementation } from "../../spreadGame";
-import Cell from "../../spreadGame/cell";
-import { cellFighters } from "../../spreadGame/mechanics/scrapeOffMechanics";
+import { availableAttackers } from "../ai";
 
-export type FutureCell = HistoryEntry<{
-    cell: Cell;
-    lastCapture: { cell: Cell; timePassedInMs: number } | null;
-}>;
+export interface CellHistoryData {
+    playerId: number | null;
+    immobilizedBeforeDurationInMs: number;
+    units: number;
+    sendableUnits: number;
+}
 
-export const prioritizeCells = (
-    game: SpreadGameImplementation,
-    playerId: number
-) => {
-    const forecast = getForecast(game);
-    const end = forecastEnd(forecast);
-};
+export type CellHistory = HistoryEntry<CellHistoryData>[];
 
-export const forecastEnd = (
-    cellChanges: HistoryEntry<Cell>[]
-): FutureCell[] => {
-    const latestCells: FutureCell[] = [];
-    cellChanges.forEach((hc) => {
-        const index = latestCells.findIndex(
-            (c) => c.data.cell.id === hc.data.id
-        );
-        if (index < 0) {
-            latestCells.push({
-                timestamp: hc.timestamp,
-                data: { cell: hc.data, lastCapture: null },
-            });
-        } else {
-            if (latestCells[index].data.cell.playerId !== hc.data.playerId) {
-                latestCells[index] = {
-                    timestamp: hc.timestamp,
-                    data: {
-                        cell: hc.data,
-                        lastCapture: {
-                            cell: { ...hc.data },
-                            timePassedInMs: hc.timestamp,
-                        },
-                    },
-                };
-            } else {
-                latestCells[index].timestamp = hc.timestamp;
-                latestCells[index].data.cell = hc.data;
-            }
-        }
-    });
-    return latestCells;
-};
+export type FutureCells = { cellId: number; history: CellHistory }[];
 
-export const getForecast = (
-    game: SpreadGameImplementation
-): HistoryEntry<Cell>[] => {
-    const cellChanges: HistoryEntry<Cell>[] = [];
+export const futureCellsFromGame = (game: SpreadGameImplementation) => {
     const copied = game.copy();
-    var currentBubbles = copied.bubbles;
-    var timePassedUntilNow = game.timePassed;
     while (copied.bubbles.length > 0) {
-        copied.step(copied.gameSettings.updateFrequencyInMs);
-        if (currentBubbles.length !== copied.bubbles.length) {
-            const terminatedBubbles = currentBubbles.filter(
-                (backedUp) => !copied.bubbles.some((b) => b.id === backedUp.id)
-            );
-            const cellsChangedNow: Cell[] = terminatedBubbles.flatMap(
-                (bubble) => {
-                    return game.eventHistory.flatMap((ev) => {
-                        if (
-                            ev.data.type === "CollisionEvent" &&
-                            ev.data.before.bubble.id === bubble.id &&
-                            ev.data.after.other.type === "Cell"
-                        ) {
-                            return [ev.data.after.other.val];
-                        } else return [];
-                    });
-                }
-            );
-            cellsChangedNow.forEach((chn) =>
-                cellChanges.push({
-                    timestamp: copied.timePassed - timePassedUntilNow,
-                    data: chn,
-                })
-            );
-
-            currentBubbles = copied.bubbles;
-        }
+        copied.step(game.gameSettings.updateFrequencyInMs);
     }
-    return cellChanges;
+    const collisionEvents = copied.eventHistory.filter(
+        (ev): ev is HistoryEntry<CollisionEvent> =>
+            ev.data.type === "CollisionEvent"
+    );
+    const res: FutureCells = copied.cells.map((sender) => {
+        const cellHistory: CellHistory = [];
+        const initialCell = game.cells.find((c) => c.id === sender.id);
+        if (initialCell !== undefined) {
+            cellHistory.push({
+                timestamp: game.timePassed,
+                data: {
+                    playerId: initialCell.playerId,
+                    units: initialCell.units,
+                    sendableUnits: availableAttackers(initialCell),
+                    immobilizedBeforeDurationInMs: 0,
+                },
+            });
+        }
+        collisionEvents.forEach((ev) => {
+            if (
+                ev.data.after.other.type !== "Cell" ||
+                ev.data.after.other.val.id !== sender.id
+            )
+                return;
+            const newOwnerId = ev.data.after.other.val.playerId;
+            if (newOwnerId === null) return; // this should be impossible
+            const finishTime = getFinishTime(ev.data);
+            if (finishTime === null) return;
+            const sendableUnits = availableAttackers(ev.data.after.other.val);
+            cellHistory.push({
+                timestamp: finishTime,
+                data: {
+                    immobilizedBeforeDurationInMs: finishTime - ev.timestamp,
+                    playerId: newOwnerId,
+                    units: ev.data.after.other.val.units,
+                    sendableUnits: sendableUnits,
+                },
+            });
+        });
+        return {
+            cellId: sender.id,
+            history: cellHistory,
+        };
+    });
+    return res;
 };

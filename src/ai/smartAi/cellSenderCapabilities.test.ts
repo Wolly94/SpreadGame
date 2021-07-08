@@ -5,6 +5,7 @@ import { SpreadGameImplementation } from "../../spreadGame";
 import { SpreadMap } from "../../spreadGame/map/map";
 import { playerFromData } from "../../spreadGame/player";
 import { CellSenderCapabilityImplementation } from "./cellSenderCapabilities";
+import { futureCellsFromGame } from "./futureCells";
 
 const simpleMap: SpreadMap = {
     players: 2,
@@ -45,7 +46,8 @@ test("cell sender caps with no collisions", () => {
         gameSettings,
         playersWithoutSkills(2).map((data) => playerFromData(data))
     );
-    const senderCaps = CellSenderCapabilityImplementation.fromGame(game);
+    const futureCells = futureCellsFromGame(game);
+    const senderCaps = new CellSenderCapabilityImplementation(futureCells);
     const cap1 = senderCaps.get(0);
     const cap2 = senderCaps.get(1);
     expect(cap1.timeline.length).toBe(1);
