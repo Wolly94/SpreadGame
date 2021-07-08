@@ -66,6 +66,12 @@ export interface CollisionEvent {
     partialCollisions: HistoryEntry<PartialCollision>[];
 }
 
+export const getFinishTime = (ev: CollisionEvent) => {
+    if (!ev.finished || ev.partialCollisions.length === 0) return null;
+    const latestColl = ev.partialCollisions.slice(-1)[0];
+    return latestColl.timestamp;
+};
+
 export const latestDistance = (event: CollisionEvent): number => {
     const latestState = event.partialCollisions.slice(-1)[0].data;
     return distance(latestState.bubble.position, latestState.other.position);

@@ -239,7 +239,8 @@ class InGameImplementation implements InGame {
     applyAiMoves() {
         //const data = this.gameState.toClientGameState(null);
         this.aiClients.forEach((aiCl) => {
-            const move = aiCl.getMove(this.gameState);
+            const copied = this.gameState.copy();
+            const move = aiCl.getMove(copied);
             if (move != null) {
                 this.gameState.applyMove(move);
             }
