@@ -5,7 +5,10 @@ import { SpreadGameImplementation } from "../../spreadGame";
 import { SpreadMap } from "../../spreadGame/map/map";
 import { playerFromData } from "../../spreadGame/player";
 import { ReachableImplementation } from "./../reachableMap";
-import { CellReceiverCapabilityImplementation } from "./cellReceiverCapabilites";
+import {
+    CellReceiverCapabilityImplementation,
+    evalReceiverData,
+} from "./cellReceiverCapabilites";
 import { CellSenderCapabilityImplementation } from "./cellSenderCapabilities";
 
 const simpleMap: SpreadMap = {
@@ -61,6 +64,13 @@ test("rec caps with no collisions", () => {
     expect(receive0.timeline.length).toBe(1);
     expect(receive1.timeline.length).toBe(2);
     expect(receive2.timeline.length).toBe(1);
+
+    const eval0 = evalReceiverData(receive0);
+    const eval1 = evalReceiverData(receive1);
+    const eval2 = evalReceiverData(receive2);
+    expect(eval0.length).toBe(2);
+    expect(eval1.length).toBe(3);
+    expect(eval2.length).toBe(2);
 });
 
 test("rec caps with collisions and cell capture", () => {
@@ -110,4 +120,11 @@ test("rec caps with collisions and cell capture", () => {
     expect(receive0.timeline.length).toBe(3);
     expect(receive1.timeline.length).toBe(3);
     expect(receive2.timeline.length).toBe(2);
+
+    const eval0 = evalReceiverData(receive0);
+    const eval1 = evalReceiverData(receive1);
+    const eval2 = evalReceiverData(receive2);
+    expect(eval0.length).toBe(4);
+    expect(eval1.length).toBe(4);
+    expect(eval2.length).toBe(3);
 });

@@ -19,13 +19,12 @@ export interface CellReceiveData {
 export const evalReceiverData = (
     recData: CellReceiveData
 ): HistoryEntry<PerPlayer<number>>[] => {
-    const sorted = recData.timeline.sort(
-        (rd1, rd2) =>
-            rd1.latestPossibleReceiverTimeInMs -
-            rd2.latestPossibleReceiverTimeInMs
-    );
-    const timestamps = sorted
-        .map((rd) => rd.latestPossibleReceiverTimeInMs)
+    const timestamps = recData.timeline
+        .flatMap((rd) => [
+            rd.latestPossibleReceiverTimeInMs,
+            rd.earliestPossibleReceiverTimeInMs,
+        ])
+        .sort((x, y) => x - y)
         .filter((val, index, arr) => index === 0 || arr[index - 1] !== val);
     const res: HistoryEntry<PerPlayer<number>>[] = timestamps.map(
         (timeStamp) => {
@@ -43,7 +42,7 @@ export const evalReceiverData = (
             return { timestamp: timeStamp, data: perPlayer };
         }
     );
-    return res;
+    return [...res];
 };
 
 export interface CellReceiverCapabilities {

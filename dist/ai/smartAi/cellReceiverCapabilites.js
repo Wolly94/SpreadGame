@@ -1,14 +1,21 @@
 "use strict";
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var reach_1 = require("../reach");
 var perPlayer_1 = require("./perPlayer");
 exports.evalReceiverData = function (recData) {
-    var sorted = recData.timeline.sort(function (rd1, rd2) {
-        return rd1.latestPossibleReceiverTimeInMs -
-            rd2.latestPossibleReceiverTimeInMs;
-    });
-    var timestamps = sorted
-        .map(function (rd) { return rd.latestPossibleReceiverTimeInMs; })
+    var timestamps = recData.timeline
+        .flatMap(function (rd) { return [
+        rd.latestPossibleReceiverTimeInMs,
+        rd.earliestPossibleReceiverTimeInMs,
+    ]; })
+        .sort(function (x, y) { return x - y; })
         .filter(function (val, index, arr) { return index === 0 || arr[index - 1] !== val; });
     var res = timestamps.map(function (timeStamp) {
         var relevant = recData.timeline.filter(function (rd) {
@@ -24,7 +31,7 @@ exports.evalReceiverData = function (recData) {
         });
         return { timestamp: timeStamp, data: perPlayer };
     });
-    return res;
+    return __spreadArrays(res);
 };
 var CellReceiverCapabilityImplementation = /** @class */ (function () {
     function CellReceiverCapabilityImplementation(reachMap, cellIds, senderCaps) {
