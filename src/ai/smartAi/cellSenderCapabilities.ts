@@ -20,6 +20,7 @@ export interface CellImpactData {
 export interface CellSenderCapabilities {
     get: (senderId: number) => CellImpactData | null;
     set: (senderId: number, imp: CellImpactData) => void;
+    getCellIds: () => number[];
 }
 
 export class CellSenderCapabilityImplementation
@@ -57,6 +58,9 @@ export class CellSenderCapabilityImplementation
             });
             this.set(futCell.cellId, { timeline: timeline });
         });
+    }
+    getCellIds() {
+        return this.store.map((val) => val.senderId);
     }
     get(senderId: number) {
         const res = this.store.find((val) => val.senderId === senderId);

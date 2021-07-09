@@ -34,8 +34,10 @@ exports.evalReceiverData = function (recData) {
     return __spreadArrays(res);
 };
 var CellReceiverCapabilityImplementation = /** @class */ (function () {
-    function CellReceiverCapabilityImplementation(reachMap, cellIds, senderCaps) {
+    function CellReceiverCapabilityImplementation(reachMap, senderCaps) {
         var _this = this;
+        // assumes that senderCaps has an entry for every cell
+        var cellIds = senderCaps.getCellIds();
         this.store = [];
         cellIds.forEach(function (receiverId) {
             var recData = [];

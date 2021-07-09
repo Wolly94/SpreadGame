@@ -23,9 +23,5 @@ const getForecast = (
     const senderCapabilities: CellSenderCapabilities =
         CellSenderCapabilityImplementation.fromGame(game);
     const receiverCapabilities: CellReceiverCapabilities =
-        new CellReceiverCapabilityImplementation(
-            reachMap,
-            game.cells.map((c) => c.id),
-            senderCapabilities
-        );
+        new CellReceiverCapabilityImplementation(reachMap, senderCapabilities);
 };

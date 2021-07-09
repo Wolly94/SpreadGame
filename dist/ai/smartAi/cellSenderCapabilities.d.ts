@@ -13,6 +13,7 @@ export interface CellImpactData {
 export interface CellSenderCapabilities {
     get: (senderId: number) => CellImpactData | null;
     set: (senderId: number, imp: CellImpactData) => void;
+    getCellIds: () => number[];
 }
 export declare class CellSenderCapabilityImplementation implements CellSenderCapabilities {
     store: {
@@ -21,6 +22,7 @@ export declare class CellSenderCapabilityImplementation implements CellSenderCap
     }[];
     static fromGame(game: SpreadGameImplementation): CellSenderCapabilities;
     constructor(futCells: FutureCells);
+    getCellIds(): number[];
     get(senderId: number): CellImpactData | null;
     set(senderId: number, imp: CellImpactData): void;
 }

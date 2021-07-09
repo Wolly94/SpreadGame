@@ -35,6 +35,9 @@ var CellSenderCapabilityImplementation = /** @class */ (function () {
         var futureCells = futureCells_1.futureCellsFromGame(game);
         return new CellSenderCapabilityImplementation(futureCells);
     };
+    CellSenderCapabilityImplementation.prototype.getCellIds = function () {
+        return this.store.map(function (val) { return val.senderId; });
+    };
     CellSenderCapabilityImplementation.prototype.get = function (senderId) {
         var res = this.store.find(function (val) { return val.senderId === senderId; });
         if (res === undefined)

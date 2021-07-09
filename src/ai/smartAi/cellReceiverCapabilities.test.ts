@@ -59,11 +59,7 @@ test("rec caps with no collisions", () => {
     expect(cap1.timeline.length).toBe(0);
     expect(cap2.timeline.length).toBe(1);
     const reach = new ReachableImplementation(gameSettings, map, []);
-    const recCaps = new CellReceiverCapabilityImplementation(
-        reach,
-        map.cells.map((c) => c.id),
-        senderCaps
-    );
+    const recCaps = new CellReceiverCapabilityImplementation(reach, senderCaps);
     const receive0 = recCaps.get(0);
     const receive1 = recCaps.get(1);
     const receive2 = recCaps.get(2);
@@ -121,11 +117,7 @@ test("rec caps with collisions and cell capture", () => {
     expect(cap1.timeline.length).toBe(1);
     expect(cap2.timeline.length).toBe(2);
     const reach = new ReachableImplementation(gameSettings, game.map, []);
-    const recCaps = new CellReceiverCapabilityImplementation(
-        reach,
-        game.cells.map((c) => c.id),
-        senderCaps
-    );
+    const recCaps = new CellReceiverCapabilityImplementation(reach, senderCaps);
     const receive0 = recCaps.get(0);
     const receive1 = recCaps.get(1);
     const receive2 = recCaps.get(2);

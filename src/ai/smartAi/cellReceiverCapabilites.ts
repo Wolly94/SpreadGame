@@ -54,11 +54,9 @@ export class CellReceiverCapabilityImplementation
     implements CellReceiverCapabilities
 {
     store: { receiverId: number; impact: CellReceiveData }[];
-    constructor(
-        reachMap: ReachableMap,
-        cellIds: number[],
-        senderCaps: CellSenderCapabilities
-    ) {
+    constructor(reachMap: ReachableMap, senderCaps: CellSenderCapabilities) {
+        // assumes that senderCaps has an entry for every cell
+        const cellIds = senderCaps.getCellIds();
         this.store = [];
         cellIds.forEach((receiverId) => {
             const recData: UnitsReceived[] = [];
